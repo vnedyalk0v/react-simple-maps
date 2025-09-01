@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.85% </span>
+                <span class="strong">61.53% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>88/140</span>
+                <span class='fraction'>88/143</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.85% </span>
+                <span class="strong">61.53% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>88/140</span>
+                <span class='fraction'>88/143</span>
             </div>
         
             
@@ -238,7 +238,10 @@
 <a name='L173'></a><a href='#L173'>173</a>
 <a name='L174'></a><a href='#L174'>174</a>
 <a name='L175'></a><a href='#L175'>175</a>
-<a name='L176'></a><a href='#L176'>176</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -331,6 +334,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -414,25 +420,25 @@
 <span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useEffect, useRef, useState } from "react"
-import { zoom as d3Zoom, zoomIdentity as d3ZoomIdentity, ZoomBehavior } from "d3-zoom"
+import { zoom as d3Zoom, zoomIdentity as d3ZoomIdentity, ZoomBehavior, D3ZoomEvent } from "d3-zoom"
 import { select as d3Select } from "d3-selection"
 import { useMapContext } from "./MapProvider"
 import { getCoords } from "../utils"
-import { ZoomPanState } from "../types"
+import { ZoomPanState, Position } from "../types"
+&nbsp;
+interface ZoomPanPosition extends ZoomPanState {
+  dragging?: Event
+}
 &nbsp;
 interface UseZoomPanHookProps {
   center: [number, number]
-  filterZoomEvent?: (event: any) =&gt; boolean
-  onMoveStart?: (position: { coordinates: [number, number]; zoom: number }, event: any) =&gt; void
-  onMoveEnd?: (position: { coordinates: [number, number]; zoom: number }, event: any) =&gt; void
-  onMove?: (position: { coordinates: [number, number]; zoom: number }, event: any) =&gt; void
+  filterZoomEvent?: (event: Event) =&gt; boolean
+  onMoveStart?: (position: Position, event: Event) =&gt; void
+  onMoveEnd?: (position: Position, event: Event) =&gt; void
+  onMove?: (position: Position, event: Event) =&gt; void
   translateExtent?: [[number, number], [number, number]]
   scaleExtent?: [number, number]
   zoom?: number
-}
-&nbsp;
-interface Position extends ZoomPanState {
-  dragging?: any
 }
 &nbsp;
 export default function useZoomPan({
@@ -451,7 +457,7 @@ export default function useZoomPan({
   const { width, height, projection } = useMapContext()
 &nbsp;
   const [lon, lat] = center
-  const [position, setPosition] = useState&lt;Position&gt;({ x: 0, y: 0, k: 1 })
+  const [position, setPosition] = useState&lt;ZoomPanPosition&gt;({ x: 0, y: 0, k: 1 })
   const lastPosition = useRef&lt;ZoomPanState&gt;({ x: 0, y: 0, k: 1 })
   const mapRef = useRef&lt;SVGGElement&gt;(null)
   const zoomRef = useRef&lt;ZoomBehavior&lt;SVGGElement, unknown&gt; | undefined&gt;(undefined)
@@ -467,7 +473,7 @@ export default function useZoomPan({
 &nbsp;
     const svg = d3Select(mapRef.current)
 &nbsp;
-<span class="fstat-no" title="function not covered" >    function handleZoomStart(d3Event: any) {</span>
+<span class="fstat-no" title="function not covered" >    function handleZoomStart(d3Event: D3ZoomEvent&lt;SVGGElement, unknown&gt;) {</span>
 <span class="cstat-no" title="statement not covered" >      if (!onMoveStart || bypassEvents.current) return</span>
 <span class="cstat-no" title="statement not covered" >      const coords = getCoords(width, height, d3Event.transform)</span>
 <span class="cstat-no" title="statement not covered" >      const inverted = projection.invert?.(coords)</span>
@@ -477,12 +483,12 @@ export default function useZoomPan({
 <span class="cstat-no" title="statement not covered" >            coordinates: inverted as [number, number],</span>
 <span class="cstat-no" title="statement not covered" >            zoom: d3Event.transform.k,</span>
 <span class="cstat-no" title="statement not covered" >          },</span>
-<span class="cstat-no" title="statement not covered" >          d3Event</span>
+<span class="cstat-no" title="statement not covered" >          d3Event.sourceEvent || d3Event</span>
 <span class="cstat-no" title="statement not covered" >        )</span>
 <span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="fstat-no" title="function not covered" >    function handleZoom(d3Event: any) {</span>
+<span class="fstat-no" title="function not covered" >    function handleZoom(d3Event: D3ZoomEvent&lt;SVGGElement, unknown&gt;) {</span>
 <span class="cstat-no" title="statement not covered" >      if (bypassEvents.current) return</span>
 <span class="cstat-no" title="statement not covered" >      const { transform, sourceEvent } = d3Event</span>
 <span class="cstat-no" title="statement not covered" >      setPosition({</span>
@@ -500,12 +506,12 @@ export default function useZoomPan({
 <span class="cstat-no" title="statement not covered" >            coordinates: inverted as [number, number],</span>
 <span class="cstat-no" title="statement not covered" >            zoom: transform.k,</span>
 <span class="cstat-no" title="statement not covered" >          },</span>
-<span class="cstat-no" title="statement not covered" >          d3Event</span>
+<span class="cstat-no" title="statement not covered" >          d3Event.sourceEvent || d3Event</span>
 <span class="cstat-no" title="statement not covered" >        )</span>
 <span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="fstat-no" title="function not covered" >    function handleZoomEnd(d3Event: any) {</span>
+<span class="fstat-no" title="function not covered" >    function handleZoomEnd(d3Event: D3ZoomEvent&lt;SVGGElement, unknown&gt;) {</span>
 <span class="cstat-no" title="statement not covered" >      if (bypassEvents.current) {</span>
 <span class="cstat-no" title="statement not covered" >        bypassEvents.current = false</span>
 <span class="cstat-no" title="statement not covered" >        return</span>
@@ -516,15 +522,18 @@ export default function useZoomPan({
 <span class="cstat-no" title="statement not covered" >        const [x, y] = inverted</span>
 <span class="cstat-no" title="statement not covered" >        lastPosition.current = { x, y, k: d3Event.transform.k }</span>
 <span class="cstat-no" title="statement not covered" >        if (!onMoveEnd) return</span>
-<span class="cstat-no" title="statement not covered" >        onMoveEnd({ coordinates: [x, y], zoom: d3Event.transform.k }, d3Event)</span>
+<span class="cstat-no" title="statement not covered" >        onMoveEnd(</span>
+<span class="cstat-no" title="statement not covered" >          { coordinates: [x, y], zoom: d3Event.transform.k },</span>
+<span class="cstat-no" title="statement not covered" >          d3Event.sourceEvent || d3Event</span>
+<span class="cstat-no" title="statement not covered" >        )</span>
 <span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="fstat-no" title="function not covered" >    function filterFunc(d3Event: any) {</span>
-<span class="cstat-no" title="statement not covered" >      if (filterZoomEvent) {</span>
-<span class="cstat-no" title="statement not covered" >        return filterZoomEvent(d3Event)</span>
+<span class="fstat-no" title="function not covered" >    function filterFunc(d3Event: D3ZoomEvent&lt;SVGGElement, unknown&gt; | null) {</span>
+<span class="cstat-no" title="statement not covered" >      if (filterZoomEvent &amp;&amp; d3Event) {</span>
+<span class="cstat-no" title="statement not covered" >        return filterZoomEvent(d3Event.sourceEvent || d3Event)</span>
 <span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >      return d3Event ? !d3Event.ctrlKey &amp;&amp; !d3Event.button : false</span>
+<span class="cstat-no" title="statement not covered" >      return d3Event ? !d3Event.sourceEvent?.ctrlKey &amp;&amp; !d3Event.sourceEvent?.button : false</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
     const zoomBehavior = d3Zoom&lt;SVGGElement, unknown&gt;()
@@ -595,7 +604,7 @@ export default function useZoomPan({
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-01T12:49:00.091Z
+                at 2025-09-01T13:05:45.739Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

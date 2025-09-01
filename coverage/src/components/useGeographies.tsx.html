@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>39/39</span>
+                <span class='fraction'>43/43</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.77% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/9</span>
+                <span class='fraction'>10/12</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>39/39</span>
+                <span class='fraction'>43/43</span>
             </div>
         
             
@@ -126,11 +126,21 @@
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -161,6 +171,8 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -175,6 +187,10 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
@@ -190,9 +206,11 @@
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useMemo, useState, useEffect } from "react"
-import { Feature, Geometry } from "geojson"
+import { Feature, Geometry, MultiLineString, LineString } from "geojson"
 import { useMapContext } from "./MapProvider"
 import { UseGeographiesProps, GeographyData } from "../types"
+&nbsp;
+type MeshGeometry = MultiLineString | LineString
 &nbsp;
 import {
   fetchGeographies,
@@ -206,8 +224,8 @@ import {
 interface GeographyOutput {
   geographies?: Feature&lt;Geometry&gt;[]
   mesh?: {
-    outline: any
-    borders: any
+    outline: MeshGeometry | null
+    borders: MeshGeometry | null
   } | null
 }
 &nbsp;
@@ -223,9 +241,11 @@ export default function useGeographies({
 &nbsp;
     if (!geography) <span class="branch-0 cbranch-no" title="branch not covered" >return</span>
 &nbsp;
+    let cancelled = false
+&nbsp;
     if (isString(geography)) {
       fetchGeographies(geography).then((geos) =&gt; {
-        if (geos) {
+        if (!cancelled &amp;&amp; geos) {
           setOutput({
             geographies: getFeatures(geos, parseGeographies),
             mesh: getMesh(geos),
@@ -238,6 +258,10 @@ export default function useGeographies({
         mesh: getMesh(geography),
       })
     }
+&nbsp;
+    return () =&gt; {
+      cancelled = true
+    }
   }, [geography, parseGeographies])
 &nbsp;
   const { geographies, outline, borders } = useMemo(() =&gt; {
@@ -245,8 +269,8 @@ export default function useGeographies({
     const preparedMesh = prepareMesh(mesh.outline, mesh.borders, path)
     return {
       geographies: prepareFeatures(output.geographies, path),
-      outline: preparedMesh.outline,
-      borders: preparedMesh.borders,
+      outline: preparedMesh.outline || "",
+      borders: preparedMesh.borders || "",
     }
   }, [output, path])
 &nbsp;
@@ -259,7 +283,7 @@ export default function useGeographies({
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-01T12:49:00.091Z
+                at 2025-09-01T13:05:45.739Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

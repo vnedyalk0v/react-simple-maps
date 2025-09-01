@@ -1,6 +1,6 @@
 # Changelog
 
-## v3.1.0 2025-01-XX (Fork by Georgi Nedyalkov)
+## v3.1.0 2025-09-01 (Fork by Georgi Nedyalkov)
 
 ### 🚀 Major Enhancements
 
