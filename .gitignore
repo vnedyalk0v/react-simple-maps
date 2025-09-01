@@ -1,4 +1,20 @@
-.next
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Testing coverage
+coverage/
+
+# Environment variables
+.env*
+
+# macOS
 .DS_Store
-node_modules
-dist
+
+# Logs
+*.log
