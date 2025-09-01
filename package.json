@@ -1,7 +1,7 @@
 {
   "name": "react-simple-maps",
-  "version": "3.1.0",
-  "description": "An svg map chart component built with and for React - TypeScript-first fork with React 19 support",
+  "version": "4.0.0",
+  "description": "An svg map chart component built with and for React 19.1.1+ - Modern TypeScript-first library with cutting-edge React patterns",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -112,8 +112,8 @@
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "react": "^16.8.0 || 17.x || 18.x || 19.x",
-    "react-dom": "^16.8.0 || 17.x || 18.x || 19.x"
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   },
   "peerDependenciesMeta": {
     "prop-types": {

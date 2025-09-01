@@ -3,6 +3,17 @@ import { GeoPath, GeoProjection } from "d3-geo"
 import { Feature, FeatureCollection, Geometry } from "geojson"
 import { Topology } from "topojson-specification"
 
+// Modern React patterns types
+export type ErrorBoundaryFallback = (error: Error, retry: () => void) => ReactNode
+
+// Branded types for better type safety
+export type Longitude = number & { __brand: "longitude" }
+export type Latitude = number & { __brand: "latitude" }
+export type Coordinates = [Longitude, Latitude]
+
+// Template literal types for projections
+export type ProjectionName = `geo${Capitalize<string>}`
+
 // Base types
 export interface ProjectionConfig {
   center?: [number, number]
@@ -29,13 +40,17 @@ export interface ZoomPanContextType {
 export interface ComposableMapProps extends SVGProps<SVGSVGElement> {
   width?: number
   height?: number
-  projection?: string | GeoProjection
+  projection?: ProjectionName | string | GeoProjection
   projectionConfig?: ProjectionConfig
   className?: string
   children?: ReactNode
+
+  // Modern React patterns
+  onGeographyError?: (error: Error) => void
+  fallback?: ReactNode
 }
 
-export interface GeographiesProps extends Omit<SVGProps<SVGGElement>, "children"> {
+export interface GeographiesProps extends Omit<SVGProps<SVGGElement>, "children" | "onError"> {
   geography: string | Topology | FeatureCollection
   children: (props: {
     geographies: Feature<Geometry>[]
@@ -46,6 +61,11 @@ export interface GeographiesProps extends Omit<SVGProps<SVGGElement>, "children"
   }) => ReactNode
   parseGeographies?: (geographies: Feature<Geometry>[]) => Feature<Geometry>[]
   className?: string
+
+  // Modern React patterns
+  errorBoundary?: boolean
+  onGeographyError?: (error: Error) => void
+  fallback?: ErrorBoundaryFallback
 }
 
 export interface GeographyProps extends Omit<SVGProps<SVGPathElement>, "style"> {
@@ -159,4 +179,18 @@ export interface ZoomPanState {
 export interface Position {
   coordinates: [number, number]
   zoom: number
+}
+
+// Modern React patterns interfaces
+export interface GeographyErrorBoundaryProps {
+  children: ReactNode
+  fallback?: (error: Error, retry: () => void) => ReactNode
+  onError?: (error: Error) => void
+}
+
+// Server Component compatible geography props
+export interface GeographyServerProps {
+  geography: string
+  children: (data: GeographyData) => ReactNode
+  cache?: boolean
 }

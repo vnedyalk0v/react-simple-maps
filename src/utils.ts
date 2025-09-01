@@ -1,3 +1,4 @@
+import { cache } from "react"
 import { feature, mesh } from "topojson-client"
 import { Feature, FeatureCollection, Geometry, MultiLineString, LineString } from "geojson"
 import { Topology, GeometryObject } from "topojson-specification"
@@ -25,6 +26,17 @@ export function fetchGeographies(url: string): Promise<Topology | FeatureCollect
       return undefined
     })
 }
+
+// Modern cached version for use with use() hook
+export const fetchGeographiesCache = cache(
+  async (url: string): Promise<Topology | FeatureCollection> => {
+    const response = await fetch(url)
+    if (!response.ok) {
+      throw new Error(`Failed to fetch geography: ${response.statusText}`)
+    }
+    return response.json()
+  }
+)
 
 export function getFeatures(
   geographies: Topology | FeatureCollection | Feature<Geometry>[],
