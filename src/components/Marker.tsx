@@ -1,4 +1,4 @@
-import { useState, forwardRef, CSSProperties } from "react"
+import { useState, forwardRef } from "react"
 import { MarkerProps } from "../types"
 import { useMapContext } from "./MapProvider"
 
@@ -64,7 +64,7 @@ const Marker = forwardRef<SVGGElement, MarkerProps>(
 
     const currentState = isPressed || isFocused ? (isPressed ? "pressed" : "hover") : "default"
 
-    const currentStyle = (style as any)?.[currentState] as CSSProperties | undefined
+    const currentStyle = style?.[currentState]
 
     return (
       <g

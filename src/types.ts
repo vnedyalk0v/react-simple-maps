@@ -70,16 +70,27 @@ export interface ZoomableGroupProps extends SVGProps<SVGGElement> {
   minZoom?: number
   maxZoom?: number
   translateExtent?: [[number, number], [number, number]]
-  filterZoomEvent?: (event: any) => boolean
-  onMoveStart?: (position: { coordinates: [number, number]; zoom: number }, event: any) => void
-  onMove?: (position: { coordinates: [number, number]; zoom: number }, event: any) => void
-  onMoveEnd?: (position: { coordinates: [number, number]; zoom: number }, event: any) => void
+  filterZoomEvent?: (event: Event) => boolean
+  onMoveStart?: (position: Position, event: Event) => void
+  onMove?: (position: Position, event: Event) => void
+  onMoveEnd?: (position: Position, event: Event) => void
   className?: string
   children?: ReactNode
 }
 
-export interface MarkerProps extends SVGProps<SVGGElement> {
+export interface MarkerProps extends Omit<SVGProps<SVGGElement>, "style"> {
   coordinates: [number, number]
+  onMouseEnter?: (event: React.MouseEvent<SVGGElement>) => void
+  onMouseLeave?: (event: React.MouseEvent<SVGGElement>) => void
+  onMouseDown?: (event: React.MouseEvent<SVGGElement>) => void
+  onMouseUp?: (event: React.MouseEvent<SVGGElement>) => void
+  onFocus?: (event: React.FocusEvent<SVGGElement>) => void
+  onBlur?: (event: React.FocusEvent<SVGGElement>) => void
+  style?: {
+    default?: CSSProperties
+    hover?: CSSProperties
+    pressed?: CSSProperties
+  }
   className?: string
   children?: ReactNode
 }
@@ -122,10 +133,10 @@ export interface UseZoomPanProps {
   zoom: number
   scaleExtent: [number, number]
   translateExtent?: [[number, number], [number, number]]
-  filterZoomEvent?: (event: any) => boolean
-  onMoveStart?: (position: { coordinates: [number, number]; zoom: number }, event: any) => void
-  onMove?: (position: { coordinates: [number, number]; zoom: number }, event: any) => void
-  onMoveEnd?: (position: { coordinates: [number, number]; zoom: number }, event: any) => void
+  filterZoomEvent?: (event: Event) => boolean
+  onMoveStart?: (position: Position, event: Event) => void
+  onMove?: (position: Position, event: Event) => void
+  onMoveEnd?: (position: Position, event: Event) => void
 }
 
 // Utility types

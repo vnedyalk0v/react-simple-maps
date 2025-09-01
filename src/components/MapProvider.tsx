@@ -29,19 +29,21 @@ const makeProjection = ({
     throw new Error(`Unknown projection: ${projection}`)
   }
 
-  let proj = (projections[projectionName] as any)().translate([width / 2, height / 2])
+  let proj = (projections[projectionName] as () => GeoProjection)().translate([
+    width / 2,
+    height / 2,
+  ])
 
-  const supported = [
-    proj.center ? "center" : null,
-    proj.rotate ? "rotate" : null,
-    proj.scale ? "scale" : null,
-    proj.parallels ? "parallels" : null,
-  ]
-
-  supported.forEach((d) => {
-    if (!d) return
-    proj = proj[d](projectionConfig[d as keyof ProjectionConfig] || proj[d]())
-  })
+  // Apply projection configuration
+  if (projectionConfig.center && proj.center) {
+    proj = proj.center(projectionConfig.center)
+  }
+  if (projectionConfig.rotate && proj.rotate) {
+    proj = proj.rotate(projectionConfig.rotate)
+  }
+  if (projectionConfig.scale && proj.scale) {
+    proj = proj.scale(projectionConfig.scale)
+  }
 
   return proj
 }

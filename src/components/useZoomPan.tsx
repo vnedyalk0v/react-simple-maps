@@ -1,23 +1,23 @@
 import { useEffect, useRef, useState } from "react"
-import { zoom as d3Zoom, zoomIdentity as d3ZoomIdentity, ZoomBehavior } from "d3-zoom"
+import { zoom as d3Zoom, zoomIdentity as d3ZoomIdentity, ZoomBehavior, D3ZoomEvent } from "d3-zoom"
 import { select as d3Select } from "d3-selection"
 import { useMapContext } from "./MapProvider"
 import { getCoords } from "../utils"
-import { ZoomPanState } from "../types"
+import { ZoomPanState, Position } from "../types"
+
+interface ZoomPanPosition extends ZoomPanState {
+  dragging?: Event
+}
 
 interface UseZoomPanHookProps {
   center: [number, number]
-  filterZoomEvent?: (event: any) => boolean
-  onMoveStart?: (position: { coordinates: [number, number]; zoom: number }, event: any) => void
-  onMoveEnd?: (position: { coordinates: [number, number]; zoom: number }, event: any) => void
-  onMove?: (position: { coordinates: [number, number]; zoom: number }, event: any) => void
+  filterZoomEvent?: (event: Event) => boolean
+  onMoveStart?: (position: Position, event: Event) => void
+  onMoveEnd?: (position: Position, event: Event) => void
+  onMove?: (position: Position, event: Event) => void
   translateExtent?: [[number, number], [number, number]]
   scaleExtent?: [number, number]
   zoom?: number
-}
-
-interface Position extends ZoomPanState {
-  dragging?: any
 }
 
 export default function useZoomPan({
@@ -36,7 +36,7 @@ export default function useZoomPan({
   const { width, height, projection } = useMapContext()
 
   const [lon, lat] = center
-  const [position, setPosition] = useState<Position>({ x: 0, y: 0, k: 1 })
+  const [position, setPosition] = useState<ZoomPanPosition>({ x: 0, y: 0, k: 1 })
   const lastPosition = useRef<ZoomPanState>({ x: 0, y: 0, k: 1 })
   const mapRef = useRef<SVGGElement>(null)
   const zoomRef = useRef<ZoomBehavior<SVGGElement, unknown> | undefined>(undefined)
@@ -52,7 +52,7 @@ export default function useZoomPan({
 
     const svg = d3Select(mapRef.current)
 
-    function handleZoomStart(d3Event: any) {
+    function handleZoomStart(d3Event: D3ZoomEvent<SVGGElement, unknown>) {
       if (!onMoveStart || bypassEvents.current) return
       const coords = getCoords(width, height, d3Event.transform)
       const inverted = projection.invert?.(coords)
@@ -62,12 +62,12 @@ export default function useZoomPan({
             coordinates: inverted as [number, number],
             zoom: d3Event.transform.k,
           },
-          d3Event
+          d3Event.sourceEvent || d3Event
         )
       }
     }
 
-    function handleZoom(d3Event: any) {
+    function handleZoom(d3Event: D3ZoomEvent<SVGGElement, unknown>) {
       if (bypassEvents.current) return
       const { transform, sourceEvent } = d3Event
       setPosition({
@@ -85,12 +85,12 @@ export default function useZoomPan({
             coordinates: inverted as [number, number],
             zoom: transform.k,
           },
-          d3Event
+          d3Event.sourceEvent || d3Event
         )
       }
     }
 
-    function handleZoomEnd(d3Event: any) {
+    function handleZoomEnd(d3Event: D3ZoomEvent<SVGGElement, unknown>) {
       if (bypassEvents.current) {
         bypassEvents.current = false
         return
@@ -101,15 +101,18 @@ export default function useZoomPan({
         const [x, y] = inverted
         lastPosition.current = { x, y, k: d3Event.transform.k }
         if (!onMoveEnd) return
-        onMoveEnd({ coordinates: [x, y], zoom: d3Event.transform.k }, d3Event)
+        onMoveEnd(
+          { coordinates: [x, y], zoom: d3Event.transform.k },
+          d3Event.sourceEvent || d3Event
+        )
       }
     }
 
-    function filterFunc(d3Event: any) {
-      if (filterZoomEvent) {
-        return filterZoomEvent(d3Event)
+    function filterFunc(d3Event: D3ZoomEvent<SVGGElement, unknown> | null) {
+      if (filterZoomEvent && d3Event) {
+        return filterZoomEvent(d3Event.sourceEvent || d3Event)
       }
-      return d3Event ? !d3Event.ctrlKey && !d3Event.button : false
+      return d3Event ? !d3Event.sourceEvent?.ctrlKey && !d3Event.sourceEvent?.button : false
     }
 
     const zoomBehavior = d3Zoom<SVGGElement, unknown>()

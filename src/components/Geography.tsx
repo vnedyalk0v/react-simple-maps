@@ -1,5 +1,5 @@
 import { useState, memo, forwardRef } from "react"
-import { GeographyProps } from "../types"
+import { GeographyProps, PreparedFeature } from "../types"
 
 const Geography = forwardRef<SVGPathElement, GeographyProps>(
   (
@@ -59,7 +59,7 @@ const Geography = forwardRef<SVGPathElement, GeographyProps>(
         ref={ref}
         tabIndex={0}
         className={`rsm-geography ${className}`}
-        d={(geography as any).svgPath}
+        d={(geography as PreparedFeature).svgPath}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onFocus={handleFocus}
