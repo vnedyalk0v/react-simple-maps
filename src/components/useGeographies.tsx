@@ -1,7 +1,9 @@
 import { useMemo, useState, useEffect } from "react"
-import { Feature, Geometry } from "geojson"
+import { Feature, Geometry, MultiLineString, LineString } from "geojson"
 import { useMapContext } from "./MapProvider"
 import { UseGeographiesProps, GeographyData } from "../types"
+
+type MeshGeometry = MultiLineString | LineString
 
 import {
   fetchGeographies,
@@ -15,8 +17,8 @@ import {
 interface GeographyOutput {
   geographies?: Feature<Geometry>[]
   mesh?: {
-    outline: any
-    borders: any
+    outline: MeshGeometry | null
+    borders: MeshGeometry | null
   } | null
 }
 
@@ -32,9 +34,11 @@ export default function useGeographies({
 
     if (!geography) return
 
+    let cancelled = false
+
     if (isString(geography)) {
       fetchGeographies(geography).then((geos) => {
-        if (geos) {
+        if (!cancelled && geos) {
           setOutput({
             geographies: getFeatures(geos, parseGeographies),
             mesh: getMesh(geos),
@@ -47,6 +51,10 @@ export default function useGeographies({
         mesh: getMesh(geography),
       })
     }
+
+    return () => {
+      cancelled = true
+    }
   }, [geography, parseGeographies])
 
   const { geographies, outline, borders } = useMemo(() => {
@@ -54,8 +62,8 @@ export default function useGeographies({
     const preparedMesh = prepareMesh(mesh.outline, mesh.borders, path)
     return {
       geographies: prepareFeatures(output.geographies, path),
-      outline: preparedMesh.outline,
-      borders: preparedMesh.borders,
+      outline: preparedMesh.outline || "",
+      borders: preparedMesh.borders || "",
     }
   }, [output, path])
 

@@ -1,9 +1,11 @@
 import { feature, mesh } from "topojson-client"
-import { Feature, FeatureCollection, Geometry } from "geojson"
-import { Topology } from "topojson-specification"
+import { Feature, FeatureCollection, Geometry, MultiLineString, LineString } from "geojson"
+import { Topology, GeometryObject } from "topojson-specification"
 import { GeoPath } from "d3-geo"
 import { ZoomTransform } from "d3-zoom"
 import { PreparedFeature } from "./types"
+
+type MeshGeometry = MultiLineString | LineString
 
 export function getCoords(w: number, h: number, t: ZoomTransform): [number, number] {
   const xOffset = (w * t.k - w) / 2
@@ -19,8 +21,7 @@ export function fetchGeographies(url: string): Promise<Topology | FeatureCollect
       }
       return res.json()
     })
-    .catch((error) => {
-      console.log("There was a problem when fetching the data: ", error)
+    .catch(() => {
       return undefined
     })
 }
@@ -46,14 +47,16 @@ export function getFeatures(
     return []
   }
 
-  const firstObjectKey = objectKeys[0]!
+  const firstObjectKey = objectKeys[0] as string
   const geometryObject = topology.objects[firstObjectKey]
   if (!geometryObject) {
     return []
   }
 
-  const featureCollection = feature(topology, geometryObject as any)
-  const feats = (featureCollection as any).features || [featureCollection]
+  const featureCollection = feature(topology, geometryObject)
+  const feats = Array.isArray(featureCollection)
+    ? featureCollection
+    : (featureCollection as FeatureCollection).features || [featureCollection]
   return parseGeographies ? parseGeographies(feats) : feats
 }
 
@@ -67,27 +70,27 @@ export function getMesh(geographies: Topology | FeatureCollection | Feature<Geom
     return null
   }
 
-  const firstObjectKey = objectKeys[0]!
+  const firstObjectKey = objectKeys[0] as string
   const geometryObject = topology.objects[firstObjectKey]
   if (!geometryObject) {
     return null
   }
 
-  const outline = mesh(topology, geometryObject as any, (a, b) => a === b)
-  const borders = mesh(topology, geometryObject as any, (a, b) => a !== b)
+  const outline = mesh(topology, geometryObject as GeometryObject, (a, b) => a === b)
+  const borders = mesh(topology, geometryObject as GeometryObject, (a, b) => a !== b)
 
-  return { outline, borders }
+  return { outline: outline || null, borders: borders || null }
 }
 
 export function prepareMesh(
-  outline: any,
-  borders: any,
+  outline: MeshGeometry | null,
+  borders: MeshGeometry | null,
   path: GeoPath
-): { outline?: any; borders?: any } {
+): { outline?: string; borders?: string } {
   return outline && borders
     ? {
-        outline: { ...outline, rsmKey: "outline", svgPath: path(outline) },
-        borders: { ...borders, rsmKey: "borders", svgPath: path(borders) },
+        outline: path(outline) || "",
+        borders: path(borders) || "",
       }
     : {}
 }
@@ -111,11 +114,13 @@ export function createConnectorPath(
   curve: number | [number, number] = 0.5
 ): string {
   const curvature = Array.isArray(curve) ? curve : [curve, curve]
-  const curveX = (dx / 2) * curvature[0]!
-  const curveY = (dy / 2) * curvature[1]!
+  const curveX = (dx / 2) * (curvature[0] ?? 0.5)
+  const curveY = (dy / 2) * (curvature[1] ?? 0.5)
   return `M${0},${0} Q${-dx / 2 - curveX},${-dy / 2 + curveY} ${-dx},${-dy}`
 }
 
-export function isString(geo: any): geo is string {
+export function isString(
+  geo: string | Topology | FeatureCollection | Feature<Geometry>[]
+): geo is string {
   return typeof geo === "string"
 }
