@@ -1,0 +1,9 @@
+dist/
+node_modules/
+coverage/
+*.min.js
+*.map
+package-lock.json
+yarn.lock
+.git/
+.DS_Store
