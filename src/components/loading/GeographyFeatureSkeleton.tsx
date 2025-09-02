@@ -1,12 +1,12 @@
 interface GeographyFeatureSkeletonProps {
-  count?: number
-  className?: string
+  count?: number;
+  className?: string;
 }
 
 // Skeleton for individual geography features
 export function GeographyFeatureSkeleton({
   count = 3,
-  className = "",
+  className = '',
 }: GeographyFeatureSkeletonProps) {
   return (
     <g className={`rsm-feature-skeleton ${className}`}>
@@ -31,7 +31,7 @@ export function GeographyFeatureSkeleton({
         </rect>
       ))}
     </g>
-  )
+  );
 }
 
-export default GeographyFeatureSkeleton
+export default GeographyFeatureSkeleton;

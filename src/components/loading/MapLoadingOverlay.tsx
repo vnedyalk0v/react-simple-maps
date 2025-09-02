@@ -1,16 +1,16 @@
 interface MapLoadingOverlayProps {
-  isLoading: boolean
-  message?: string
-  className?: string
+  isLoading: boolean;
+  message?: string;
+  className?: string;
 }
 
 // Map loading overlay for full-screen loading states
 export function MapLoadingOverlay({
   isLoading,
-  message = "Loading map data...",
-  className = "",
+  message = 'Loading map data...',
+  className = '',
 }: MapLoadingOverlayProps) {
-  if (!isLoading) return null
+  if (!isLoading) return null;
 
   return (
     <div className={`rsm-map-loading-overlay ${className}`}>
@@ -46,7 +46,7 @@ export function MapLoadingOverlay({
         <p className="rsm-loading-message">{message}</p>
       </div>
     </div>
-  )
+  );
 }
 
-export default MapLoadingOverlay
+export default MapLoadingOverlay;

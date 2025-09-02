@@ -1,7 +1,7 @@
-import { Ref, SVGProps } from "react"
-import { AnnotationProps } from "../types"
-import { useMapContext } from "./MapProvider"
-import { createConnectorPath } from "../utils"
+import { Ref, SVGProps } from 'react';
+import { AnnotationProps } from '../types';
+import { useMapContext } from './MapProvider';
+import { createConnectorPath } from '../utils';
 
 function Annotation({
   subject,
@@ -10,19 +10,19 @@ function Annotation({
   dx = 30,
   dy = 30,
   curve = 0,
-  className = "",
+  className = '',
   ref,
   ...restProps
 }: AnnotationProps & { ref?: Ref<SVGGElement> }) {
-  const { projection } = useMapContext()
-  const projectedCoords = projection(subject)
+  const { projection } = useMapContext();
+  const projectedCoords = projection(subject);
 
   if (!projectedCoords) {
-    return null
+    return null;
   }
 
-  const [x, y] = projectedCoords
-  const connectorPath = createConnectorPath(dx, dy, curve)
+  const [x, y] = projectedCoords;
+  const connectorPath = createConnectorPath(dx, dy, curve);
 
   return (
     <g
@@ -39,9 +39,9 @@ function Annotation({
       />
       {children}
     </g>
-  )
+  );
 }
 
-Annotation.displayName = "Annotation"
+Annotation.displayName = 'Annotation';
 
-export default Annotation
+export default Annotation;

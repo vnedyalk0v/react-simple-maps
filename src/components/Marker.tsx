@@ -1,6 +1,6 @@
-import { useState, Ref } from "react"
-import { MarkerProps } from "../types"
-import { useMapContext } from "./MapProvider"
+import { useState, Ref } from 'react';
+import { MarkerProps } from '../types';
+import { useMapContext } from './MapProvider';
 
 function Marker({
   coordinates,
@@ -12,56 +12,57 @@ function Marker({
   onFocus,
   onBlur,
   style = {},
-  className = "",
+  className = '',
   ref,
   ...restProps
 }: MarkerProps & { ref?: Ref<SVGGElement> }) {
-  const { projection } = useMapContext()
-  const [isPressed, setPressed] = useState(false)
-  const [isFocused, setFocus] = useState(false)
+  const { projection } = useMapContext();
+  const [isPressed, setPressed] = useState(false);
+  const [isFocused, setFocus] = useState(false);
 
-  const projectedCoords = projection(coordinates)
+  const projectedCoords = projection(coordinates);
   if (!projectedCoords) {
-    return null
+    return null;
   }
 
-  const [x, y] = projectedCoords
+  const [x, y] = projectedCoords;
 
   function handleMouseEnter(evt: React.MouseEvent<SVGGElement>) {
-    setFocus(true)
-    if (onMouseEnter) onMouseEnter(evt)
+    setFocus(true);
+    if (onMouseEnter) onMouseEnter(evt);
   }
 
   function handleMouseLeave(evt: React.MouseEvent<SVGGElement>) {
-    setFocus(false)
-    if (isPressed) setPressed(false)
-    if (onMouseLeave) onMouseLeave(evt)
+    setFocus(false);
+    if (isPressed) setPressed(false);
+    if (onMouseLeave) onMouseLeave(evt);
   }
 
   function handleFocus(evt: React.FocusEvent<SVGGElement>) {
-    setFocus(true)
-    if (onFocus) onFocus(evt)
+    setFocus(true);
+    if (onFocus) onFocus(evt);
   }
 
   function handleBlur(evt: React.FocusEvent<SVGGElement>) {
-    setFocus(false)
-    if (isPressed) setPressed(false)
-    if (onBlur) onBlur(evt)
+    setFocus(false);
+    if (isPressed) setPressed(false);
+    if (onBlur) onBlur(evt);
   }
 
   function handleMouseDown(evt: React.MouseEvent<SVGGElement>) {
-    setPressed(true)
-    if (onMouseDown) onMouseDown(evt)
+    setPressed(true);
+    if (onMouseDown) onMouseDown(evt);
   }
 
   function handleMouseUp(evt: React.MouseEvent<SVGGElement>) {
-    setPressed(false)
-    if (onMouseUp) onMouseUp(evt)
+    setPressed(false);
+    if (onMouseUp) onMouseUp(evt);
   }
 
-  const currentState = isPressed || isFocused ? (isPressed ? "pressed" : "hover") : "default"
+  const currentState =
+    isPressed || isFocused ? (isPressed ? 'pressed' : 'hover') : 'default';
 
-  const currentStyle = style?.[currentState]
+  const currentStyle = style?.[currentState];
 
   return (
     <g
@@ -79,9 +80,9 @@ function Marker({
     >
       {children}
     </g>
-  )
+  );
 }
 
-Marker.displayName = "Marker"
+Marker.displayName = 'Marker';
 
-export default Marker
+export default Marker;

@@ -1,11 +1,14 @@
 interface ZoomPanIndicatorProps {
-  isPending: boolean
-  className?: string
+  isPending: boolean;
+  className?: string;
 }
 
 // Zoom/Pan loading indicator for smooth transitions
-export function ZoomPanIndicator({ isPending, className = "" }: ZoomPanIndicatorProps) {
-  if (!isPending) return null
+export function ZoomPanIndicator({
+  isPending,
+  className = '',
+}: ZoomPanIndicatorProps) {
+  if (!isPending) return null;
 
   return (
     <div className={`rsm-zoom-pan-indicator ${className}`} aria-live="polite">
@@ -41,7 +44,7 @@ export function ZoomPanIndicator({ isPending, className = "" }: ZoomPanIndicator
         </svg>
       </div>
     </div>
-  )
+  );
 }
 
-export default ZoomPanIndicator
+export default ZoomPanIndicator;

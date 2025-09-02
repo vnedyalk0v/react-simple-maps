@@ -61,40 +61,44 @@ pnpm add react19-simple-maps
 ### Basic Example (JavaScript)
 
 ```jsx
-import React from "react"
-import { ComposableMap, Geographies, Geography } from "react19-simple-maps"
+import React from 'react';
+import { ComposableMap, Geographies, Geography } from 'react19-simple-maps';
 
 // URL to a valid TopoJSON file
-const geoUrl = "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json"
+const geoUrl =
+  'https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json';
 
 const MapChart = () => {
   return (
     <ComposableMap>
       <Geographies geography={geoUrl}>
         {({ geographies }) =>
-          geographies.map((geo) => <Geography key={geo.rsmKey} geography={geo} />)
+          geographies.map((geo) => (
+            <Geography key={geo.rsmKey} geography={geo} />
+          ))
         }
       </Geographies>
     </ComposableMap>
-  )
-}
+  );
+};
 
-export default MapChart
+export default MapChart;
 ```
 
 ### TypeScript Example
 
 ```tsx
-import React from "react"
-import { ComposableMap, Geographies, Geography } from "react19-simple-maps"
-import type { GeographyProps } from "react19-simple-maps"
+import React from 'react';
+import { ComposableMap, Geographies, Geography } from 'react19-simple-maps';
+import type { GeographyProps } from 'react19-simple-maps';
 
-const geoUrl = "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json"
+const geoUrl =
+  'https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json';
 
 const MapChart: React.FC = () => {
-  const handleGeographyClick = (geography: GeographyProps["geography"]) => {
-    console.log("Clicked on:", geography.properties.NAME)
-  }
+  const handleGeographyClick = (geography: GeographyProps['geography']) => {
+    console.log('Clicked on:', geography.properties.NAME);
+  };
 
   return (
     <ComposableMap>
@@ -106,19 +110,19 @@ const MapChart: React.FC = () => {
               geography={geo}
               onClick={() => handleGeographyClick(geo)}
               style={{
-                default: { fill: "#D6D6DA" },
-                hover: { fill: "#F53" },
-                pressed: { fill: "#E42" },
+                default: { fill: '#D6D6DA' },
+                hover: { fill: '#F53' },
+                pressed: { fill: '#E42' },
               }}
             />
           ))
         }
       </Geographies>
     </ComposableMap>
-  )
-}
+  );
+};
 
-export default MapChart
+export default MapChart;
 ```
 
 Check out the [live example](https://codesandbox.io/s/basic-map-wvlol)
@@ -132,8 +136,8 @@ The above examples will render a world map using the [equal earth projection](ht
 The main wrapper component that provides the SVG context and projection.
 
 ```tsx
-import { ComposableMap } from "react19-simple-maps"
-;<ComposableMap
+import { ComposableMap } from 'react19-simple-maps';
+<ComposableMap
   projection="geoEqualEarth"
   projectionConfig={{
     scale: 100,
@@ -143,7 +147,7 @@ import { ComposableMap } from "react19-simple-maps"
   height={600}
 >
   {/* Map content */}
-</ComposableMap>
+</ComposableMap>;
 ```
 
 ### Geographies
@@ -151,10 +155,12 @@ import { ComposableMap } from "react19-simple-maps"
 Renders geographic features from TopoJSON or GeoJSON data.
 
 ```tsx
-import { Geographies, Geography } from "react19-simple-maps"
-;<Geographies geography="/path/to/world.json">
-  {({ geographies }) => geographies.map((geo) => <Geography key={geo.rsmKey} geography={geo} />)}
-</Geographies>
+import { Geographies, Geography } from 'react19-simple-maps';
+<Geographies geography="/path/to/world.json">
+  {({ geographies }) =>
+    geographies.map((geo) => <Geography key={geo.rsmKey} geography={geo} />)
+  }
+</Geographies>;
 ```
 
 ### Markers & Annotations
@@ -194,22 +200,22 @@ import type {
   GeographyProps,
   MarkerProps,
   ProjectionConfig,
-} from "react19-simple-maps"
+} from 'react19-simple-maps';
 
 // Custom projection configuration
 const projectionConfig: ProjectionConfig = {
   scale: 147,
   center: [0, 0],
   rotate: [0, 0, 0],
-}
+};
 
 // Typed event handlers
 const handleGeographyClick = (
-  geography: GeographyProps["geography"],
-  event: React.MouseEvent<SVGPathElement>
+  geography: GeographyProps['geography'],
+  event: React.MouseEvent<SVGPathElement>,
 ) => {
-  console.log("Country:", geography.properties.NAME)
-}
+  console.log('Country:', geography.properties.NAME);
+};
 ```
 
 ## Map Data Sources
@@ -231,22 +237,24 @@ To learn how to make your own TopoJSON maps from shapefiles, read ["How to conve
 ### Zoom and Pan
 
 ```tsx
-import { ComposableMap, ZoomableGroup } from "react19-simple-maps"
-;<ComposableMap>
+import { ComposableMap, ZoomableGroup } from 'react19-simple-maps';
+<ComposableMap>
   <ZoomableGroup zoom={1} center={[0, 0]}>
     {/* Map content */}
   </ZoomableGroup>
-</ComposableMap>
+</ComposableMap>;
 ```
 
 ### Custom Projections
 
 ```tsx
-import { geoMercator } from "d3-geo"
+import { geoMercator } from 'd3-geo';
 
-const customProjection = geoMercator().scale(100).translate([400, 300])
+const customProjection = geoMercator().scale(100).translate([400, 300]);
 
-;<ComposableMap projection={customProjection}>{/* Map content */}</ComposableMap>
+<ComposableMap projection={customProjection}>
+  {/* Map content */}
+</ComposableMap>;
 ```
 
 ### Styling with CSS-in-JS
@@ -254,20 +262,20 @@ const customProjection = geoMercator().scale(100).translate([400, 300])
 ```tsx
 const geographyStyle = {
   default: {
-    fill: "#D6D6DA",
-    outline: "none",
+    fill: '#D6D6DA',
+    outline: 'none',
   },
   hover: {
-    fill: "#F53",
-    outline: "none",
+    fill: '#F53',
+    outline: 'none',
   },
   pressed: {
-    fill: "#E42",
-    outline: "none",
+    fill: '#E42',
+    outline: 'none',
   },
-}
+};
 
-;<Geography geography={geo} style={geographyStyle} />
+<Geography geography={geo} style={geographyStyle} />;
 ```
 
 ## Migration from react-simple-maps

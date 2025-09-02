@@ -8,7 +8,7 @@ export default {
       priority: 'high',
       thresholds: {
         raw: { max: 150 * 1024, warning: 130 * 1024 }, // 150KB max, 130KB warning
-        gzip: { max: 45 * 1024, warning: 40 * 1024 },   // 45KB max, 40KB warning
+        gzip: { max: 45 * 1024, warning: 40 * 1024 }, // 45KB max, 40KB warning
         brotli: { max: 40 * 1024, warning: 35 * 1024 }, // 40KB max, 35KB warning
       },
       optimizations: ['tree-shaking', 'minification', 'compression'],
@@ -22,7 +22,12 @@ export default {
         gzip: { max: 35 * 1024, warning: 30 * 1024 },
         brotli: { max: 30 * 1024, warning: 25 * 1024 },
       },
-      optimizations: ['tree-shaking', 'minification', 'compression', 'modern-syntax'],
+      optimizations: [
+        'tree-shaking',
+        'minification',
+        'compression',
+        'modern-syntax',
+      ],
     },
     'dist/index.js': {
       name: 'CJS Bundle',
@@ -52,11 +57,21 @@ export default {
   react19Optimizations: {
     concurrentFeatures: {
       name: 'React 19 Concurrent Features',
-      description: 'Optimized concurrent rendering with useTransition, useDeferredValue, useOptimistic',
+      description:
+        'Optimized concurrent rendering with useTransition, useDeferredValue, useOptimistic',
       expectedSavings: { min: 5, max: 10 }, // Percentage
       indicators: {
-        positive: ['startTransition', 'useDeferredValue', 'useOptimistic', 'Suspense'],
-        negative: ['useLayoutEffect', 'componentDidMount', 'componentDidUpdate'],
+        positive: [
+          'startTransition',
+          'useDeferredValue',
+          'useOptimistic',
+          'Suspense',
+        ],
+        negative: [
+          'useLayoutEffect',
+          'componentDidMount',
+          'componentDidUpdate',
+        ],
       },
       weight: 0.3, // Importance weight for overall score
     },
@@ -66,7 +81,12 @@ export default {
       expectedSavings: { min: 2, max: 5 },
       indicators: {
         positive: [], // No console statements is good
-        negative: ['console.log', 'console.warn', 'console.debug', 'console.info'],
+        negative: [
+          'console.log',
+          'console.warn',
+          'console.debug',
+          'console.info',
+        ],
       },
       weight: 0.2,
     },
@@ -97,18 +117,18 @@ export default {
     // Historical data retention
     historyRetention: {
       maxReports: 50, // Keep last 50 reports
-      maxAgeDays: 30,  // Keep reports for 30 days
+      maxAgeDays: 30, // Keep reports for 30 days
     },
-    
+
     // Alert thresholds
     alerts: {
       sizeIncrease: {
-        warning: 5,  // Warn if bundle size increases by 5%
+        warning: 5, // Warn if bundle size increases by 5%
         critical: 10, // Critical if bundle size increases by 10%
       },
       thresholdViolation: {
         warning: 'warning', // Alert when warning threshold is exceeded
-        critical: 'max',    // Critical when max threshold is exceeded
+        critical: 'max', // Critical when max threshold is exceeded
       },
       optimizationRegression: {
         warning: 10, // Warn if optimization score drops by 10%
@@ -118,18 +138,18 @@ export default {
 
     // CI/CD integration
     ci: {
-      failOnCritical: true,        // Fail CI if critical alerts are triggered
+      failOnCritical: true, // Fail CI if critical alerts are triggered
       failOnThresholdViolation: true, // Fail CI if max thresholds are exceeded
-      generateComments: true,      // Generate PR comments with bundle analysis
+      generateComments: true, // Generate PR comments with bundle analysis
       compareWithBaseBranch: true, // Compare with base branch in PRs
     },
 
     // Reporting
     reports: {
-      format: 'json',              // Report format: json, markdown, html
+      format: 'json', // Report format: json, markdown, html
       includeHistoricalData: true, // Include trend analysis
       includeOptimizationTips: true, // Include optimization recommendations
-      includeGitInfo: true,        // Include git commit/branch information
+      includeGitInfo: true, // Include git commit/branch information
     },
   },
 
@@ -137,17 +157,17 @@ export default {
   performanceBudgets: {
     // Overall project budgets
     total: {
-      raw: 500 * 1024,    // 500KB total raw size
-      gzip: 150 * 1024,   // 150KB total gzip size
+      raw: 500 * 1024, // 500KB total raw size
+      gzip: 150 * 1024, // 150KB total gzip size
       brotli: 120 * 1024, // 120KB total brotli size
     },
-    
+
     // Per-bundle budgets (automatically calculated from targets)
     perBundle: 'auto',
-    
+
     // Budget enforcement
     enforcement: {
-      strict: false,        // Strict mode fails on any budget violation
+      strict: false, // Strict mode fails on any budget violation
       warningThreshold: 0.8, // Warn when 80% of budget is used
       criticalThreshold: 0.95, // Critical when 95% of budget is used
     },
@@ -157,7 +177,7 @@ export default {
   recommendations: {
     // Automatic optimization suggestions
     autoSuggest: true,
-    
+
     // Suggestion categories
     categories: {
       bundleSize: {
@@ -199,7 +219,7 @@ export default {
       commentOnPR: true,
       updateStatus: true,
     },
-    
+
     // Slack notifications
     slack: {
       enabled: false, // Enable for Slack integration
@@ -209,11 +229,11 @@ export default {
         reports: '#dev-reports',
       },
     },
-    
+
     // Custom webhooks
     webhooks: {
       enabled: false,
       endpoints: [],
     },
   },
-}
+};

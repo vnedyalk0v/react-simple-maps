@@ -1,27 +1,30 @@
-"use client"
+'use client';
 
-import { useActionState, useOptimistic, ReactNode, useEffect } from "react"
-import { FeatureCollection } from "geojson"
-import { Topology } from "topojson-specification"
-import { loadGeographyAction, preloadGeographyAction } from "./GeographyActions"
+import { useActionState, useOptimistic, ReactNode, useEffect } from 'react';
+import { FeatureCollection } from 'geojson';
+import { Topology } from 'topojson-specification';
+import {
+  loadGeographyAction,
+  preloadGeographyAction,
+} from './GeographyActions';
 
 interface GeographyLoaderProps {
-  url: string
-  onLoad?: (data: Topology | FeatureCollection) => void
-  onError?: (error: string) => void
+  url: string;
+  onLoad?: (data: Topology | FeatureCollection) => void;
+  onError?: (error: string) => void;
   children?: (props: {
-    data: Topology | FeatureCollection | null
-    isLoading: boolean
-    error: string | null
-    reload: () => void
-  }) => ReactNode
-  fallback?: ReactNode
-  preload?: boolean
+    data: Topology | FeatureCollection | null;
+    isLoading: boolean;
+    error: string | null;
+    reload: () => void;
+  }) => ReactNode;
+  fallback?: ReactNode;
+  preload?: boolean;
 }
 
 interface GeographyState {
-  data: Topology | FeatureCollection | null
-  error: string | null
+  data: Topology | FeatureCollection | null;
+  error: string | null;
 }
 
 export function GeographyLoader({
@@ -35,9 +38,12 @@ export function GeographyLoader({
   const initialState: GeographyState = {
     data: null,
     error: null,
-  }
+  };
 
-  const [state, submitAction, isPending] = useActionState(loadGeographyAction, initialState)
+  const [state, submitAction, isPending] = useActionState(
+    loadGeographyAction,
+    initialState,
+  );
 
   // Optimistic updates for immediate feedback
   const [optimisticState, setOptimisticState] = useOptimistic(
@@ -45,54 +51,54 @@ export function GeographyLoader({
     (currentState, optimisticUpdate: Partial<GeographyState>) => ({
       ...currentState,
       ...optimisticUpdate,
-    })
-  )
+    }),
+  );
 
   // Load geography data when URL changes
   useEffect(() => {
-    if (!url) return
+    if (!url) return;
 
     // Optimistically set loading state
-    setOptimisticState({ error: null })
+    setOptimisticState({ error: null });
 
-    const formData = new FormData()
-    formData.append("url", url)
-    submitAction(formData)
-  }, [url, submitAction, setOptimisticState])
+    const formData = new FormData();
+    formData.append('url', url);
+    submitAction(formData);
+  }, [url, submitAction, setOptimisticState]);
 
   // Preload geography data if requested
   useEffect(() => {
     if (preload && url) {
       preloadGeographyAction(url).catch(() => {
         // Silently handle preload errors
-      })
+      });
     }
-  }, [url, preload])
+  }, [url, preload]);
 
   // Call callbacks when state changes
   useEffect(() => {
     if (optimisticState.data && onLoad) {
-      onLoad(optimisticState.data)
+      onLoad(optimisticState.data);
     }
-  }, [optimisticState.data, onLoad])
+  }, [optimisticState.data, onLoad]);
 
   useEffect(() => {
     if (optimisticState.error && onError) {
-      onError(optimisticState.error)
+      onError(optimisticState.error);
     }
-  }, [optimisticState.error, onError])
+  }, [optimisticState.error, onError]);
 
   const reload = () => {
-    setOptimisticState({ error: null })
+    setOptimisticState({ error: null });
 
-    const formData = new FormData()
-    formData.append("url", url)
-    submitAction(formData)
-  }
+    const formData = new FormData();
+    formData.append('url', url);
+    submitAction(formData);
+  };
 
   // Show fallback during initial loading
   if (isPending && !optimisticState.data && !optimisticState.error) {
-    return <>{fallback || <div>Loading geography data...</div>}</>
+    return <>{fallback || <div>Loading geography data...</div>}</>;
   }
 
   if (children) {
@@ -105,27 +111,27 @@ export function GeographyLoader({
           reload,
         })}
       </>
-    )
+    );
   }
 
   // Default rendering
   if (optimisticState.error) {
     return (
-      <div role="alert" style={{ color: "red", padding: "1rem" }}>
+      <div role="alert" style={{ color: 'red', padding: '1rem' }}>
         <h3>Failed to load geography data</h3>
         <p>{optimisticState.error}</p>
         <button onClick={reload} type="button">
           Retry
         </button>
       </div>
-    )
+    );
   }
 
   if (optimisticState.data) {
-    return <div>Geography data loaded successfully</div>
+    return <div>Geography data loaded successfully</div>;
   }
 
-  return <>{fallback || <div>No geography data</div>}</>
+  return <>{fallback || <div>No geography data</div>}</>;
 }
 
-export default GeographyLoader
+export default GeographyLoader;

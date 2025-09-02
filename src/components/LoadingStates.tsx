@@ -8,7 +8,7 @@ export {
   ZoomPanIndicator,
   LoadingProgressBar,
   GeographyFeatureSkeleton,
-} from "./loading"
+} from './loading';
 
 // Maintain backward compatibility with the default export
-export { default } from "./loading"
+export { default } from './loading';

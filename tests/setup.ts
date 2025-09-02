@@ -1,26 +1,26 @@
-import '@testing-library/jest-dom'
-import { vi } from 'vitest'
+import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 
 // Add SVG element types to global scope
 Object.defineProperty(global, 'SVGElement', {
   value: class SVGElement extends Element {},
-})
+});
 Object.defineProperty(global, 'SVGSVGElement', {
   value: class SVGSVGElement extends SVGElement {},
-})
+});
 Object.defineProperty(global, 'SVGGElement', {
   value: class SVGGElement extends SVGElement {},
-})
+});
 Object.defineProperty(global, 'SVGPathElement', {
   value: class SVGPathElement extends SVGElement {},
-})
+});
 
 // Mock D3 modules for testing
 vi.mock('d3-geo', () => ({
   geoPath: vi.fn(() => {
-    const pathFn = vi.fn(() => 'M0,0L10,10') as any
-    pathFn.projection = vi.fn(() => pathFn)
-    return pathFn
+    const pathFn = vi.fn(() => 'M0,0L10,10') as any;
+    pathFn.projection = vi.fn(() => pathFn);
+    return pathFn;
   }),
   geoEqualEarth: vi.fn(() => ({
     translate: vi.fn().mockReturnThis(),
@@ -37,9 +37,11 @@ vi.mock('d3-geo', () => ({
     parallels: vi.fn().mockReturnThis(),
   })),
   geoGraticule: vi.fn(() => ({
-    step: vi.fn(() => vi.fn(() => ({ type: 'MultiLineString', coordinates: [] }))),
+    step: vi.fn(() =>
+      vi.fn(() => ({ type: 'MultiLineString', coordinates: [] })),
+    ),
   })),
-}))
+}));
 
 vi.mock('d3-zoom', () => ({
   zoom: vi.fn(() => ({
@@ -53,13 +55,13 @@ vi.mock('d3-zoom', () => ({
     translate: vi.fn().mockReturnThis(),
     scale: vi.fn().mockReturnThis(),
   },
-}))
+}));
 
 vi.mock('d3-selection', () => ({
   select: vi.fn(() => ({
     call: vi.fn(),
   })),
-}))
+}));
 
 vi.mock('topojson-client', () => ({
   feature: vi.fn(() => ({
@@ -76,7 +78,7 @@ vi.mock('topojson-client', () => ({
     type: 'MultiLineString',
     coordinates: [],
   })),
-}))
+}));
 
 // Mock fetch for geography loading
 global.fetch = vi.fn(() =>
@@ -92,8 +94,8 @@ global.fetch = vi.fn(() =>
           },
         },
       }),
-  })
-) as any
+  }),
+) as any;
 
 // Mock console methods to reduce noise in tests
 global.console = {
@@ -101,4 +103,4 @@ global.console = {
   log: vi.fn(),
   warn: vi.fn(),
   error: vi.fn(),
-}
+};

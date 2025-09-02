@@ -28,6 +28,7 @@ npm run build
 ## Key Features Demonstrated
 
 ### 1. ZoomableGroup with Position Tracking
+
 ```tsx
 const [position, setPosition] = useState<Position>({ coordinates: [0, 0], zoom: 1 })
 
@@ -41,34 +42,42 @@ const [position, setPosition] = useState<Position>({ coordinates: [0, 0], zoom: 
 ```
 
 ### 2. Interactive Geography Selection
+
 ```tsx
 const handleGeographyClick = (geography: GeographyProps['geography']) => {
-  const countryName = geography.properties?.NAME || 'Unknown'
-  setSelectedCountry(countryName)
-}
+  const countryName = geography.properties?.NAME || 'Unknown';
+  setSelectedCountry(countryName);
+};
 ```
 
 ### 3. Conditional Rendering Based on Zoom
+
 ```tsx
-{position.zoom > 2 && cities.map(({ name, coordinates }) => (
-  <Annotation key={`${name}-annotation`} subject={coordinates}>
-    <text>{name}</text>
-  </Annotation>
-))}
+{
+  position.zoom > 2 &&
+    cities.map(({ name, coordinates }) => (
+      <Annotation key={`${name}-annotation`} subject={coordinates}>
+        <text>{name}</text>
+      </Annotation>
+    ));
+}
 ```
 
 ### 4. Custom Markers with TypeScript
+
 ```tsx
 const cities = [
   { name: 'New York', coordinates: [-74.006, 40.7128] as [number, number] },
   // ... more cities
-]
+];
 
-{cities.map(({ name, coordinates }) => (
-  <Marker key={name} coordinates={coordinates}>
-    <circle r={4} fill="#4ECDC4" stroke="#fff" strokeWidth={2} />
-  </Marker>
-))}
+{
+  cities.map(({ name, coordinates }) => (
+    <Marker key={name} coordinates={coordinates}>
+      <circle r={4} fill="#4ECDC4" stroke="#fff" strokeWidth={2} />
+    </Marker>
+  ));
+}
 ```
 
 ## TypeScript Benefits
