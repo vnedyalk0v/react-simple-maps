@@ -18,9 +18,11 @@
 
 **Published:** September 2, 2025
 
-- **📦 Build Improvements** - Enhanced build configuration and output optimization
-- **🔧 TypeScript Enhancements** - Improved type definitions and exports
-- **📚 Documentation Updates** - Better README and usage examples
+- **⚛️ React Hooks Compliance** - Fixed `use()` hook being called inside `useMemo()` which violated Rules of Hooks
+- **🔧 Hook Architecture** - Moved `use()` call to top level of `useGeographies` hook for proper React 19 compliance
+- **🌐 CORS Resolution** - Updated examples to use working TopoJSON URL from jsdelivr CDN
+- **📝 TypeScript Fixes** - Resolved TypeScript issues with branded coordinate types in examples
+- **📦 Example Updates** - Fixed both basic-map and interactive-map examples with proper dependencies
 
 ## 1.0.0
 
