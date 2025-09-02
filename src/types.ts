@@ -99,7 +99,7 @@ export interface ZoomableGroupProps extends SVGProps<SVGGElement> {
 }
 
 export interface MarkerProps extends Omit<SVGProps<SVGGElement>, "style"> {
-  coordinates: [number, number]
+  coordinates: Coordinates
   onMouseEnter?: (event: React.MouseEvent<SVGGElement>) => void
   onMouseLeave?: (event: React.MouseEvent<SVGGElement>) => void
   onMouseDown?: (event: React.MouseEvent<SVGGElement>) => void
@@ -116,14 +116,14 @@ export interface MarkerProps extends Omit<SVGProps<SVGGElement>, "style"> {
 }
 
 export interface LineProps extends Omit<SVGProps<SVGPathElement>, "from" | "to"> {
-  from: [number, number]
-  to: [number, number]
-  coordinates?: [number, number][]
+  from: Coordinates
+  to: Coordinates
+  coordinates?: Coordinates[]
   className?: string
 }
 
 export interface AnnotationProps extends SVGProps<SVGGElement> {
-  subject: [number, number]
+  subject: Coordinates
   dx?: number
   dy?: number
   curve?: number
@@ -168,6 +168,7 @@ export interface GeographyData {
   geographies: PreparedFeature[]
   outline: string
   borders: string
+  center?: Coordinates // Use branded type for center coordinates
 }
 
 export interface ZoomPanState {
@@ -177,7 +178,7 @@ export interface ZoomPanState {
 }
 
 export interface Position {
-  coordinates: [number, number]
+  coordinates: Coordinates
   zoom: number
 }
 

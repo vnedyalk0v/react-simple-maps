@@ -35,6 +35,11 @@ const Geographies = forwardRef<SVGGElement, GeographiesProps>(
       )
     }
 
+    // Build a consistent fallback element so consumers always get a stable container
+    const fallbackElement = (
+      <g ref={ref} className={`rsm-geographies ${className} rsm-loading`} {...restProps} />
+    )
+
     if (errorBoundary) {
       const errorBoundaryProps: {
         onError?: (error: Error) => void
@@ -51,14 +56,18 @@ const Geographies = forwardRef<SVGGElement, GeographiesProps>(
 
       return (
         <GeographyErrorBoundary {...errorBoundaryProps}>
-          <Suspense fallback={<g className={`rsm-geographies ${className} rsm-loading`} />}>
+          <Suspense fallback={fallbackElement}>
             <GeographiesContent />
           </Suspense>
         </GeographyErrorBoundary>
       )
     }
 
-    return <GeographiesContent />
+    return (
+      <Suspense fallback={fallbackElement}>
+        <GeographiesContent />
+      </Suspense>
+    )
   }
 )
 

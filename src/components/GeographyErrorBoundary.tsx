@@ -1,4 +1,4 @@
-import { Component, ReactNode, ErrorInfo } from "react"
+import { ReactNode, useCallback, useState, Component, ErrorInfo } from "react"
 
 interface GeographyErrorBoundaryProps {
   children: ReactNode
@@ -6,7 +6,7 @@ interface GeographyErrorBoundaryProps {
   onError?: (error: Error) => void
 }
 
-interface GeographyErrorBoundaryState {
+interface ErrorBoundaryState {
   hasError: boolean
   error: Error | null
 }
@@ -30,40 +30,74 @@ function DefaultErrorFallback(error: Error, retry: () => void) {
   )
 }
 
-export class GeographyErrorBoundary extends Component<
-  GeographyErrorBoundaryProps,
-  GeographyErrorBoundaryState
+// Internal error boundary implementation using modern patterns
+class InternalErrorBoundary extends Component<
+  {
+    children: ReactNode
+    fallback: (error: Error) => ReactNode
+    onError?: (error: Error, errorInfo: ErrorInfo) => void
+  },
+  ErrorBoundaryState
 > {
-  constructor(props: GeographyErrorBoundaryProps) {
+  constructor(props: {
+    children: ReactNode
+    fallback: (error: Error) => ReactNode
+    onError?: (error: Error, errorInfo: ErrorInfo) => void
+  }) {
     super(props)
     this.state = { hasError: false, error: null }
   }
 
-  static getDerivedStateFromError(error: Error): GeographyErrorBoundaryState {
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error }
   }
 
   override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     if (this.props.onError) {
-      this.props.onError(error)
+      this.props.onError(error, errorInfo)
     }
-    // eslint-disable-next-line no-console
-    console.error("GeographyErrorBoundary caught an error:", error, errorInfo)
-  }
-
-  retry = () => {
-    this.setState({ hasError: false, error: null })
   }
 
   override render() {
     if (this.state.hasError && this.state.error) {
-      const fallbackFn: (error: Error, retry: () => void) => ReactNode =
-        this.props.fallback || DefaultErrorFallback
-      return fallbackFn(this.state.error, this.retry)
+      return this.props.fallback(this.state.error)
     }
 
     return this.props.children
   }
+}
+
+// Modern function component wrapper using React 19 patterns
+export function GeographyErrorBoundary({
+  children,
+  fallback = DefaultErrorFallback,
+  onError,
+}: GeographyErrorBoundaryProps) {
+  const [errorBoundaryKey, setErrorBoundaryKey] = useState(0)
+
+  const handleError = useCallback(
+    (error: Error, errorInfo: ErrorInfo) => {
+      if (onError) {
+        onError(error)
+      }
+      // eslint-disable-next-line no-console
+      console.error("GeographyErrorBoundary caught an error:", error, errorInfo)
+    },
+    [onError]
+  )
+
+  const retry = useCallback(() => {
+    // Reset the error boundary by changing the key
+    setErrorBoundaryKey((prev) => prev + 1)
+  }, [])
+
+  const errorFallback = useCallback((error: Error) => fallback(error, retry), [fallback, retry])
+
+  return (
+    <InternalErrorBoundary key={errorBoundaryKey} fallback={errorFallback} onError={handleError}>
+      {children}
+    </InternalErrorBoundary>
+  )
 }
 
 export default GeographyErrorBoundary

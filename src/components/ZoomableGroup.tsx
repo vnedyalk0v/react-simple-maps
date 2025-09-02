@@ -3,6 +3,7 @@ import { ZoomableGroupProps } from "../types"
 import { useMapContext } from "./MapProvider"
 import { ZoomPanProvider } from "./ZoomPanProvider"
 import useZoomPan from "./useZoomPan"
+import { ZoomPanIndicator } from "./LoadingStates"
 
 const ZoomableGroup = forwardRef<SVGGElement, ZoomableGroupProps>(
   (
@@ -24,7 +25,7 @@ const ZoomableGroup = forwardRef<SVGGElement, ZoomableGroupProps>(
   ) => {
     const { width, height } = useMapContext()
 
-    const { mapRef, transformString, position } = useZoomPan({
+    const { mapRef, transformString, position, isPending } = useZoomPan({
       center,
       ...(filterZoomEvent && { filterZoomEvent }),
       ...(onMoveStart && { onMoveStart }),
@@ -47,6 +48,8 @@ const ZoomableGroup = forwardRef<SVGGElement, ZoomableGroupProps>(
           >
             {children}
           </g>
+          {/* Show pending indicator during zoom/pan transitions */}
+          <ZoomPanIndicator isPending={isPending} className="rsm-zoom-pan-overlay" />
         </g>
       </ZoomPanProvider>
     )
