@@ -8,7 +8,44 @@ import {
 import type { GeographyProps } from '@vnedyalk0v/react19-simple-maps';
 
 // URL to a valid TopoJSON file
-const geoUrl = '/world-110m.json';
+// Simple inline geography data for testing
+const geoData = {
+  type: 'FeatureCollection' as const,
+  features: [
+    {
+      type: 'Feature' as const,
+      properties: { NAME: 'Sample Country 1' },
+      geometry: {
+        type: 'Polygon' as const,
+        coordinates: [
+          [
+            [0, 0],
+            [10, 0],
+            [10, 10],
+            [0, 10],
+            [0, 0],
+          ],
+        ],
+      },
+    },
+    {
+      type: 'Feature' as const,
+      properties: { NAME: 'Sample Country 2' },
+      geometry: {
+        type: 'Polygon' as const,
+        coordinates: [
+          [
+            [20, 20],
+            [30, 20],
+            [30, 30],
+            [20, 30],
+            [20, 20],
+          ],
+        ],
+      },
+    },
+  ],
+};
 
 const App: React.FC = () => {
   const handleGeographyClick = (geography: GeographyProps['geography']) => {
@@ -48,7 +85,7 @@ const App: React.FC = () => {
               }
             >
               <Geographies
-                geography={geoUrl}
+                geography={geoData}
                 errorBoundary={true}
                 onGeographyError={handleGeographyError}
               >

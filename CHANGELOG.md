@@ -1,5 +1,27 @@
 # @vnedyalk0v/react19-simple-maps
 
+## 1.0.2
+
+### 🔧 Improvements
+
+**Published:** September 2, 2025
+
+- **🎯 Enhanced Examples** - Added comprehensive interactive map example with zoom, pan, and click interactions
+- **🗺️ CORS-Free Geography Data** - Updated examples to use inline geography data, eliminating CORS issues
+- **🎨 Improved UI** - Beautiful gradient backgrounds and professional styling in examples
+- **📍 Interactive Markers** - Added city markers with hover effects and real-time position display
+- **🔄 Reset Functionality** - Added reset view button for better user experience
+
+## 1.0.1
+
+### 🐛 Bug Fixes
+
+**Published:** September 2, 2025
+
+- **📦 Build Improvements** - Enhanced build configuration and output optimization
+- **🔧 TypeScript Enhancements** - Improved type definitions and exports
+- **📚 Documentation Updates** - Better README and usage examples
+
 ## 1.0.0
 
 ### 🎉 Initial Release
