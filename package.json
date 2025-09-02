@@ -51,7 +51,7 @@
     "size:detailed": "npm run build && node scripts/analyze-bundle.js --no-save",
     "size:monitor": "npm run build && node scripts/enhanced-bundle-monitor.js",
     "local-release": "changeset version && changeset publish",
-    "prepublishOnly": "npm run ci"
+    "prepublishOnly": "npm run build && npm run check-format"
   },
   "repository": {
     "type": "git",
