@@ -20,7 +20,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rollup -c && tsc --project tsconfig.build.json",
+    "build": "tsc --project tsconfig.build.json && rollup -c",
     "build:types": "tsc --project tsconfig.build.json",
     "watch": "rollup -cw",
     "prepare": "npm run build",
