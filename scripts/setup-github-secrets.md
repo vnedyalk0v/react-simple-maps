@@ -5,6 +5,7 @@ To enable automatic publishing to both npm and GitHub Package Registry, you need
 ## Required Secrets
 
 ### 1. NPM_TOKEN
+
 - Go to [npmjs.com](https://www.npmjs.com) → Account Settings → Access Tokens
 - Create a new **Automation** token (or **Publish** token)
 - Copy the token value
@@ -13,6 +14,7 @@ To enable automatic publishing to both npm and GitHub Package Registry, you need
 - Value: Your npm token
 
 ### 2. GITHUB_TOKEN (Automatic)
+
 - This is automatically provided by GitHub Actions
 - No manual setup required
 - Used for publishing to GitHub Package Registry
@@ -20,17 +22,20 @@ To enable automatic publishing to both npm and GitHub Package Registry, you need
 ## Setup Steps
 
 1. **Enable GitHub Package Registry**:
+
    ```bash
    # In your repository settings
    Settings → General → Features → Packages ✓
    ```
 
 2. **Set Repository Secrets**:
+
    ```
    Repository → Settings → Secrets and variables → Actions
    ```
 
 3. **Create npm token**:
+
    ```bash
    npm login
    npm token create --type=automation
@@ -58,5 +63,6 @@ npm publish --registry=https://npm.pkg.github.com
 ## Verification
 
 After publishing, your package should appear in:
+
 - Repository → Packages (right sidebar)
 - https://github.com/vnedyalk0v/react19-simple-maps/packages
