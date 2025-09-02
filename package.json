@@ -60,6 +60,9 @@
     "type": "git",
     "url": "git+https://github.com/vnedyalk0v/react19-simple-maps.git"
   },
+  "publishConfig": {
+    "@vnedyalk0v:registry": "https://npm.pkg.github.com"
+  },
   "keywords": [
     "react",
     "maps",
