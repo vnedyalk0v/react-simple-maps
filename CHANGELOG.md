@@ -1,5 +1,14 @@
 # @vnedyalk0v/react19-simple-maps
 
+## 1.0.3
+
+### 🐛 Bug Fixes
+
+**Published:** September 2, 2025
+
+- **📦 Package Files** - Fixed npm package to include README.md, LICENSE, and CHANGELOG.md files
+- **📚 Documentation** - Resolved issue where npmjs.com was showing outdated README due to missing files in package
+
 ## 1.0.2
 
 ### 🔧 Improvements
