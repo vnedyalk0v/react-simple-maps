@@ -1,5 +1,5 @@
 {
-  "name": "react-simple-maps-interactive-example",
+  "name": "react19-simple-maps-interactive-example",
   "version": "1.0.0",
   "private": true,
   "description": "Interactive TypeScript example with zoom, pan, and markers",
@@ -13,7 +13,7 @@
   "dependencies": {
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-simple-maps": "^3.0.0"
+    "react19-simple-maps": "^1.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.1.12",

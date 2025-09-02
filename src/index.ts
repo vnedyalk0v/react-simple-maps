@@ -12,6 +12,9 @@ export { ZoomPanProvider, ZoomPanContext, useZoomPanContext } from "./components
 export { default as useGeographies } from "./components/useGeographies"
 export { default as useZoomPan } from "./components/useZoomPan"
 
+// React 19 specific exports
+export { default as GeographyErrorBoundary } from "./components/GeographyErrorBoundary"
+
 // Export types for TypeScript users
 export type {
   ComposableMapProps,

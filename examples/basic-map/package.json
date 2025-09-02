@@ -1,8 +1,8 @@
 {
-  "name": "react-simple-maps-basic-example",
+  "name": "react19-simple-maps-basic-example",
   "version": "1.0.0",
   "private": true,
-  "description": "Basic TypeScript example for react-simple-maps",
+  "description": "Basic TypeScript example for react19-simple-maps",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,7 +13,7 @@
   "dependencies": {
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-simple-maps": "^3.0.0"
+    "react19-simple-maps": "^1.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.1.12",
