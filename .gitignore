@@ -18,3 +18,6 @@ coverage/
 
 # Logs
 *.log
+
+# Documentation (internal use only)
+docs/
