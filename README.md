@@ -19,7 +19,13 @@ Create beautiful SVG maps in React with d3-geo and topojson using a declarative,
 - 🧪 **Comprehensive Testing** - 100% test coverage with 159 tests
 - 📦 **Optimized Bundle** - Smaller bundle size with better performance
 
-Read the [docs](https://www.react-simple-maps.io/docs/getting-started/), or check out the [examples](https://www.react-simple-maps.io/examples/).
+## 📋 Quick Links
+
+- 📚 [Documentation](https://www.react-simple-maps.io/docs/getting-started/)
+- 🎯 [Examples](https://www.react-simple-maps.io/examples/)
+- 📝 [**Changelog**](https://github.com/vnedyalk0v/react19-simple-maps/blob/main/CHANGELOG.md) - See what's new!
+- 🐛 [Issues](https://github.com/vnedyalk0v/react19-simple-maps/issues)
+- 💬 [Discussions](https://github.com/vnedyalk0v/react19-simple-maps/discussions)
 
 ## Why @vnedyalk0v/react19-simple-maps?
 

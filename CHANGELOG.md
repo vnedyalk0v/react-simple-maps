@@ -1,4 +1,11 @@
-# @vnedyalk0v/react19-simple-maps
+# Changelog
+
+All notable changes to `@vnedyalk0v/react19-simple-maps` will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+> 📦 **Latest Version**: Check [npm](https://www.npmjs.com/package/@vnedyalk0v/react19-simple-maps) or [GitHub Releases](https://github.com/vnedyalk0v/react19-simple-maps/releases) for the most recent version.
 
 ## 1.0.3
 

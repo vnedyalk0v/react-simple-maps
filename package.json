@@ -50,6 +50,8 @@
     "monitor:bundle": "npm run build && node scripts/enhanced-bundle-monitor.js",
     "monitor:dashboard": "node scripts/bundle-dashboard.js",
     "monitor:trends": "node scripts/bundle-dashboard.js --detailed",
+    "changelog": "cat CHANGELOG.md",
+    "releases": "open https://github.com/vnedyalk0v/react19-simple-maps/releases",
     "size": "npm run build && ls -lh dist/*.js dist/*.d.ts",
     "size:detailed": "npm run build && node scripts/analyze-bundle.js --no-save",
     "size:monitor": "npm run build && node scripts/enhanced-bundle-monitor.js",
@@ -86,6 +88,10 @@
     "url": "https://github.com/vnedyalk0v/react19-simple-maps/issues"
   },
   "homepage": "https://github.com/vnedyalk0v/react19-simple-maps#readme",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/vnedyalk0v"
+  },
   "devDependencies": {
     "@babel/core": "^7.28.3",
     "@babel/plugin-external-helpers": "^7.18.6",
