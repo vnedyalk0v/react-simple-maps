@@ -8,7 +8,7 @@ import {
 import type { GeographyProps } from '@vnedyalk0v/react19-simple-maps';
 
 // URL to a valid TopoJSON file
-const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@3/countries-110m.json';
+const geoUrl = '/world-110m.json';
 
 const App: React.FC = () => {
   const handleGeographyClick = (geography: GeographyProps['geography']) => {

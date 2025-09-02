@@ -1,4 +1,6 @@
-import { use, useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
+import { FeatureCollection } from 'geojson';
+import { Topology } from 'topojson-specification';
 import { useMapContext } from './MapProvider';
 import { UseGeographiesProps, GeographyData } from '../types';
 import {
@@ -17,29 +19,47 @@ export default function useGeographies({
   parseGeographies,
 }: UseGeographiesProps): GeographyData {
   const { path } = useMapContext();
+  const [loadedData, setLoadedData] = useState<
+    Topology | FeatureCollection | null
+  >(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Preload geography resources using React 19 preloading APIs
+  // Handle string URLs with traditional async loading
   useEffect(() => {
     if (isString(geography)) {
-      // Preload the geography resource for better performance
+      setIsLoading(true);
       preloadGeography(geography);
+
+      devTools.debugGeographyLoading(geography, 'start');
+
+      fetchGeographiesCache(geography)
+        .then((data) => {
+          devTools.debugGeographyLoading(geography, 'success', data);
+          setLoadedData(data);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          devTools.debugGeographyLoading(geography, 'error', error);
+          setIsLoading(false);
+        });
+    } else {
+      setLoadedData(geography);
+      setIsLoading(false);
     }
   }, [geography]);
 
-  // React 19 compliance: use() API must be called at top level, not inside useMemo
-  let geographyData;
-  if (isString(geography)) {
-    devTools.debugGeographyLoading(geography, 'start');
-    // Error handling is delegated to Error Boundaries
-    geographyData = use(fetchGeographiesCache(geography));
-    devTools.debugGeographyLoading(geography, 'success', geographyData);
-  } else {
-    geographyData = geography;
-  }
-
   return useMemo(() => {
-    const features = getFeatures(geographyData, parseGeographies);
-    const mesh = getMesh(geographyData);
+    if (isLoading || !loadedData) {
+      // Return empty data structure while loading
+      return {
+        geographies: [],
+        outline: '',
+        borders: '',
+      };
+    }
+
+    const features = getFeatures(loadedData, parseGeographies);
+    const mesh = getMesh(loadedData);
     const preparedMesh = prepareMesh(
       mesh?.outline || null,
       mesh?.borders || null,
@@ -51,5 +71,5 @@ export default function useGeographies({
       outline: preparedMesh.outline || '',
       borders: preparedMesh.borders || '',
     };
-  }, [geographyData, parseGeographies, path]);
+  }, [loadedData, isLoading, parseGeographies, path]);
 }
