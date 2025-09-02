@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+### Patch Changes
+
+- b47f146: Initial release.
+
 ## 2.0.0
 
 ### Major Changes
