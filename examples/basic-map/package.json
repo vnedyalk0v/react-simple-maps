@@ -11,9 +11,9 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@vnedyalk0v/react19-simple-maps": "^1.0.1",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react19-simple-maps": "^1.0.0"
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@types/react": "^19.1.12",

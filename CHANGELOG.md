@@ -1,5 +1,38 @@
 # @vnedyalk0v/react19-simple-maps
 
+## 1.0.3
+
+### 🐛 Bug Fixes
+
+**Published:** September 2, 2025
+
+- **📦 Package Files** - Fixed npm package to include README.md, LICENSE, and CHANGELOG.md files
+- **📚 Documentation** - Resolved issue where npmjs.com was showing outdated README due to missing files in package
+
+## 1.0.2
+
+### 🔧 Improvements
+
+**Published:** September 2, 2025
+
+- **🎯 Enhanced Examples** - Added comprehensive interactive map example with zoom, pan, and click interactions
+- **🗺️ CORS-Free Geography Data** - Updated examples to use inline geography data, eliminating CORS issues
+- **🎨 Improved UI** - Beautiful gradient backgrounds and professional styling in examples
+- **📍 Interactive Markers** - Added city markers with hover effects and real-time position display
+- **🔄 Reset Functionality** - Added reset view button for better user experience
+
+## 1.0.1
+
+### 🐛 Bug Fixes
+
+**Published:** September 2, 2025
+
+- **⚛️ React Hooks Compliance** - Fixed `use()` hook being called inside `useMemo()` which violated Rules of Hooks
+- **🔧 Hook Architecture** - Moved `use()` call to top level of `useGeographies` hook for proper React 19 compliance
+- **🌐 CORS Resolution** - Updated examples to use working TopoJSON URL from jsdelivr CDN
+- **📝 TypeScript Fixes** - Resolved TypeScript issues with branded coordinate types in examples
+- **📦 Example Updates** - Fixed both basic-map and interactive-map examples with proper dependencies
+
 ## 1.0.0
 
 ### 🎉 Initial Release

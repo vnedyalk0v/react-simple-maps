@@ -1,6 +1,6 @@
 {
   "name": "@vnedyalk0v/react19-simple-maps",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "An svg map chart component built exclusively for React 19+ - Modern TypeScript-first library with cutting-edge React patterns",
   "type": "module",
   "main": "dist/index.js",
@@ -17,7 +17,10 @@
   },
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "tsc --project tsconfig.build.json && rollup -c",
@@ -51,7 +54,7 @@
     "size:detailed": "npm run build && node scripts/analyze-bundle.js --no-save",
     "size:monitor": "npm run build && node scripts/enhanced-bundle-monitor.js",
     "local-release": "changeset version && changeset publish",
-    "prepublishOnly": "npm run ci"
+    "prepublishOnly": "npm run build && npm run check-format"
   },
   "repository": {
     "type": "git",
