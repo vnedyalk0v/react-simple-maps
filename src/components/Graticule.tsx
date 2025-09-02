@@ -1,31 +1,31 @@
-import { memo, Ref } from "react"
-import { geoGraticule } from "d3-geo"
-import { GraticuleProps } from "../types"
-import { useMapContext } from "./MapProvider"
+import { memo, Ref } from 'react';
+import { geoGraticule } from 'd3-geo';
+import { GraticuleProps } from '../types';
+import { useMapContext } from './MapProvider';
 
 function Graticule({
-  fill = "transparent",
-  stroke = "currentcolor",
+  fill = 'transparent',
+  stroke = 'currentcolor',
   step = [10, 10],
-  className = "",
+  className = '',
   ref,
   ...restProps
 }: GraticuleProps & { ref?: Ref<SVGPathElement> }) {
-  const { path } = useMapContext()
-  const graticule = geoGraticule().step(step)()
+  const { path } = useMapContext();
+  const graticule = geoGraticule().step(step)();
 
   return (
     <path
       ref={ref}
-      d={path(graticule) || ""}
+      d={path(graticule) || ''}
       fill={fill}
       stroke={stroke}
       className={`rsm-graticule ${className}`}
       {...restProps}
     />
-  )
+  );
 }
 
-Graticule.displayName = "Graticule"
+Graticule.displayName = 'Graticule';
 
-export default memo(Graticule)
+export default memo(Graticule);

@@ -1,16 +1,16 @@
 interface LoadingProgressBarProps {
-  progress: number
-  className?: string
-  showPercentage?: boolean
+  progress: number;
+  className?: string;
+  showPercentage?: boolean;
 }
 
 // Progress bar for data loading
 export function LoadingProgressBar({
   progress = 0,
-  className = "",
+  className = '',
   showPercentage = true,
 }: LoadingProgressBarProps) {
-  const clampedProgress = Math.max(0, Math.min(100, progress))
+  const clampedProgress = Math.max(0, Math.min(100, progress));
 
   return (
     <div
@@ -20,10 +20,17 @@ export function LoadingProgressBar({
       aria-valuemin={0}
       aria-valuemax={100}
     >
-      <div className="rsm-progress-bar" style={{ width: `${clampedProgress}%` }} />
-      {showPercentage && <span className="rsm-progress-text">{Math.round(clampedProgress)}%</span>}
+      <div
+        className="rsm-progress-bar"
+        style={{ width: `${clampedProgress}%` }}
+      />
+      {showPercentage && (
+        <span className="rsm-progress-text">
+          {Math.round(clampedProgress)}%
+        </span>
+      )}
     </div>
-  )
+  );
 }
 
-export default LoadingProgressBar
+export default LoadingProgressBar;

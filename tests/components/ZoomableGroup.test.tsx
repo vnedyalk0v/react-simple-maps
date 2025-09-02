@@ -1,17 +1,20 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, fireEvent } from '@testing-library/react'
-import ZoomableGroup from '../../src/components/ZoomableGroup'
-import { MapProvider } from '../../src/components/MapProvider'
+import { describe, it, expect, vi } from 'vitest';
+import { render, fireEvent } from '@testing-library/react';
+import ZoomableGroup from '../../src/components/ZoomableGroup';
+import { MapProvider } from '../../src/components/MapProvider';
 
 // Mock projection function
-const mockProjection = vi.fn((coords: [number, number]) => [coords[0] * 100, coords[1] * 100]) as any
-mockProjection.invert = vi.fn()
+const mockProjection = vi.fn((coords: [number, number]) => [
+  coords[0] * 100,
+  coords[1] * 100,
+]) as any;
+mockProjection.invert = vi.fn();
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
   <MapProvider width={800} height={600} projection={mockProjection}>
     <svg>{children}</svg>
   </MapProvider>
-)
+);
 
 describe('ZoomableGroup', () => {
   it('should render zoomable group with default props', () => {
@@ -20,14 +23,14 @@ describe('ZoomableGroup', () => {
         <ZoomableGroup data-testid="zoomable-group">
           <circle r="5" />
         </ZoomableGroup>
-      </TestWrapper>
-    )
+      </TestWrapper>,
+    );
 
-    const group = container.querySelector('[data-testid="zoomable-group"]')
-    expect(group).toBeTruthy()
-    expect(group?.tagName.toLowerCase()).toBe('g')
-    expect(group?.getAttribute('class')).toContain('rsm-zoomable-group')
-  })
+    const group = container.querySelector('[data-testid="zoomable-group"]');
+    expect(group).toBeTruthy();
+    expect(group?.tagName.toLowerCase()).toBe('g');
+    expect(group?.getAttribute('class')).toContain('rsm-zoomable-group');
+  });
 
   it('should apply custom className', () => {
     const { container } = render(
@@ -35,13 +38,13 @@ describe('ZoomableGroup', () => {
         <ZoomableGroup className="custom-zoom" data-testid="zoomable-group">
           <circle r="5" />
         </ZoomableGroup>
-      </TestWrapper>
-    )
+      </TestWrapper>,
+    );
 
-    const group = container.querySelector('[data-testid="zoomable-group"]')
-    expect(group?.getAttribute('class')).toContain('rsm-zoomable-group')
-    expect(group?.getAttribute('class')).toContain('custom-zoom')
-  })
+    const group = container.querySelector('[data-testid="zoomable-group"]');
+    expect(group?.getAttribute('class')).toContain('rsm-zoomable-group');
+    expect(group?.getAttribute('class')).toContain('custom-zoom');
+  });
 
   it('should render children', () => {
     const { container } = render(
@@ -50,14 +53,14 @@ describe('ZoomableGroup', () => {
           <circle data-testid="child-circle" r="5" />
           <rect data-testid="child-rect" width="10" height="10" />
         </ZoomableGroup>
-      </TestWrapper>
-    )
+      </TestWrapper>,
+    );
 
-    const circle = container.querySelector('[data-testid="child-circle"]')
-    const rect = container.querySelector('[data-testid="child-rect"]')
-    expect(circle).toBeTruthy()
-    expect(rect).toBeTruthy()
-  })
+    const circle = container.querySelector('[data-testid="child-circle"]');
+    const rect = container.querySelector('[data-testid="child-rect"]');
+    expect(circle).toBeTruthy();
+    expect(rect).toBeTruthy();
+  });
 
   it('should handle custom center prop', () => {
     const { container } = render(
@@ -65,53 +68,56 @@ describe('ZoomableGroup', () => {
         <ZoomableGroup center={[10, 20]} data-testid="zoomable-group">
           <circle r="5" />
         </ZoomableGroup>
-      </TestWrapper>
-    )
+      </TestWrapper>,
+    );
 
-    const group = container.querySelector('[data-testid="zoomable-group"]')
-    expect(group).toBeTruthy()
-  })
+    const group = container.querySelector('[data-testid="zoomable-group"]');
+    expect(group).toBeTruthy();
+  });
 
   it('should handle custom zoom props', () => {
     const { container } = render(
       <TestWrapper>
-        <ZoomableGroup 
-          zoom={2} 
-          minZoom={0.5} 
-          maxZoom={10} 
+        <ZoomableGroup
+          zoom={2}
+          minZoom={0.5}
+          maxZoom={10}
           data-testid="zoomable-group"
         >
           <circle r="5" />
         </ZoomableGroup>
-      </TestWrapper>
-    )
+      </TestWrapper>,
+    );
 
-    const group = container.querySelector('[data-testid="zoomable-group"]')
-    expect(group).toBeTruthy()
-  })
+    const group = container.querySelector('[data-testid="zoomable-group"]');
+    expect(group).toBeTruthy();
+  });
 
   it('should handle translateExtent prop', () => {
-    const translateExtent: [[number, number], [number, number]] = [[0, 0], [800, 600]]
-    
+    const translateExtent: [[number, number], [number, number]] = [
+      [0, 0],
+      [800, 600],
+    ];
+
     const { container } = render(
       <TestWrapper>
-        <ZoomableGroup 
-          translateExtent={translateExtent} 
+        <ZoomableGroup
+          translateExtent={translateExtent}
           data-testid="zoomable-group"
         >
           <circle r="5" />
         </ZoomableGroup>
-      </TestWrapper>
-    )
+      </TestWrapper>,
+    );
 
-    const group = container.querySelector('[data-testid="zoomable-group"]')
-    expect(group).toBeTruthy()
-  })
+    const group = container.querySelector('[data-testid="zoomable-group"]');
+    expect(group).toBeTruthy();
+  });
 
   it('should handle zoom event callbacks', () => {
-    const onMoveStart = vi.fn()
-    const onMove = vi.fn()
-    const onMoveEnd = vi.fn()
+    const onMoveStart = vi.fn();
+    const onMove = vi.fn();
+    const onMoveEnd = vi.fn();
 
     const { container } = render(
       <TestWrapper>
@@ -123,15 +129,15 @@ describe('ZoomableGroup', () => {
         >
           <circle r="5" />
         </ZoomableGroup>
-      </TestWrapper>
-    )
+      </TestWrapper>,
+    );
 
-    const group = container.querySelector('[data-testid="zoomable-group"]')
-    expect(group).toBeTruthy()
-  })
+    const group = container.querySelector('[data-testid="zoomable-group"]');
+    expect(group).toBeTruthy();
+  });
 
   it('should handle filterZoomEvent prop', () => {
-    const filterZoomEvent = vi.fn(() => true)
+    const filterZoomEvent = vi.fn(() => true);
 
     const { container } = render(
       <TestWrapper>
@@ -141,16 +147,16 @@ describe('ZoomableGroup', () => {
         >
           <circle r="5" />
         </ZoomableGroup>
-      </TestWrapper>
-    )
+      </TestWrapper>,
+    );
 
-    const group = container.querySelector('[data-testid="zoomable-group"]')
-    expect(group).toBeTruthy()
-  })
+    const group = container.querySelector('[data-testid="zoomable-group"]');
+    expect(group).toBeTruthy();
+  });
 
   it('should handle mouse events', () => {
-    const onMouseEnter = vi.fn()
-    const onMouseLeave = vi.fn()
+    const onMouseEnter = vi.fn();
+    const onMouseLeave = vi.fn();
 
     const { container } = render(
       <TestWrapper>
@@ -161,32 +167,32 @@ describe('ZoomableGroup', () => {
         >
           <circle r="5" />
         </ZoomableGroup>
-      </TestWrapper>
-    )
+      </TestWrapper>,
+    );
 
-    const group = container.querySelector('[data-testid="zoomable-group"]')!
+    const group = container.querySelector('[data-testid="zoomable-group"]')!;
 
-    fireEvent.mouseEnter(group)
-    expect(onMouseEnter).toHaveBeenCalledTimes(1)
+    fireEvent.mouseEnter(group);
+    expect(onMouseEnter).toHaveBeenCalledTimes(1);
 
-    fireEvent.mouseLeave(group)
-    expect(onMouseLeave).toHaveBeenCalledTimes(1)
-  })
+    fireEvent.mouseLeave(group);
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
+  });
 
   it('should forward ref correctly', () => {
-    const ref = { current: null as any }
-    
+    const ref = { current: null as any };
+
     render(
       <TestWrapper>
         <ZoomableGroup ref={ref}>
           <circle r="5" />
         </ZoomableGroup>
-      </TestWrapper>
-    )
+      </TestWrapper>,
+    );
 
-    expect(ref.current).toBeTruthy()
-    expect(ref.current?.tagName.toLowerCase()).toBe('g')
-  })
+    expect(ref.current).toBeTruthy();
+    expect(ref.current?.tagName.toLowerCase()).toBe('g');
+  });
 
   it('should handle additional props', () => {
     const { container } = render(
@@ -194,10 +200,10 @@ describe('ZoomableGroup', () => {
         <ZoomableGroup data-custom="zoom-data" data-testid="zoomable-group">
           <circle r="5" />
         </ZoomableGroup>
-      </TestWrapper>
-    )
+      </TestWrapper>,
+    );
 
-    const group = container.querySelector('[data-testid="zoomable-group"]')
-    expect(group?.getAttribute('data-custom')).toBe('zoom-data')
-  })
-})
+    const group = container.querySelector('[data-testid="zoomable-group"]');
+    expect(group?.getAttribute('data-custom')).toBe('zoom-data');
+  });
+});

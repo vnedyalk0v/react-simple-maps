@@ -1,9 +1,9 @@
-import { Ref } from "react"
-import { ZoomableGroupProps } from "../types"
-import { useMapContext } from "./MapProvider"
-import { ZoomPanProvider } from "./ZoomPanProvider"
-import useZoomPan from "./useZoomPan"
-import { ZoomPanIndicator } from "./LoadingStates"
+import { Ref } from 'react';
+import { ZoomableGroupProps } from '../types';
+import { useMapContext } from './MapProvider';
+import { ZoomPanProvider } from './ZoomPanProvider';
+import useZoomPan from './useZoomPan';
+import { ZoomPanIndicator } from './LoadingStates';
 
 function ZoomableGroup({
   center = [0, 0],
@@ -15,12 +15,12 @@ function ZoomableGroup({
   onMoveStart,
   onMove,
   onMoveEnd,
-  className = "",
+  className = '',
   children,
   ref,
   ...restProps
 }: ZoomableGroupProps & { ref?: Ref<SVGGElement> }) {
-  const { width, height } = useMapContext()
+  const { width, height } = useMapContext();
 
   const { mapRef, transformString, position, isPending } = useZoomPan({
     center,
@@ -31,10 +31,12 @@ function ZoomableGroup({
     scaleExtent: [minZoom, maxZoom],
     ...(translateExtent && { translateExtent }),
     zoom,
-  })
+  });
 
   return (
-    <ZoomPanProvider value={{ x: position.x, y: position.y, k: position.k, transformString }}>
+    <ZoomPanProvider
+      value={{ x: position.x, y: position.y, k: position.k, transformString }}
+    >
       <g ref={mapRef}>
         <rect width={width} height={height} fill="transparent" />
         <g
@@ -46,12 +48,15 @@ function ZoomableGroup({
           {children}
         </g>
         {/* Show pending indicator during zoom/pan transitions */}
-        <ZoomPanIndicator isPending={isPending} className="rsm-zoom-pan-overlay" />
+        <ZoomPanIndicator
+          isPending={isPending}
+          className="rsm-zoom-pan-overlay"
+        />
       </g>
     </ZoomPanProvider>
-  )
+  );
 }
 
-ZoomableGroup.displayName = "ZoomableGroup"
+ZoomableGroup.displayName = 'ZoomableGroup';
 
-export default ZoomableGroup
+export default ZoomableGroup;

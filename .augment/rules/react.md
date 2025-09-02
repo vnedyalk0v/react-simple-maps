@@ -1,5 +1,5 @@
 ---
-type: "always_apply"
+type: 'always_apply'
 ---
 
 # React 19 Development Rules
@@ -71,19 +71,19 @@ const [error, submitAction, isPending] = useActionState(
 
 ```typescript
 // ✅ CORRECT - Complete useOptimistic implementation
-const [optimisticMessages, addOptimisticMessage] = useOptimistic(messages, (state, newMessage) => [
-  { text: newMessage, sending: true },
-  ...state,
-])
+const [optimisticMessages, addOptimisticMessage] = useOptimistic(
+  messages,
+  (state, newMessage) => [{ text: newMessage, sending: true }, ...state],
+);
 
 const submitAction = async (formData: FormData) => {
-  const message = formData.get("message") as string
-  addOptimisticMessage(message)
+  const message = formData.get('message') as string;
+  addOptimisticMessage(message);
 
   startTransition(async () => {
-    await sendMessage(message)
-  })
-}
+    await sendMessage(message);
+  });
+};
 ```
 
 ## Resource Management
@@ -130,14 +130,14 @@ function BadComponent({ promise }: { promise: Promise<any> }) {
 - **ALWAYS** preload critical resources in components that need them
 
 ```typescript
-import { prefetchDNS, preconnect, preload, preinit } from "react-dom"
+import { prefetchDNS, preconnect, preload, preinit } from 'react-dom';
 
 function MyComponent() {
-  preinit("https://example.com/script.js", { as: "script" })
-  preload("https://example.com/font.woff", { as: "font" })
-  preload("https://example.com/styles.css", { as: "style" })
-  prefetchDNS("https://api.example.com")
-  preconnect("https://cdn.example.com")
+  preinit('https://example.com/script.js', { as: 'script' });
+  preload('https://example.com/font.woff', { as: 'font' });
+  preload('https://example.com/styles.css', { as: 'style' });
+  prefetchDNS('https://api.example.com');
+  preconnect('https://cdn.example.com');
 }
 ```
 
@@ -245,12 +245,12 @@ function Search({ query }: { query: string }) {
 ```typescript
 const root = createRoot(container, {
   onUncaughtError: (error, errorInfo) => {
-    console.error("Uncaught error:", error)
+    console.error('Uncaught error:', error);
   },
   onCaughtError: (error, errorInfo) => {
-    console.error("Caught error:", error)
+    console.error('Caught error:', error);
   },
-})
+});
 ```
 
 ### 17. Hydration
@@ -340,12 +340,12 @@ function MyComponent() {
 
 ```typescript
 // ✅ CORRECT - Owner Stack usage in development
-import { captureOwnerStack } from "react"
+import { captureOwnerStack } from 'react';
 
 function MyComponent() {
-  if (process.env.NODE_ENV !== "production") {
-    const ownerStack = captureOwnerStack()
-    console.log("Component rendering hierarchy:", ownerStack)
+  if (process.env.NODE_ENV !== 'production') {
+    const ownerStack = captureOwnerStack();
+    console.log('Component rendering hierarchy:', ownerStack);
   }
   // Regular component code...
 }

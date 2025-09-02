@@ -1,5 +1,5 @@
-import { useState, memo, Ref } from "react"
-import { GeographyProps, PreparedFeature } from "../types"
+import { useState, memo, Ref } from 'react';
+import { GeographyProps, PreparedFeature } from '../types';
 
 function Geography({
   geography,
@@ -10,46 +10,47 @@ function Geography({
   onFocus,
   onBlur,
   style = {},
-  className = "",
+  className = '',
   ref,
   ...restProps
 }: GeographyProps & { ref?: Ref<SVGPathElement> }) {
-  const [isPressed, setPressed] = useState(false)
-  const [isFocused, setFocus] = useState(false)
+  const [isPressed, setPressed] = useState(false);
+  const [isFocused, setFocus] = useState(false);
 
   function handleMouseEnter(evt: React.MouseEvent<SVGPathElement>) {
-    setFocus(true)
-    if (onMouseEnter) onMouseEnter(evt)
+    setFocus(true);
+    if (onMouseEnter) onMouseEnter(evt);
   }
 
   function handleMouseLeave(evt: React.MouseEvent<SVGPathElement>) {
-    setFocus(false)
-    if (isPressed) setPressed(false)
-    if (onMouseLeave) onMouseLeave(evt)
+    setFocus(false);
+    if (isPressed) setPressed(false);
+    if (onMouseLeave) onMouseLeave(evt);
   }
 
   function handleFocus(evt: React.FocusEvent<SVGPathElement>) {
-    setFocus(true)
-    if (onFocus) onFocus(evt)
+    setFocus(true);
+    if (onFocus) onFocus(evt);
   }
 
   function handleBlur(evt: React.FocusEvent<SVGPathElement>) {
-    setFocus(false)
-    if (isPressed) setPressed(false)
-    if (onBlur) onBlur(evt)
+    setFocus(false);
+    if (isPressed) setPressed(false);
+    if (onBlur) onBlur(evt);
   }
 
   function handleMouseDown(evt: React.MouseEvent<SVGPathElement>) {
-    setPressed(true)
-    if (onMouseDown) onMouseDown(evt)
+    setPressed(true);
+    if (onMouseDown) onMouseDown(evt);
   }
 
   function handleMouseUp(evt: React.MouseEvent<SVGPathElement>) {
-    setPressed(false)
-    if (onMouseUp) onMouseUp(evt)
+    setPressed(false);
+    if (onMouseUp) onMouseUp(evt);
   }
 
-  const currentState = isPressed || isFocused ? (isPressed ? "pressed" : "hover") : "default"
+  const currentState =
+    isPressed || isFocused ? (isPressed ? 'pressed' : 'hover') : 'default';
 
   return (
     <path
@@ -66,9 +67,9 @@ function Geography({
       style={style[currentState]}
       {...restProps}
     />
-  )
+  );
 }
 
-Geography.displayName = "Geography"
+Geography.displayName = 'Geography';
 
-export default memo(Geography)
+export default memo(Geography);

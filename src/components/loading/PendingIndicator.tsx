@@ -1,10 +1,10 @@
-import { ReactNode } from "react"
+import { ReactNode } from 'react';
 
 interface PendingIndicatorProps {
-  isPending: boolean
-  children: ReactNode
-  fallback?: ReactNode
-  className?: string
+  isPending: boolean;
+  children: ReactNode;
+  fallback?: ReactNode;
+  className?: string;
 }
 
 // Pending indicator wrapper that shows loading state during transitions
@@ -12,19 +12,27 @@ export function PendingIndicator({
   isPending,
   children,
   fallback,
-  className = "",
+  className = '',
 }: PendingIndicatorProps) {
   if (isPending && fallback) {
     return (
-      <div className={`rsm-pending-indicator ${className}`} aria-live="polite" aria-busy="true">
+      <div
+        className={`rsm-pending-indicator ${className}`}
+        aria-live="polite"
+        aria-busy="true"
+      >
         {fallback}
       </div>
-    )
+    );
   }
 
   if (isPending) {
     return (
-      <div className={`rsm-pending-indicator ${className}`} aria-live="polite" aria-busy="true">
+      <div
+        className={`rsm-pending-indicator ${className}`}
+        aria-live="polite"
+        aria-busy="true"
+      >
         <div className="rsm-pending-spinner">
           <svg width="24" height="24" viewBox="0 0 24 24">
             <circle
@@ -54,10 +62,10 @@ export function PendingIndicator({
           </svg>
         </div>
       </div>
-    )
+    );
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }
 
-export default PendingIndicator
+export default PendingIndicator;

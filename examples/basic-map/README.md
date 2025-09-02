@@ -39,11 +39,11 @@ npm run type-check
 ### Typed Props
 
 ```tsx
-import type { GeographyProps } from "react-simple-maps"
+import type { GeographyProps } from 'react-simple-maps';
 
-const handleGeographyClick = (geography: GeographyProps["geography"]) => {
-  console.log("Country:", geography.properties?.NAME)
-}
+const handleGeographyClick = (geography: GeographyProps['geography']) => {
+  console.log('Country:', geography.properties?.NAME);
+};
 ```
 
 ### Typed Components
@@ -60,8 +60,8 @@ const App: React.FC = () => {
     >
       {/* Fully typed components */}
     </ComposableMap>
-  )
-}
+  );
+};
 ```
 
 ## Learn More

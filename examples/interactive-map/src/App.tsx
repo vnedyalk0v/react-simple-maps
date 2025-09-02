@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState } from 'react';
 import {
   ComposableMap,
   Geographies,
@@ -6,51 +6,58 @@ import {
   ZoomableGroup,
   Marker,
   Annotation,
-} from "react19-simple-maps"
-import type { GeographyProps, Position } from "react19-simple-maps"
+} from 'react19-simple-maps';
+import type { GeographyProps, Position } from 'react19-simple-maps';
 
-const geoUrl = "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json"
+const geoUrl =
+  'https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json';
 
 // Major cities with coordinates
 const cities = [
-  { name: "New York", coordinates: [-74.006, 40.7128] as [number, number] },
-  { name: "London", coordinates: [-0.1276, 51.5074] as [number, number] },
-  { name: "Tokyo", coordinates: [139.6917, 35.6895] as [number, number] },
-  { name: "Sydney", coordinates: [151.2093, -33.8688] as [number, number] },
-  { name: "São Paulo", coordinates: [-46.6333, -23.5505] as [number, number] },
-]
+  { name: 'New York', coordinates: [-74.006, 40.7128] as [number, number] },
+  { name: 'London', coordinates: [-0.1276, 51.5074] as [number, number] },
+  { name: 'Tokyo', coordinates: [139.6917, 35.6895] as [number, number] },
+  { name: 'Sydney', coordinates: [151.2093, -33.8688] as [number, number] },
+  { name: 'São Paulo', coordinates: [-46.6333, -23.5505] as [number, number] },
+];
 
 const App: React.FC = () => {
-  const [position, setPosition] = useState<Position>({ coordinates: [0, 0], zoom: 1 })
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
+  const [position, setPosition] = useState<Position>({
+    coordinates: [0, 0],
+    zoom: 1,
+  });
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
   const handleMoveEnd = (position: Position) => {
-    setPosition(position)
-  }
+    setPosition(position);
+  };
 
-  const handleGeographyClick = (geography: GeographyProps["geography"]) => {
-    const countryName = geography.properties?.NAME || "Unknown"
-    setSelectedCountry(countryName)
-    console.log("Selected country:", countryName)
-  }
+  const handleGeographyClick = (geography: GeographyProps['geography']) => {
+    const countryName = geography.properties?.NAME || 'Unknown';
+    setSelectedCountry(countryName);
+    console.log('Selected country:', countryName);
+  };
 
   const handleReset = () => {
-    setPosition({ coordinates: [0, 0], zoom: 1 })
-    setSelectedCountry(null)
-  }
+    setPosition({ coordinates: [0, 0], zoom: 1 });
+    setSelectedCountry(null);
+  };
 
   return (
     <div className="container">
       <div className="header">
         <h1>Interactive World Map</h1>
-        <p>Zoom, pan, and click to explore. Built with TypeScript and React 19.</p>
+        <p>
+          Zoom, pan, and click to explore. Built with TypeScript and React 19.
+        </p>
       </div>
 
       <div className="controls">
         <div className="info-panel">
           <h3>Map Position</h3>
           <p>
-            Center: [{position.coordinates[0].toFixed(2)}, {position.coordinates[1].toFixed(2)}]
+            Center: [{position.coordinates[0].toFixed(2)},{' '}
+            {position.coordinates[1].toFixed(2)}]
           </p>
           <p>Zoom: {position.zoom.toFixed(2)}x</p>
           {selectedCountry && (
@@ -90,18 +97,21 @@ const App: React.FC = () => {
                     onClick={() => handleGeographyClick(geo)}
                     style={{
                       default: {
-                        fill: selectedCountry === geo.properties?.NAME ? "#FF6B6B" : "#D6D6DA",
-                        outline: "none",
-                        transition: "fill 0.2s ease-in-out",
+                        fill:
+                          selectedCountry === geo.properties?.NAME
+                            ? '#FF6B6B'
+                            : '#D6D6DA',
+                        outline: 'none',
+                        transition: 'fill 0.2s ease-in-out',
                       },
                       hover: {
-                        fill: "#F53",
-                        outline: "none",
-                        cursor: "pointer",
+                        fill: '#F53',
+                        outline: 'none',
+                        cursor: 'pointer',
                       },
                       pressed: {
-                        fill: "#E42",
-                        outline: "none",
+                        fill: '#E42',
+                        outline: 'none',
                       },
                     }}
                   />
@@ -125,9 +135,9 @@ const App: React.FC = () => {
                   dx={-90}
                   dy={-30}
                   connectorProps={{
-                    stroke: "#4ECDC4",
+                    stroke: '#4ECDC4',
                     strokeWidth: 2,
-                    strokeLinecap: "round",
+                    strokeLinecap: 'round',
                   }}
                 >
                   <text
@@ -166,7 +176,7 @@ const App: React.FC = () => {
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;

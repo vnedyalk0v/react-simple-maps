@@ -1,24 +1,33 @@
-import React, { Suspense } from "react"
-import { ComposableMap, Geographies, Geography, GeographyErrorBoundary } from "react19-simple-maps"
-import type { GeographyProps } from "react19-simple-maps"
+import React, { Suspense } from 'react';
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  GeographyErrorBoundary,
+} from 'react19-simple-maps';
+import type { GeographyProps } from 'react19-simple-maps';
 
 // URL to a valid TopoJSON file
-const geoUrl = "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json"
+const geoUrl =
+  'https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json';
 
 const App: React.FC = () => {
-  const handleGeographyClick = (geography: GeographyProps["geography"]) => {
-    console.log("Clicked on:", geography.properties?.NAME || "Unknown")
-  }
+  const handleGeographyClick = (geography: GeographyProps['geography']) => {
+    console.log('Clicked on:', geography.properties?.NAME || 'Unknown');
+  };
 
   const handleGeographyError = (error: Error) => {
-    console.error("Geography loading error:", error.message)
-  }
+    console.error('Geography loading error:', error.message);
+  };
 
   return (
     <div className="container">
       <div className="header">
         <h1>Basic World Map</h1>
-        <p>A modern TypeScript example using react19-simple-maps v1.0 with error boundaries</p>
+        <p>
+          A modern TypeScript example using react19-simple-maps v1.0 with error
+          boundaries
+        </p>
       </div>
 
       <div className="map-container">
@@ -52,17 +61,17 @@ const App: React.FC = () => {
                       onClick={() => handleGeographyClick(geo)}
                       style={{
                         default: {
-                          fill: "#D6D6DA",
-                          outline: "none",
+                          fill: '#D6D6DA',
+                          outline: 'none',
                         },
                         hover: {
-                          fill: "#F53",
-                          outline: "none",
-                          cursor: "pointer",
+                          fill: '#F53',
+                          outline: 'none',
+                          cursor: 'pointer',
                         },
                         pressed: {
-                          fill: "#E42",
-                          outline: "none",
+                          fill: '#E42',
+                          outline: 'none',
                         },
                       }}
                     />
@@ -76,11 +85,14 @@ const App: React.FC = () => {
 
       <div className="info">
         <h3>Modern React Features</h3>
-        <p>This example demonstrates modern React patterns in react19-simple-maps v1.0:</p>
+        <p>
+          This example demonstrates modern React patterns in react19-simple-maps
+          v1.0:
+        </p>
         <ul>
           <li>
-            <strong>Error Boundaries:</strong> Graceful error handling for geography loading
-            failures
+            <strong>Error Boundaries:</strong> Graceful error handling for
+            geography loading failures
           </li>
           <li>
             <strong>Suspense:</strong> Loading states with fallback UI
@@ -93,12 +105,13 @@ const App: React.FC = () => {
           </li>
         </ul>
         <p>
-          Click on any country to see the typed event handler in action (check the console). Try
-          changing the geography URL to an invalid one to see error boundary in action.
+          Click on any country to see the typed event handler in action (check
+          the console). Try changing the geography URL to an invalid one to see
+          error boundary in action.
         </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;

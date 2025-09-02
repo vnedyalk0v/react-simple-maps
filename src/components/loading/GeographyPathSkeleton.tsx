@@ -1,10 +1,13 @@
 interface LoadingSkeletonProps {
-  className?: string
-  pathCount?: number
+  className?: string;
+  pathCount?: number;
 }
 
 // Enhanced loading skeleton with animated paths
-export function GeographyPathSkeleton({ className = "", pathCount = 5 }: LoadingSkeletonProps) {
+export function GeographyPathSkeleton({
+  className = '',
+  pathCount = 5,
+}: LoadingSkeletonProps) {
   const paths = Array.from({ length: pathCount }, (_, i) => (
     <path
       key={i}
@@ -28,9 +31,9 @@ export function GeographyPathSkeleton({ className = "", pathCount = 5 }: Loading
         repeatCount="indefinite"
       />
     </path>
-  ))
+  ));
 
-  return <g className={`rsm-path-skeleton ${className}`}>{paths}</g>
+  return <g className={`rsm-path-skeleton ${className}`}>{paths}</g>;
 }
 
-export default GeographyPathSkeleton
+export default GeographyPathSkeleton;

@@ -9,29 +9,29 @@ Complete TypeScript API reference for react-simple-maps v3.0.
 The main wrapper component that provides the SVG context and projection.
 
 ```tsx
-import { ComposableMap } from 'react-simple-maps'
-import type { ComposableMapProps } from 'react-simple-maps'
+import { ComposableMap } from 'react-simple-maps';
+import type { ComposableMapProps } from 'react-simple-maps';
 ```
 
 #### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `width` | `number` | `800` | Width of the SVG element |
-| `height` | `number` | `600` | Height of the SVG element |
-| `projection` | `string \| Function` | `"geoEqualEarth"` | D3 projection name or custom projection function |
-| `projectionConfig` | `ProjectionConfig` | `{}` | Configuration for the projection |
-| `className` | `string` | `""` | CSS class name |
-| `style` | `CSSProperties` | `{}` | Inline styles |
+| Prop               | Type                 | Default           | Description                                      |
+| ------------------ | -------------------- | ----------------- | ------------------------------------------------ |
+| `width`            | `number`             | `800`             | Width of the SVG element                         |
+| `height`           | `number`             | `600`             | Height of the SVG element                        |
+| `projection`       | `string \| Function` | `"geoEqualEarth"` | D3 projection name or custom projection function |
+| `projectionConfig` | `ProjectionConfig`   | `{}`              | Configuration for the projection                 |
+| `className`        | `string`             | `""`              | CSS class name                                   |
+| `style`            | `CSSProperties`      | `{}`              | Inline styles                                    |
 
 #### ProjectionConfig
 
 ```tsx
 interface ProjectionConfig {
-  center?: [number, number]
-  rotate?: [number, number, number]
-  scale?: number
-  parallels?: [number, number]
+  center?: [number, number];
+  rotate?: [number, number, number];
+  scale?: number;
+  parallels?: [number, number];
 }
 ```
 
@@ -43,7 +43,7 @@ interface ProjectionConfig {
   projectionConfig={{
     scale: 100,
     center: [0, 0],
-    rotate: [0, 0, 0]
+    rotate: [0, 0, 0],
   }}
   width={900}
   height={600}
@@ -57,25 +57,25 @@ interface ProjectionConfig {
 Renders geographic features from TopoJSON or GeoJSON data.
 
 ```tsx
-import { Geographies } from 'react-simple-maps'
-import type { GeographiesProps } from 'react-simple-maps'
+import { Geographies } from 'react-simple-maps';
+import type { GeographiesProps } from 'react-simple-maps';
 ```
 
 #### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `geography` | `string \| object \| Array` | **required** | URL to TopoJSON/GeoJSON file or data object |
-| `parseGeographies` | `(geographies: any[]) => any[]` | `undefined` | Function to parse/filter geographies |
-| `children` | `({ geographies, outline, borders }) => ReactNode` | **required** | Render prop function |
+| Prop               | Type                                               | Default      | Description                                 |
+| ------------------ | -------------------------------------------------- | ------------ | ------------------------------------------- |
+| `geography`        | `string \| object \| Array`                        | **required** | URL to TopoJSON/GeoJSON file or data object |
+| `parseGeographies` | `(geographies: any[]) => any[]`                    | `undefined`  | Function to parse/filter geographies        |
+| `children`         | `({ geographies, outline, borders }) => ReactNode` | **required** | Render prop function                        |
 
 #### Render Prop Arguments
 
 ```tsx
 interface GeographiesRenderProps {
-  geographies: PreparedFeature[]
-  outline: string
-  borders: string
+  geographies: PreparedFeature[];
+  outline: string;
+  borders: string;
 }
 ```
 
@@ -84,9 +84,7 @@ interface GeographiesRenderProps {
 ```tsx
 <Geographies geography="/world.json">
   {({ geographies }) =>
-    geographies.map((geo) => (
-      <Geography key={geo.rsmKey} geography={geo} />
-    ))
+    geographies.map((geo) => <Geography key={geo.rsmKey} geography={geo} />)
   }
 </Geographies>
 ```
@@ -96,26 +94,26 @@ interface GeographiesRenderProps {
 Renders individual geographic features (countries, states, etc.).
 
 ```tsx
-import { Geography } from 'react-simple-maps'
-import type { GeographyProps } from 'react-simple-maps'
+import { Geography } from 'react-simple-maps';
+import type { GeographyProps } from 'react-simple-maps';
 ```
 
 #### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `geography` | `PreparedFeature` | **required** | Geography data from Geographies render prop |
-| `style` | `GeographyStyle` | `{}` | Styles for different states |
-| `className` | `string` | `""` | CSS class name |
-| Event handlers | `(geography, event) => void` | `undefined` | Mouse and focus event handlers |
+| Prop           | Type                         | Default      | Description                                 |
+| -------------- | ---------------------------- | ------------ | ------------------------------------------- |
+| `geography`    | `PreparedFeature`            | **required** | Geography data from Geographies render prop |
+| `style`        | `GeographyStyle`             | `{}`         | Styles for different states                 |
+| `className`    | `string`                     | `""`         | CSS class name                              |
+| Event handlers | `(geography, event) => void` | `undefined`  | Mouse and focus event handlers              |
 
 #### GeographyStyle
 
 ```tsx
 interface GeographyStyle {
-  default?: CSSProperties
-  hover?: CSSProperties
-  pressed?: CSSProperties
+  default?: CSSProperties;
+  hover?: CSSProperties;
+  pressed?: CSSProperties;
 }
 ```
 
@@ -135,12 +133,12 @@ interface GeographyStyle {
 <Geography
   geography={geo}
   onClick={(geography, event) => {
-    console.log('Clicked:', geography.properties?.NAME)
+    console.log('Clicked:', geography.properties?.NAME);
   }}
   style={{
     default: { fill: '#D6D6DA' },
     hover: { fill: '#F53' },
-    pressed: { fill: '#E42' }
+    pressed: { fill: '#E42' },
   }}
 />
 ```
@@ -150,30 +148,30 @@ interface GeographyStyle {
 Provides zoom and pan functionality for map content.
 
 ```tsx
-import { ZoomableGroup } from 'react-simple-maps'
-import type { ZoomableGroupProps, Position } from 'react-simple-maps'
+import { ZoomableGroup } from 'react-simple-maps';
+import type { ZoomableGroupProps, Position } from 'react-simple-maps';
 ```
 
 #### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `zoom` | `number` | `1` | Initial zoom level |
-| `center` | `[number, number]` | `[0, 0]` | Initial center coordinates |
-| `minZoom` | `number` | `1` | Minimum zoom level |
-| `maxZoom` | `number` | `8` | Maximum zoom level |
-| `translateExtent` | `[[number, number], [number, number]]` | `undefined` | Constrain panning area |
-| `onMoveStart` | `(position: Position) => void` | `undefined` | Called when zoom/pan starts |
-| `onMove` | `(position: Position) => void` | `undefined` | Called during zoom/pan |
-| `onMoveEnd` | `(position: Position) => void` | `undefined` | Called when zoom/pan ends |
-| `filterZoomEvent` | `(event: any) => boolean` | `undefined` | Filter which events trigger zoom |
+| Prop              | Type                                   | Default     | Description                      |
+| ----------------- | -------------------------------------- | ----------- | -------------------------------- |
+| `zoom`            | `number`                               | `1`         | Initial zoom level               |
+| `center`          | `[number, number]`                     | `[0, 0]`    | Initial center coordinates       |
+| `minZoom`         | `number`                               | `1`         | Minimum zoom level               |
+| `maxZoom`         | `number`                               | `8`         | Maximum zoom level               |
+| `translateExtent` | `[[number, number], [number, number]]` | `undefined` | Constrain panning area           |
+| `onMoveStart`     | `(position: Position) => void`         | `undefined` | Called when zoom/pan starts      |
+| `onMove`          | `(position: Position) => void`         | `undefined` | Called during zoom/pan           |
+| `onMoveEnd`       | `(position: Position) => void`         | `undefined` | Called when zoom/pan ends        |
+| `filterZoomEvent` | `(event: any) => boolean`              | `undefined` | Filter which events trigger zoom |
 
 #### Position Interface
 
 ```tsx
 interface Position {
-  coordinates: [number, number]
-  zoom: number
+  coordinates: [number, number];
+  zoom: number;
 }
 ```
 
@@ -201,18 +199,18 @@ const [position, setPosition] = useState<Position>({
 Places custom markers at specific coordinates.
 
 ```tsx
-import { Marker } from 'react-simple-maps'
-import type { MarkerProps } from 'react-simple-maps'
+import { Marker } from 'react-simple-maps';
+import type { MarkerProps } from 'react-simple-maps';
 ```
 
 #### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `coordinates` | `[number, number]` | **required** | Longitude and latitude |
-| `style` | `CSSProperties` | `{}` | Inline styles |
-| `className` | `string` | `""` | CSS class name |
-| Event handlers | `(event) => void` | `undefined` | Mouse and focus event handlers |
+| Prop           | Type               | Default      | Description                    |
+| -------------- | ------------------ | ------------ | ------------------------------ |
+| `coordinates`  | `[number, number]` | **required** | Longitude and latitude         |
+| `style`        | `CSSProperties`    | `{}`         | Inline styles                  |
+| `className`    | `string`           | `""`         | CSS class name                 |
+| Event handlers | `(event) => void`  | `undefined`  | Mouse and focus event handlers |
 
 #### Example
 
@@ -230,21 +228,21 @@ import type { MarkerProps } from 'react-simple-maps'
 Creates annotations with leaders pointing to specific locations.
 
 ```tsx
-import { Annotation } from 'react-simple-maps'
-import type { AnnotationProps } from 'react-simple-maps'
+import { Annotation } from 'react-simple-maps';
+import type { AnnotationProps } from 'react-simple-maps';
 ```
 
 #### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `subject` | `[number, number]` | **required** | Target coordinates |
-| `dx` | `number` | `0` | Horizontal offset |
-| `dy` | `number` | `0` | Vertical offset |
-| `curve` | `number` | `0` | Curve amount for connector |
-| `connectorProps` | `SVGProps<SVGPathElement>` | `{}` | Props for connector line |
-| `style` | `CSSProperties` | `{}` | Inline styles |
-| `className` | `string` | `""` | CSS class name |
+| Prop             | Type                       | Default      | Description                |
+| ---------------- | -------------------------- | ------------ | -------------------------- |
+| `subject`        | `[number, number]`         | **required** | Target coordinates         |
+| `dx`             | `number`                   | `0`          | Horizontal offset          |
+| `dy`             | `number`                   | `0`          | Vertical offset            |
+| `curve`          | `number`                   | `0`          | Curve amount for connector |
+| `connectorProps` | `SVGProps<SVGPathElement>` | `{}`         | Props for connector line   |
+| `style`          | `CSSProperties`            | `{}`         | Inline styles              |
+| `className`      | `string`                   | `""`         | CSS class name             |
 
 #### Example
 
@@ -254,9 +252,9 @@ import type { AnnotationProps } from 'react-simple-maps'
   dx={-90}
   dy={-30}
   connectorProps={{
-    stroke: "#FF5533",
+    stroke: '#FF5533',
     strokeWidth: 2,
-    strokeLinecap: "round"
+    strokeLinecap: 'round',
   }}
 >
   <text textAnchor="end" alignmentBaseline="middle" fill="#F53">
@@ -270,27 +268,23 @@ import type { AnnotationProps } from 'react-simple-maps'
 Renders coordinate grid lines.
 
 ```tsx
-import { Graticule } from 'react-simple-maps'
-import type { GraticuleProps } from 'react-simple-maps'
+import { Graticule } from 'react-simple-maps';
+import type { GraticuleProps } from 'react-simple-maps';
 ```
 
 #### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `step` | `[number, number]` | `[10, 10]` | Step size for grid lines |
-| `stroke` | `string` | `"#E4E5E6"` | Stroke color |
-| `strokeWidth` | `number` | `0.5` | Stroke width |
-| `fill` | `string` | `"transparent"` | Fill color |
+| Prop          | Type               | Default         | Description              |
+| ------------- | ------------------ | --------------- | ------------------------ |
+| `step`        | `[number, number]` | `[10, 10]`      | Step size for grid lines |
+| `stroke`      | `string`           | `"#E4E5E6"`     | Stroke color             |
+| `strokeWidth` | `number`           | `0.5`           | Stroke width             |
+| `fill`        | `string`           | `"transparent"` | Fill color               |
 
 #### Example
 
 ```tsx
-<Graticule
-  step={[10, 10]}
-  stroke="#E4E5E6"
-  strokeWidth={0.5}
-/>
+<Graticule step={[10, 10]} stroke="#E4E5E6" strokeWidth={0.5} />
 ```
 
 ### Sphere
@@ -298,27 +292,23 @@ import type { GraticuleProps } from 'react-simple-maps'
 Renders the outline of the Earth sphere.
 
 ```tsx
-import { Sphere } from 'react-simple-maps'
-import type { SphereProps } from 'react-simple-maps'
+import { Sphere } from 'react-simple-maps';
+import type { SphereProps } from 'react-simple-maps';
 ```
 
 #### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `id` | `string` | `"rsm-sphere"` | ID for the sphere element |
-| `fill` | `string` | `"transparent"` | Fill color |
-| `stroke` | `string` | `"#E4E5E6"` | Stroke color |
-| `strokeWidth` | `number` | `0.5` | Stroke width |
+| Prop          | Type     | Default         | Description               |
+| ------------- | -------- | --------------- | ------------------------- |
+| `id`          | `string` | `"rsm-sphere"`  | ID for the sphere element |
+| `fill`        | `string` | `"transparent"` | Fill color                |
+| `stroke`      | `string` | `"#E4E5E6"`     | Stroke color              |
+| `strokeWidth` | `number` | `0.5`           | Stroke width              |
 
 #### Example
 
 ```tsx
-<Sphere
-  fill="#E4E5E6"
-  stroke="#D6D6DA"
-  strokeWidth={0.5}
-/>
+<Sphere fill="#E4E5E6" stroke="#D6D6DA" strokeWidth={0.5} />
 ```
 
 ## Hooks
@@ -328,16 +318,16 @@ import type { SphereProps } from 'react-simple-maps'
 Hook for loading and processing geography data.
 
 ```tsx
-import { useGeographies } from 'react-simple-maps'
-import type { UseGeographiesProps } from 'react-simple-maps'
+import { useGeographies } from 'react-simple-maps';
+import type { UseGeographiesProps } from 'react-simple-maps';
 ```
 
 #### Parameters
 
 ```tsx
 interface UseGeographiesProps {
-  geography: string | object | Array<any>
-  parseGeographies?: (geographies: any[]) => any[]
+  geography: string | object | Array<any>;
+  parseGeographies?: (geographies: any[]) => any[];
 }
 ```
 
@@ -345,9 +335,9 @@ interface UseGeographiesProps {
 
 ```tsx
 interface UseGeographiesReturn {
-  geographies: PreparedFeature[]
-  outline: string
-  borders: string
+  geographies: PreparedFeature[];
+  outline: string;
+  borders: string;
 }
 ```
 
@@ -355,9 +345,10 @@ interface UseGeographiesReturn {
 
 ```tsx
 const { geographies, outline, borders } = useGeographies({
-  geography: "/world.json",
-  parseGeographies: (geos) => geos.filter(geo => geo.properties.POP_EST > 1000000)
-})
+  geography: '/world.json',
+  parseGeographies: (geos) =>
+    geos.filter((geo) => geo.properties.POP_EST > 1000000),
+});
 ```
 
 ### useZoomPan
@@ -365,22 +356,22 @@ const { geographies, outline, borders } = useGeographies({
 Hook for zoom and pan functionality.
 
 ```tsx
-import { useZoomPan } from 'react-simple-maps'
-import type { UseZoomPanProps } from 'react-simple-maps'
+import { useZoomPan } from 'react-simple-maps';
+import type { UseZoomPanProps } from 'react-simple-maps';
 ```
 
 #### Parameters
 
 ```tsx
 interface UseZoomPanProps {
-  center: [number, number]
-  zoom?: number
-  scaleExtent?: [number, number]
-  translateExtent?: [[number, number], [number, number]]
-  onMoveStart?: (position: Position) => void
-  onMove?: (position: Position) => void
-  onMoveEnd?: (position: Position) => void
-  filterZoomEvent?: (event: any) => boolean
+  center: [number, number];
+  zoom?: number;
+  scaleExtent?: [number, number];
+  translateExtent?: [[number, number], [number, number]];
+  onMoveStart?: (position: Position) => void;
+  onMove?: (position: Position) => void;
+  onMoveEnd?: (position: Position) => void;
+  filterZoomEvent?: (event: any) => boolean;
 }
 ```
 
@@ -388,9 +379,9 @@ interface UseZoomPanProps {
 
 ```tsx
 interface UseZoomPanReturn {
-  mapRef: RefObject<SVGGElement>
-  transformString: string
-  position: Position
+  mapRef: RefObject<SVGGElement>;
+  transformString: string;
+  position: Position;
 }
 ```
 
@@ -400,8 +391,8 @@ interface UseZoomPanReturn {
 const { mapRef, transformString, position } = useZoomPan({
   center: [0, 0],
   zoom: 1,
-  onMoveEnd: (position) => console.log('New position:', position)
-})
+  onMoveEnd: (position) => console.log('New position:', position),
+});
 ```
 
 ## Context
@@ -411,18 +402,18 @@ const { mapRef, transformString, position } = useZoomPan({
 Provides map context including projection and path functions.
 
 ```tsx
-import { MapProvider, useMapContext } from 'react-simple-maps'
-import type { MapContextType } from 'react-simple-maps'
+import { MapProvider, useMapContext } from 'react-simple-maps';
+import type { MapContextType } from 'react-simple-maps';
 ```
 
 #### MapContextType
 
 ```tsx
 interface MapContextType {
-  width: number
-  height: number
-  projection: Function
-  path: Function
+  width: number;
+  height: number;
+  projection: Function;
+  path: Function;
 }
 ```
 
@@ -431,8 +422,8 @@ interface MapContextType {
 Provides zoom and pan context.
 
 ```tsx
-import { ZoomPanProvider, useZoomPanContext } from 'react-simple-maps'
-import type { ZoomPanContextType } from 'react-simple-maps'
+import { ZoomPanProvider, useZoomPanContext } from 'react-simple-maps';
+import type { ZoomPanContextType } from 'react-simple-maps';
 ```
 
 ## Type Definitions
@@ -442,28 +433,28 @@ import type { ZoomPanContextType } from 'react-simple-maps'
 ```tsx
 // Geographic feature with SVG path
 interface PreparedFeature {
-  type: string
-  geometry: any
-  properties: any
-  svgPath: string
-  rsmKey: string
+  type: string;
+  geometry: any;
+  properties: any;
+  svgPath: string;
+  rsmKey: string;
 }
 
 // Map position and zoom state
 interface Position {
-  coordinates: [number, number]
-  zoom: number
+  coordinates: [number, number];
+  zoom: number;
 }
 
 // Zoom/pan transform state
 interface ZoomPanState {
-  x: number
-  y: number
-  k: number
+  x: number;
+  y: number;
+  k: number;
 }
 
 // Geography data types
-type GeographyData = string | object | Array<any>
+type GeographyData = string | object | Array<any>;
 ```
 
 ### Event Handler Types
@@ -472,16 +463,14 @@ type GeographyData = string | object | Array<any>
 // Geography event handlers
 type GeographyEventHandler = (
   geography: PreparedFeature,
-  event: React.MouseEvent<SVGPathElement>
-) => void
+  event: React.MouseEvent<SVGPathElement>,
+) => void;
 
 // Marker event handlers
-type MarkerEventHandler = (
-  event: React.MouseEvent<SVGGElement>
-) => void
+type MarkerEventHandler = (event: React.MouseEvent<SVGGElement>) => void;
 
 // Position change handlers
-type PositionChangeHandler = (position: Position) => void
+type PositionChangeHandler = (position: Position) => void;
 ```
 
 ## Utility Functions
@@ -489,16 +478,16 @@ type PositionChangeHandler = (position: Position) => void
 ### Projection Utilities
 
 ```tsx
-import { getCoords, prepareFeatures, getMesh } from 'react-simple-maps'
+import { getCoords, prepareFeatures, getMesh } from 'react-simple-maps';
 
 // Convert screen coordinates to geographic coordinates
-const coords = getCoords(width, height, transform)
+const coords = getCoords(width, height, transform);
 
 // Prepare features with SVG paths
-const features = prepareFeatures(rawFeatures, pathFunction)
+const features = prepareFeatures(rawFeatures, pathFunction);
 
 // Extract mesh data from topology
-const mesh = getMesh(topology)
+const mesh = getMesh(topology);
 ```
 
 This API reference covers all the main components, hooks, and types available in react-simple-maps v3.0. For more detailed examples and guides, see the [documentation](https://www.react-simple-maps.io/) and [examples](./examples/).

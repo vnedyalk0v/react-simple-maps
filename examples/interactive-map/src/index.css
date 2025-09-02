@@ -1,8 +1,8 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -47,7 +47,7 @@ body {
 .info-panel h3 {
   margin-top: 0;
   margin-bottom: 0.5rem;
-  color: #4ECDC4;
+  color: #4ecdc4;
 }
 
 .info-panel p {
@@ -57,7 +57,7 @@ body {
 }
 
 .reset-button {
-  background: #4ECDC4;
+  background: #4ecdc4;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -69,7 +69,7 @@ body {
 }
 
 .reset-button:hover {
-  background: #45B7B8;
+  background: #45b7b8;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
 }
@@ -93,7 +93,7 @@ body {
 
 .features h3 {
   margin-top: 0;
-  color: #4ECDC4;
+  color: #4ecdc4;
   font-size: 1.3rem;
 }
 
@@ -116,5 +116,5 @@ body {
 }
 
 .features strong {
-  color: #4ECDC4;
+  color: #4ecdc4;
 }

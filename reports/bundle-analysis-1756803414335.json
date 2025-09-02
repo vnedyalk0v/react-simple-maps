@@ -54,10 +54,7 @@
           "name": "Console Statement Removal",
           "expectedSavings": "2-5%",
           "applied": false,
-          "foundIndicators": [
-            "console.log",
-            "console.warn"
-          ],
+          "foundIndicators": ["console.log", "console.warn"],
           "status": "needs-optimization"
         },
         "treeShaking": {
@@ -124,10 +121,7 @@
           "name": "Console Statement Removal",
           "expectedSavings": "2-5%",
           "applied": false,
-          "foundIndicators": [
-            "console.log",
-            "console.warn"
-          ],
+          "foundIndicators": ["console.log", "console.warn"],
           "status": "needs-optimization"
         },
         "treeShaking": {
@@ -194,10 +188,7 @@
           "name": "Console Statement Removal",
           "expectedSavings": "2-5%",
           "applied": false,
-          "foundIndicators": [
-            "console.log",
-            "console.warn"
-          ],
+          "foundIndicators": ["console.log", "console.warn"],
           "status": "needs-optimization"
         },
         "treeShaking": {
@@ -297,11 +288,7 @@
     "concurrentFeatures": {
       "name": "React 19 Concurrent Features",
       "expectedSavings": "5-10%",
-      "indicators": [
-        "useTransition",
-        "useDeferredValue",
-        "useOptimistic"
-      ],
+      "indicators": ["useTransition", "useDeferredValue", "useOptimistic"],
       "appliedToBundles": 1,
       "totalBundles": 4,
       "completionRate": "25.0",
@@ -310,11 +297,7 @@
     "consoleStripping": {
       "name": "Console Statement Removal",
       "expectedSavings": "2-5%",
-      "indicators": [
-        "console.log",
-        "console.warn",
-        "console.debug"
-      ],
+      "indicators": ["console.log", "console.warn", "console.debug"],
       "appliedToBundles": 1,
       "totalBundles": 4,
       "completionRate": "25.0",
@@ -323,10 +306,7 @@
     "treeShaking": {
       "name": "Enhanced Tree Shaking",
       "expectedSavings": "10-15%",
-      "indicators": [
-        "unused exports",
-        "dead code"
-      ],
+      "indicators": ["unused exports", "dead code"],
       "appliedToBundles": 4,
       "totalBundles": 4,
       "completionRate": "100.0",
@@ -335,11 +315,7 @@
     "compression": {
       "name": "Advanced Compression",
       "expectedSavings": "15-25%",
-      "indicators": [
-        "terser optimization",
-        "gzip",
-        "brotli"
-      ],
+      "indicators": ["terser optimization", "gzip", "brotli"],
       "appliedToBundles": 4,
       "totalBundles": 4,
       "completionRate": "100.0",

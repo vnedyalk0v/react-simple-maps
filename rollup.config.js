@@ -1,23 +1,23 @@
-import resolve from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
-import terser from "@rollup/plugin-terser";
-import typescript from "@rollup/plugin-typescript";
-import { dts } from "rollup-plugin-dts";
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import terser from '@rollup/plugin-terser';
+import typescript from '@rollup/plugin-typescript';
+import { dts } from 'rollup-plugin-dts';
 
-import pkg from "./package.json" with { type: "json" };
+import pkg from './package.json' with { type: 'json' };
 
 const external = [
   ...Object.keys(pkg.dependencies || {}),
   ...Object.keys(pkg.peerDependencies || {}),
-  "react/jsx-runtime",
+  'react/jsx-runtime',
 ];
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === 'production';
 
 export default [
   // UMD build for browsers
   {
-    input: "src/index.ts",
+    input: 'src/index.ts',
     external,
     treeshake: {
       moduleSideEffects: false,
@@ -25,21 +25,21 @@ export default [
       tryCatchDeoptimization: false,
     },
     output: {
-      name: "reactSimpleMaps",
+      name: 'reactSimpleMaps',
       file: pkg.browser,
-      format: "umd",
+      format: 'umd',
       extend: true,
       sourcemap: true,
       globals: {
-        react: "React",
-        "react-dom": "ReactDOM",
-        "react/jsx-runtime": "React",
-        "d3-geo": "d3",
-        "d3-zoom": "d3",
-        "d3-selection": "d3",
-        "d3-color": "d3",
-        "d3-interpolate": "d3",
-        "topojson-client": "topojson",
+        react: 'React',
+        'react-dom': 'ReactDOM',
+        'react/jsx-runtime': 'React',
+        'd3-geo': 'd3',
+        'd3-zoom': 'd3',
+        'd3-selection': 'd3',
+        'd3-color': 'd3',
+        'd3-interpolate': 'd3',
+        'topojson-client': 'topojson',
       },
     },
     plugins: [
@@ -51,7 +51,7 @@ export default [
       }),
       commonjs(),
       typescript({
-        tsconfig: "./tsconfig.build.json",
+        tsconfig: './tsconfig.build.json',
         outDir: undefined,
         declaration: false,
         declarationMap: false,
@@ -61,26 +61,28 @@ export default [
         compress: {
           drop_console: isProduction,
           drop_debugger: isProduction,
-          pure_funcs: isProduction ? [
-            'console.log',
-            'console.warn',
-            'console.info',
-            'console.debug',
-            'console.trace',
-            'console.group',
-            'console.groupEnd',
-            'console.groupCollapsed',
-            'console.time',
-            'console.timeEnd',
-            'console.timeLog',
-            'console.count',
-            'console.countReset',
-            'console.clear',
-            'console.table',
-            'console.dir',
-            'console.dirxml',
-            'console.assert'
-          ] : [],
+          pure_funcs: isProduction
+            ? [
+                'console.log',
+                'console.warn',
+                'console.info',
+                'console.debug',
+                'console.trace',
+                'console.group',
+                'console.groupEnd',
+                'console.groupCollapsed',
+                'console.time',
+                'console.timeEnd',
+                'console.timeLog',
+                'console.count',
+                'console.countReset',
+                'console.clear',
+                'console.table',
+                'console.dir',
+                'console.dirxml',
+                'console.assert',
+              ]
+            : [],
           dead_code: true,
           unused: true,
           side_effects: false,
@@ -131,7 +133,7 @@ export default [
   },
   // ESM and CJS builds for Node.js
   {
-    input: "src/index.ts",
+    input: 'src/index.ts',
     external,
     treeshake: {
       moduleSideEffects: false,
@@ -141,14 +143,14 @@ export default [
     output: [
       {
         file: pkg.main,
-        format: "cjs",
+        format: 'cjs',
         sourcemap: true,
-        exports: "named",
-        interop: "auto",
+        exports: 'named',
+        interop: 'auto',
       },
       {
         file: pkg.module,
-        format: "es",
+        format: 'es',
         sourcemap: true,
       },
     ],
@@ -162,83 +164,85 @@ export default [
         ignoreDynamicRequires: true,
       }),
       typescript({
-        tsconfig: "./tsconfig.build.json",
+        tsconfig: './tsconfig.build.json',
         outDir: undefined,
         declaration: false,
         declarationMap: false,
         sourceMap: true,
       }),
-      ...(isProduction ? [
-        terser({
-          compress: {
-            drop_console: true,
-            drop_debugger: true,
-            pure_funcs: [
-              'console.log',
-              'console.warn',
-              'console.info',
-              'console.debug',
-              'console.trace',
-              'console.group',
-              'console.groupEnd',
-              'console.groupCollapsed',
-              'console.time',
-              'console.timeEnd',
-              'console.timeLog',
-              'console.count',
-              'console.countReset',
-              'console.clear',
-              'console.table',
-              'console.dir',
-              'console.dirxml',
-              'console.assert'
-            ],
-            dead_code: true,
-            unused: true,
-            side_effects: false,
-            passes: 2,
-            // Additional optimizations for React 19
-            keep_fargs: false,
-            reduce_vars: true,
-            reduce_funcs: true,
-            collapse_vars: true,
-            join_vars: true,
-            sequences: true,
-            properties: true,
-            conditionals: true,
-            comparisons: true,
-            evaluate: true,
-            booleans: true,
-            loops: true,
-            hoist_funs: true,
-            hoist_vars: false,
-            if_return: true,
-            inline: true,
-            unsafe: false,
-          },
-          mangle: {
-            toplevel: true,
-            module: true,
-            properties: {
-              regex: /^_/,
-            },
-          },
-          format: {
-            comments: false,
-            beautify: false,
-            ascii_only: false,
-            semicolons: true,
-          },
-        })
-      ] : []),
+      ...(isProduction
+        ? [
+            terser({
+              compress: {
+                drop_console: true,
+                drop_debugger: true,
+                pure_funcs: [
+                  'console.log',
+                  'console.warn',
+                  'console.info',
+                  'console.debug',
+                  'console.trace',
+                  'console.group',
+                  'console.groupEnd',
+                  'console.groupCollapsed',
+                  'console.time',
+                  'console.timeEnd',
+                  'console.timeLog',
+                  'console.count',
+                  'console.countReset',
+                  'console.clear',
+                  'console.table',
+                  'console.dir',
+                  'console.dirxml',
+                  'console.assert',
+                ],
+                dead_code: true,
+                unused: true,
+                side_effects: false,
+                passes: 2,
+                // Additional optimizations for React 19
+                keep_fargs: false,
+                reduce_vars: true,
+                reduce_funcs: true,
+                collapse_vars: true,
+                join_vars: true,
+                sequences: true,
+                properties: true,
+                conditionals: true,
+                comparisons: true,
+                evaluate: true,
+                booleans: true,
+                loops: true,
+                hoist_funs: true,
+                hoist_vars: false,
+                if_return: true,
+                inline: true,
+                unsafe: false,
+              },
+              mangle: {
+                toplevel: true,
+                module: true,
+                properties: {
+                  regex: /^_/,
+                },
+              },
+              format: {
+                comments: false,
+                beautify: false,
+                ascii_only: false,
+                semicolons: true,
+              },
+            }),
+          ]
+        : []),
     ],
   },
   // Type definitions bundle
   {
-    input: "dist/types/index.d.ts",
+    input: 'dist/types/index.d.ts',
     output: {
-      file: "dist/index.d.ts",
-      format: "es",
+      file: 'dist/index.d.ts',
+      format: 'es',
     },
     plugins: [dts()],
   },

@@ -1,14 +1,14 @@
-import { ReactNode, useCallback, useState, Component, ErrorInfo } from "react"
+import { ReactNode, useCallback, useState, Component, ErrorInfo } from 'react';
 
 interface GeographyErrorBoundaryProps {
-  children: ReactNode
-  fallback?: (error: Error, retry: () => void) => ReactNode
-  onError?: (error: Error) => void
+  children: ReactNode;
+  fallback?: (error: Error, retry: () => void) => ReactNode;
+  onError?: (error: Error) => void;
 }
 
 interface ErrorBoundaryState {
-  hasError: boolean
-  error: Error | null
+  hasError: boolean;
+  error: Error | null;
 }
 
 function DefaultErrorFallback(error: Error, retry: () => void) {
@@ -27,45 +27,45 @@ function DefaultErrorFallback(error: Error, retry: () => void) {
         </button>
       </div>
     </div>
-  )
+  );
 }
 
 // Minimal class component for error boundary - React 19 still requires class components for error boundaries
 // This is the smallest possible implementation to satisfy error boundary requirements
 class MinimalErrorBoundary extends Component<
   {
-    children: ReactNode
-    fallback: (error: Error) => ReactNode
-    onError?: (error: Error, errorInfo: ErrorInfo) => void
+    children: ReactNode;
+    fallback: (error: Error) => ReactNode;
+    onError?: (error: Error, errorInfo: ErrorInfo) => void;
   },
   ErrorBoundaryState
 > {
   constructor(props: {
-    children: ReactNode
-    fallback: (error: Error) => ReactNode
-    onError?: (error: Error, errorInfo: ErrorInfo) => void
+    children: ReactNode;
+    fallback: (error: Error) => ReactNode;
+    onError?: (error: Error, errorInfo: ErrorInfo) => void;
   }) {
-    super(props)
-    this.state = { hasError: false, error: null }
+    super(props);
+    this.state = { hasError: false, error: null };
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error }
+    return { hasError: true, error };
   }
 
   override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // React 19 compliance: Use improved error reporting
     if (this.props.onError) {
-      this.props.onError(error, errorInfo)
+      this.props.onError(error, errorInfo);
     }
   }
 
   override render() {
     if (this.state.hasError && this.state.error) {
-      return this.props.fallback(this.state.error)
+      return this.props.fallback(this.state.error);
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
 
@@ -75,34 +75,45 @@ export function GeographyErrorBoundary({
   fallback = DefaultErrorFallback,
   onError,
 }: GeographyErrorBoundaryProps) {
-  const [errorBoundaryKey, setErrorBoundaryKey] = useState(0)
+  const [errorBoundaryKey, setErrorBoundaryKey] = useState(0);
 
   const handleError = useCallback(
     (error: Error, errorInfo: ErrorInfo) => {
       if (onError) {
-        onError(error)
+        onError(error);
       }
       // React 19 compliance: Enhanced error logging for development
-      if (process.env.NODE_ENV !== "production") {
+      if (process.env.NODE_ENV !== 'production') {
         // eslint-disable-next-line no-console
-        console.error("GeographyErrorBoundary caught an error:", error, errorInfo)
+        console.error(
+          'GeographyErrorBoundary caught an error:',
+          error,
+          errorInfo,
+        );
       }
     },
-    [onError]
-  )
+    [onError],
+  );
 
   const retry = useCallback(() => {
     // Reset the error boundary by changing the key - React 19 compatible pattern
-    setErrorBoundaryKey((prev) => prev + 1)
-  }, [])
+    setErrorBoundaryKey((prev) => prev + 1);
+  }, []);
 
-  const errorFallback = useCallback((error: Error) => fallback(error, retry), [fallback, retry])
+  const errorFallback = useCallback(
+    (error: Error) => fallback(error, retry),
+    [fallback, retry],
+  );
 
   return (
-    <MinimalErrorBoundary key={errorBoundaryKey} fallback={errorFallback} onError={handleError}>
+    <MinimalErrorBoundary
+      key={errorBoundaryKey}
+      fallback={errorFallback}
+      onError={handleError}
+    >
       {children}
     </MinimalErrorBoundary>
-  )
+  );
 }
 
-export default GeographyErrorBoundary
+export default GeographyErrorBoundary;
