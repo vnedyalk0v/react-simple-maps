@@ -4,12 +4,11 @@ import {
   Geographies,
   Geography,
   GeographyErrorBoundary,
-} from 'react19-simple-maps';
-import type { GeographyProps } from 'react19-simple-maps';
+} from '@vnedyalk0v/react19-simple-maps';
+import type { GeographyProps } from '@vnedyalk0v/react19-simple-maps';
 
 // URL to a valid TopoJSON file
-const geoUrl =
-  'https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json';
+const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@3/countries-110m.json';
 
 const App: React.FC = () => {
   const handleGeographyClick = (geography: GeographyProps['geography']) => {
@@ -54,9 +53,9 @@ const App: React.FC = () => {
                 onGeographyError={handleGeographyError}
               >
                 {({ geographies }) =>
-                  geographies.map((geo) => (
+                  geographies.map((geo, index) => (
                     <Geography
-                      key={geo.rsmKey}
+                      key={geo.properties?.NAME || `geo-${index}`}
                       geography={geo}
                       onClick={() => handleGeographyClick(geo)}
                       style={{

@@ -6,11 +6,10 @@ import {
   ZoomableGroup,
   Marker,
   Annotation,
-} from 'react19-simple-maps';
-import type { GeographyProps, Position } from 'react19-simple-maps';
+} from '@vnedyalk0v/react19-simple-maps';
+import type { GeographyProps, Position } from '@vnedyalk0v/react19-simple-maps';
 
-const geoUrl =
-  'https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json';
+const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@3/countries-110m.json';
 
 // Major cities with coordinates
 const cities = [
@@ -23,7 +22,7 @@ const cities = [
 
 const App: React.FC = () => {
   const [position, setPosition] = useState<Position>({
-    coordinates: [0, 0],
+    coordinates: [0, 0] as any,
     zoom: 1,
   });
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
@@ -39,7 +38,7 @@ const App: React.FC = () => {
   };
 
   const handleReset = () => {
-    setPosition({ coordinates: [0, 0], zoom: 1 });
+    setPosition({ coordinates: [0, 0] as any, zoom: 1 });
     setSelectedCountry(null);
   };
 
@@ -90,9 +89,9 @@ const App: React.FC = () => {
           >
             <Geographies geography={geoUrl}>
               {({ geographies }) =>
-                geographies.map((geo) => (
+                geographies.map((geo, index) => (
                   <Geography
-                    key={geo.rsmKey}
+                    key={geo.properties?.NAME || `geo-${index}`}
                     geography={geo}
                     onClick={() => handleGeographyClick(geo)}
                     style={{
@@ -121,7 +120,7 @@ const App: React.FC = () => {
 
             {/* City Markers */}
             {cities.map(({ name, coordinates }) => (
-              <Marker key={name} coordinates={coordinates}>
+              <Marker key={name} coordinates={coordinates as any}>
                 <circle r={4} fill="#4ECDC4" stroke="#fff" strokeWidth={2} />
               </Marker>
             ))}
@@ -131,7 +130,7 @@ const App: React.FC = () => {
               cities.map(({ name, coordinates }) => (
                 <Annotation
                   key={`${name}-annotation`}
-                  subject={coordinates}
+                  subject={coordinates as any}
                   dx={-90}
                   dy={-30}
                   connectorProps={{

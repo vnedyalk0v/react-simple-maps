@@ -26,17 +26,16 @@ export default function useGeographies({
     }
   }, [geography]);
 
-  const geographyData = useMemo(() => {
-    if (isString(geography)) {
-      devTools.debugGeographyLoading(geography, 'start');
-      // React 19 compliance: use() API should not be wrapped in try/catch
-      // Error handling is delegated to Error Boundaries
-      const data = use(fetchGeographiesCache(geography));
-      devTools.debugGeographyLoading(geography, 'success', data);
-      return data;
-    }
-    return geography;
-  }, [geography]);
+  // React 19 compliance: use() API must be called at top level, not inside useMemo
+  let geographyData;
+  if (isString(geography)) {
+    devTools.debugGeographyLoading(geography, 'start');
+    // Error handling is delegated to Error Boundaries
+    geographyData = use(fetchGeographiesCache(geography));
+    devTools.debugGeographyLoading(geography, 'success', geographyData);
+  } else {
+    geographyData = geography;
+  }
 
   return useMemo(() => {
     const features = getFeatures(geographyData, parseGeographies);
