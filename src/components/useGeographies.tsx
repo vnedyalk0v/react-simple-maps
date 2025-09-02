@@ -29,14 +29,11 @@ export default function useGeographies({
   const geographyData = useMemo(() => {
     if (isString(geography)) {
       devTools.debugGeographyLoading(geography, "start")
-      try {
-        const data = use(fetchGeographiesCache(geography))
-        devTools.debugGeographyLoading(geography, "success", data)
-        return data
-      } catch (error) {
-        devTools.debugGeographyLoading(geography, "error", error)
-        throw error
-      }
+      // React 19 compliance: use() API should not be wrapped in try/catch
+      // Error handling is delegated to Error Boundaries
+      const data = use(fetchGeographiesCache(geography))
+      devTools.debugGeographyLoading(geography, "success", data)
+      return data
     }
     return geography
   }, [geography])

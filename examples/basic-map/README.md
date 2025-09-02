@@ -1,6 +1,6 @@
 # Basic Map Example
 
-A simple TypeScript example demonstrating the basic usage of react-simple-maps v3.0.
+A simple TypeScript example demonstrating the basic usage of react19-simple-maps v1.0.
 
 ## Features
 
@@ -37,15 +37,17 @@ npm run type-check
 ## Key TypeScript Features
 
 ### Typed Props
-```tsx
-import type { GeographyProps } from 'react-simple-maps'
 
-const handleGeographyClick = (geography: GeographyProps['geography']) => {
-  console.log('Country:', geography.properties?.NAME)
+```tsx
+import type { GeographyProps } from "react-simple-maps"
+
+const handleGeographyClick = (geography: GeographyProps["geography"]) => {
+  console.log("Country:", geography.properties?.NAME)
 }
 ```
 
 ### Typed Components
+
 ```tsx
 const App: React.FC = () => {
   return (

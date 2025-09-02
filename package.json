@@ -1,7 +1,7 @@
 {
-  "name": "react-simple-maps",
-  "version": "4.0.0",
-  "description": "An svg map chart component built with and for React 19.1.1+ - Modern TypeScript-first library with cutting-edge React patterns",
+  "name": "react19-simple-maps",
+  "version": "1.0.0",
+  "description": "An svg map chart component built exclusively for React 19+ - Modern TypeScript-first library with cutting-edge React patterns",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -52,7 +52,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vnedyalk0v/react-simple-maps.git"
+    "url": "git+https://github.com/vnedyalk0v/react19-simple-maps.git"
   },
   "keywords": [
     "react",
@@ -73,9 +73,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vnedyalk0v/react-simple-maps/issues"
+    "url": "https://github.com/vnedyalk0v/react19-simple-maps/issues"
   },
-  "homepage": "https://github.com/vnedyalk0v/react-simple-maps#readme",
+  "homepage": "https://github.com/vnedyalk0v/react19-simple-maps#readme",
   "devDependencies": {
     "@babel/core": "^7.28.3",
     "@babel/plugin-external-helpers": "^7.18.6",
@@ -125,8 +125,8 @@
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
   },
   "peerDependenciesMeta": {
     "prop-types": {
