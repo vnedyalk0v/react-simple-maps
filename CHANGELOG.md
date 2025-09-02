@@ -4,6 +4,12 @@
 
 ### Patch Changes
 
+- 14d7ab9: Initial release.
+
+## 1.0.1
+
+### Patch Changes
+
 - b47f146: Initial release.
 
 ## 2.0.0
