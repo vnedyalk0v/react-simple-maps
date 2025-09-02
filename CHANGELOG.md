@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0
+
+### Major Changes
+
+- 1244fe3: Initial version.
+
 ## v3.1.0 2025-09-01 (Fork by Georgi Nedyalkov)
 
 ### 🚀 Major Enhancements
