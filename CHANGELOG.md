@@ -1,63 +1,63 @@
-# Changelog
+# @vnedyalk0v/react19-simple-maps
 
-## 1.0.1
+## 1.0.0
 
-### Patch Changes
+### 🎉 Initial Release
 
-- 14d7ab9: Initial release.
+**Published:** September 2, 2025
 
-## 1.0.1
+This is the initial release of `@vnedyalk0v/react19-simple-maps` - a modern, TypeScript-first React mapping library built exclusively for React 19+ with cutting-edge React patterns.
 
-### Patch Changes
+### ✨ Features
 
-- b47f146: Initial release.
-
-## 2.0.0
-
-### Major Changes
-
-- 1244fe3: Initial version.
-
-## v3.1.0 2025-09-01 (Fork by Georgi Nedyalkov)
-
-### 🚀 Major Enhancements
-
-- **🔒 Zero Security Vulnerabilities** - Eliminated 18 security issues, updated all dependencies
-- **📝 Full TypeScript Rewrite** - 100% strict TypeScript with zero `any` types
-- **⚛️ React 19 Compatible** - Works with React 16.8+ through React 19
+- **⚛️ React 19 Exclusive** - Built specifically for React 19.1.1+ with modern patterns
+- **📝 100% TypeScript** - Strict TypeScript with comprehensive type definitions
+- **🔒 Zero Security Vulnerabilities** - All dependencies updated and secure
 - **📦 Modern Build System** - ESM/CJS/UMD builds with tree-shaking support
-- **🧪 Comprehensive Testing** - 132 tests with 93% coverage using Vitest
-- **📚 Complete Documentation** - TypeScript examples and migration guide
+- **🧪 Comprehensive Testing** - 159 tests with full coverage using Vitest
+- **🎯 Multiple Output Formats** - CommonJS, ES Modules, and UMD builds
+- **🗺️ Source Maps** - Full debugging support with source maps
+- **📚 Complete TypeScript Definitions** - Detailed type definitions for excellent DX
 
-### 🔧 Technical Improvements
+### � Technical Stack
 
-- **Modern Tooling**: ESLint v9, Prettier, Vite development server
-- **Performance**: Optimized bundle sizes, memory leak prevention
-- **Developer Experience**: Full IntelliSense, compile-time error checking
-- **Quality**: Strict linting, automated testing, source maps
+- **React 19.1.1+** - Latest React with concurrent features
+- **TypeScript 5.9+** - Strict mode with comprehensive typing
+- **D3 Geo** - Powerful geographic projections and utilities
+- **Rollup** - Optimized bundling with multiple output formats
+- **Vitest** - Modern testing framework
+- **ESLint 9** - Latest linting with strict rules
+- **Prettier** - Consistent code formatting
 
-### 🎯 API Enhancements
+### 📦 Installation
 
-- Comprehensive TypeScript interfaces for all components
-- Type-safe event handlers and projection configuration
-- Enhanced hooks (`useGeographies`, `useZoomPan`) with proper typing
-- Improved components with better error handling
+```bash
+npm install @vnedyalk0v/react19-simple-maps
+```
 
-### 🔄 Breaking Changes
+### 🎯 Key Components
 
-- Node.js 18+ required for development
-- TypeScript recommended (JavaScript still supported)
-- Updated D3 dependencies may require bundler updates
+- `ComposableMap` - Main map container with projection support
+- `Geographies` - Geography data loading and rendering
+- `Geography` - Individual geography feature rendering
+- `Marker` - Point markers on maps
+- `Annotation` - Text annotations
+- `Graticule` - Coordinate grid lines
+- `Sphere` - Map sphere/globe outline
+- `ZoomableGroup` - Zoom and pan functionality
+
+### � Modern React 19 Features
+
+- **Actions API** - For async operations with automatic pending states
+- **Optimistic Updates** - Immediate UI feedback with automatic rollback
+- **Suspense Integration** - Proper loading states and error boundaries
+- **Resource Preloading** - Automatic geography data preloading
+- **Concurrent Features** - Built for React's concurrent rendering
 
 ### 🙏 Acknowledgments
 
-Built upon the excellent foundation by Richard Zimerman and original contributors. All enhancements maintain backward compatibility.
+Built upon the excellent foundation of `react-simple-maps` by Richard Zimerman and contributors. This package modernizes the library for React 19 while maintaining API compatibility.
 
----
+### 📄 License
 
-## v3.0.0 2022-07-25 (Original)
-
-- Added `forwardRef` to mapping components
-- Added `ZoomPanContext` and `ZoomPanProvider`
-- Added `useZoomPanContext` and `useMapContext` hooks
-- Added support for React 18
+MIT License - see LICENSE file for details.

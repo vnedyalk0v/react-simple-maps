@@ -1,7 +1,7 @@
-# react19-simple-maps
+# @vnedyalk0v/react19-simple-maps
 
-[![npm version](https://img.shields.io/npm/v/react19-simple-maps.svg)](https://www.npmjs.com/package/react19-simple-maps)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/react19-simple-maps?color=%2328cb95&label=gzip)](https://bundlephobia.com/package/react19-simple-maps)
+[![npm version](https://img.shields.io/npm/v/@vnedyalk0v/react19-simple-maps.svg)](https://www.npmjs.com/package/@vnedyalk0v/react19-simple-maps)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@vnedyalk0v/react19-simple-maps?color=%2328cb95&label=gzip)](https://bundlephobia.com/package/@vnedyalk0v/react19-simple-maps)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![React 19](https://img.shields.io/badge/React-19%20Ready-61dafb.svg)](https://reactjs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -21,11 +21,11 @@ Create beautiful SVG maps in React with d3-geo and topojson using a declarative,
 
 Read the [docs](https://www.react-simple-maps.io/docs/getting-started/), or check out the [examples](https://www.react-simple-maps.io/examples/).
 
-## Why react19-simple-maps?
+## Why @vnedyalk0v/react19-simple-maps?
 
-`react19-simple-maps` aims to make working with SVG maps in React easier. It handles tasks such as panning, zooming and simple rendering optimization, and takes advantage of parts of [d3-geo](https://github.com/d3/d3-geo) and topojson-client instead of relying on the entire d3 library.
+`@vnedyalk0v/react19-simple-maps` aims to make working with SVG maps in React easier. It handles tasks such as panning, zooming and simple rendering optimization, and takes advantage of parts of [d3-geo](https://github.com/d3/d3-geo) and topojson-client instead of relying on the entire d3 library.
 
-Since `react19-simple-maps` leaves DOM work to React, it can also easily be used with other libraries, such as [react-spring](https://github.com/react-spring/react-spring) and [react-annotation](https://github.com/susielu/react-annotation/).
+Since `@vnedyalk0v/react19-simple-maps` leaves DOM work to React, it can also easily be used with other libraries, such as [react-spring](https://github.com/react-spring/react-spring) and [react-annotation](https://github.com/susielu/react-annotation/).
 
 **Key Benefits:**
 
@@ -40,13 +40,13 @@ Since `react19-simple-maps` leaves DOM work to React, it can also easily be used
 
 ```bash
 # npm
-npm install react19-simple-maps
+npm install @vnedyalk0v/react19-simple-maps
 
 # yarn
-yarn add react19-simple-maps
+yarn add @vnedyalk0v/react19-simple-maps
 
 # pnpm
-pnpm add react19-simple-maps
+pnpm add @vnedyalk0v/react19-simple-maps
 ```
 
 ### Requirements
@@ -62,7 +62,11 @@ pnpm add react19-simple-maps
 
 ```jsx
 import React from 'react';
-import { ComposableMap, Geographies, Geography } from 'react19-simple-maps';
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+} from '@vnedyalk0v/react19-simple-maps';
 
 // URL to a valid TopoJSON file
 const geoUrl =
@@ -89,8 +93,12 @@ export default MapChart;
 
 ```tsx
 import React from 'react';
-import { ComposableMap, Geographies, Geography } from 'react19-simple-maps';
-import type { GeographyProps } from 'react19-simple-maps';
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+} from '@vnedyalk0v/react19-simple-maps';
+import type { GeographyProps } from '@vnedyalk0v/react19-simple-maps';
 
 const geoUrl =
   'https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json';
@@ -136,7 +144,7 @@ The above examples will render a world map using the [equal earth projection](ht
 The main wrapper component that provides the SVG context and projection.
 
 ```tsx
-import { ComposableMap } from 'react19-simple-maps';
+import { ComposableMap } from '@vnedyalk0v/react19-simple-maps';
 <ComposableMap
   projection="geoEqualEarth"
   projectionConfig={{
@@ -155,7 +163,7 @@ import { ComposableMap } from 'react19-simple-maps';
 Renders geographic features from TopoJSON or GeoJSON data.
 
 ```tsx
-import { Geographies, Geography } from 'react19-simple-maps';
+import { Geographies, Geography } from '@vnedyalk0v/react19-simple-maps';
 <Geographies geography="/path/to/world.json">
   {({ geographies }) =>
     geographies.map((geo) => <Geography key={geo.rsmKey} geography={geo} />)
@@ -168,7 +176,7 @@ import { Geographies, Geography } from 'react19-simple-maps';
 Add custom markers and annotations to your maps.
 
 ```tsx
-import { Marker, Annotation } from "react19-simple-maps";
+import { Marker, Annotation } from "@vnedyalk0v/react19-simple-maps";
 
 <Marker coordinates={[-74.006, 40.7128]}>
   <circle r={5} fill="#F53" />
@@ -200,7 +208,7 @@ import type {
   GeographyProps,
   MarkerProps,
   ProjectionConfig,
-} from 'react19-simple-maps';
+} from '@vnedyalk0v/react19-simple-maps';
 
 // Custom projection configuration
 const projectionConfig: ProjectionConfig = {
@@ -237,7 +245,7 @@ To learn how to make your own TopoJSON maps from shapefiles, read ["How to conve
 ### Zoom and Pan
 
 ```tsx
-import { ComposableMap, ZoomableGroup } from 'react19-simple-maps';
+import { ComposableMap, ZoomableGroup } from '@vnedyalk0v/react19-simple-maps';
 <ComposableMap>
   <ZoomableGroup zoom={1} center={[0, 0]}>
     {/* Map content */}
