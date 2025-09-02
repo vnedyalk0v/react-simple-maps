@@ -36,7 +36,19 @@
     "dev": "rollup -cw",
     "clean": "rm -rf dist",
     "analyze": "npm run build && npx rollup-plugin-analyzer dist/index.es.js",
-    "size": "npm run build && ls -lh dist/*.js dist/*.d.ts"
+    "analyze:bundle": "npm run build && node scripts/analyze-bundle.js",
+    "analyze:optimize": "node scripts/bundle-optimizer.js",
+    "analyze:compare": "npm run build && node scripts/analyze-bundle.js --compare",
+    "analyze:enhanced": "npm run build && node scripts/enhanced-bundle-monitor.js",
+    "analyze:dashboard": "npm run build && node scripts/bundle-dashboard.js",
+    "analyze:dashboard:detailed": "npm run build && node scripts/bundle-dashboard.js --detailed",
+    "optimize:generate": "node scripts/bundle-optimizer.js --generate-script",
+    "monitor:bundle": "npm run build && node scripts/enhanced-bundle-monitor.js",
+    "monitor:dashboard": "node scripts/bundle-dashboard.js",
+    "monitor:trends": "node scripts/bundle-dashboard.js --detailed",
+    "size": "npm run build && ls -lh dist/*.js dist/*.d.ts",
+    "size:detailed": "npm run build && node scripts/analyze-bundle.js --no-save",
+    "size:monitor": "npm run build && node scripts/enhanced-bundle-monitor.js"
   },
   "repository": {
     "type": "git",
@@ -85,6 +97,7 @@
     "@types/d3-interpolate": "^3.0.4",
     "@types/d3-selection": "^3.0.11",
     "@types/d3-zoom": "^3.0.8",
+    "@types/node": "^24.3.0",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
     "@types/topojson-client": "^3.1.5",

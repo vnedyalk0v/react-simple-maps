@@ -7,13 +7,14 @@ import { useMapContext } from "../MapProvider"
 
 type ParseGeographiesFunction = (geographies: Feature<Geometry>[]) => Feature<Geometry>[]
 
-// Cache geography fetching for Server Components
+// Cache geography fetching for Server Components with security measures
 const preloadGeography = cache(async (geography: string): Promise<Topology | FeatureCollection> => {
-  const response = await fetch(geography)
-  if (!response.ok) {
-    throw new Error(`Failed to fetch geography: ${response.statusText}`)
-  }
-  return response.json()
+  // Reuse the secure fetchGeographiesCache implementation
+  // Import the secure function from utils
+  const { fetchGeographiesCache } = await import("../../utils")
+
+  // Use the secure implementation
+  return fetchGeographiesCache(geography)
 })
 
 interface GeographyServerProps {

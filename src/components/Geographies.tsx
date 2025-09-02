@@ -1,75 +1,88 @@
-import { forwardRef, Suspense, ReactNode } from "react"
+import { Ref, ReactNode } from "react"
 import { GeographiesProps } from "../types"
 import { useMapContext } from "./MapProvider"
 import useGeographies from "./useGeographies"
 import GeographyErrorBoundary from "./GeographyErrorBoundary"
+import { GeographyOptimizedSuspense } from "./OptimizedSuspense"
 
-const Geographies = forwardRef<SVGGElement, GeographiesProps>(
-  (
-    {
+function Geographies({
+  geography,
+  children,
+  parseGeographies,
+  className = "",
+  errorBoundary = false,
+  onGeographyError,
+  fallback,
+  ref,
+  ...restProps
+}: GeographiesProps & { ref?: Ref<SVGGElement> }) {
+  const { path, projection } = useMapContext()
+
+  const GeographiesContent = () => {
+    const { geographies, outline, borders } = useGeographies({
       geography,
-      children,
-      parseGeographies,
-      className = "",
-      errorBoundary = false,
-      onGeographyError,
-      fallback,
-      ...restProps
-    },
-    ref
-  ) => {
-    const { path, projection } = useMapContext()
+      ...(parseGeographies && { parseGeographies }),
+    })
 
-    const GeographiesContent = () => {
-      const { geographies, outline, borders } = useGeographies({
-        geography,
-        ...(parseGeographies && { parseGeographies }),
-      })
+    return (
+      <>
+        {geographies &&
+          geographies.length > 0 &&
+          children({ geographies, outline, borders, path, projection })}
+      </>
+    )
+  }
 
-      return (
-        <g ref={ref} className={`rsm-geographies ${className}`} {...restProps}>
-          {geographies &&
-            geographies.length > 0 &&
-            children({ geographies, outline, borders, path, projection })}
-        </g>
-      )
+  // Build a consistent fallback element for Suspense
+  const suspenseFallback = (
+    <text className="rsm-loading-text" x="50%" y="50%" textAnchor="middle">
+      Loading...
+    </text>
+  )
+
+  if (errorBoundary) {
+    const errorBoundaryProps: {
+      onError?: (error: Error) => void
+      fallback?: (error: Error, retry: () => void) => ReactNode
+    } = {}
+
+    if (onGeographyError) {
+      errorBoundaryProps.onError = onGeographyError
     }
 
-    // Build a consistent fallback element so consumers always get a stable container
-    const fallbackElement = (
-      <g ref={ref} className={`rsm-geographies ${className} rsm-loading`} {...restProps} />
-    )
-
-    if (errorBoundary) {
-      const errorBoundaryProps: {
-        onError?: (error: Error) => void
-        fallback?: (error: Error, retry: () => void) => ReactNode
-      } = {}
-
-      if (onGeographyError) {
-        errorBoundaryProps.onError = onGeographyError
-      }
-
-      if (fallback) {
-        errorBoundaryProps.fallback = fallback
-      }
-
-      return (
-        <GeographyErrorBoundary {...errorBoundaryProps}>
-          <Suspense fallback={fallbackElement}>
-            <GeographiesContent />
-          </Suspense>
-        </GeographyErrorBoundary>
-      )
+    if (fallback) {
+      errorBoundaryProps.fallback = fallback
     }
 
     return (
-      <Suspense fallback={fallbackElement}>
-        <GeographiesContent />
-      </Suspense>
+      <g ref={ref} className={`rsm-geographies ${className}`} {...restProps}>
+        <GeographyErrorBoundary {...errorBoundaryProps}>
+          <GeographyOptimizedSuspense
+            fallback={suspenseFallback}
+            {...(typeof geography === "string" && { geographyUrl: geography })}
+            priority="high"
+            expectedLoadTime={2000}
+          >
+            <GeographiesContent />
+          </GeographyOptimizedSuspense>
+        </GeographyErrorBoundary>
+      </g>
     )
   }
-)
+
+  return (
+    <g ref={ref} className={`rsm-geographies ${className}`} {...restProps}>
+      <GeographyOptimizedSuspense
+        fallback={suspenseFallback}
+        {...(typeof geography === "string" && { geographyUrl: geography })}
+        priority="high"
+        expectedLoadTime={2000}
+      >
+        <GeographiesContent />
+      </GeographyOptimizedSuspense>
+    </g>
+  )
+}
 
 Geographies.displayName = "Geographies"
 

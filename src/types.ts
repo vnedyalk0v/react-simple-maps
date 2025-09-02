@@ -48,6 +48,15 @@ export interface ComposableMapProps extends SVGProps<SVGSVGElement> {
   // Modern React patterns
   onGeographyError?: (error: Error) => void
   fallback?: ReactNode
+
+  // Metadata support
+  metadata?: {
+    title?: string
+    description?: string
+    keywords?: string[]
+    author?: string
+    canonicalUrl?: string
+  }
 }
 
 export interface GeographiesProps extends Omit<SVGProps<SVGGElement>, "children" | "onError"> {

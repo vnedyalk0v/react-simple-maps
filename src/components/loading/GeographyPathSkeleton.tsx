@@ -4,10 +4,7 @@ interface LoadingSkeletonProps {
 }
 
 // Enhanced loading skeleton with animated paths
-export function GeographyPathSkeleton({
-  className = "",
-  pathCount = 5,
-}: LoadingSkeletonProps) {
+export function GeographyPathSkeleton({ className = "", pathCount = 5 }: LoadingSkeletonProps) {
   const paths = Array.from({ length: pathCount }, (_, i) => (
     <path
       key={i}
@@ -33,11 +30,7 @@ export function GeographyPathSkeleton({
     </path>
   ))
 
-  return (
-    <g className={`rsm-path-skeleton ${className}`}>
-      {paths}
-    </g>
-  )
+  return <g className={`rsm-path-skeleton ${className}`}>{paths}</g>
 }
 
 export default GeographyPathSkeleton

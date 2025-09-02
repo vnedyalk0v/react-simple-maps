@@ -38,16 +38,22 @@ export function useZoomPan({
 }: UseZoomPanHookProps): UseZoomPanReturn {
   const { width, height, projection } = useMapContext()
 
-  // Defer expensive calculations for smooth rendering
-  const deferredCenter = useDeferredValue(center)
-  const deferredZoom = useDeferredValue(zoom)
+  // Defer expensive calculations for smooth rendering with initialValue for better UX
+  const deferredCenter = useDeferredValue(center, [0, 0] as [number, number])
+  const deferredZoom = useDeferredValue(zoom, 1)
 
   const mapRef = useRef<SVGGElement>(null)
   const bypassEvents = useRef(false)
 
-  // Use the focused hooks
-  const { smoothPosition, setPosition, isPending, startTransition, transformString } =
-    useDeferredPosition()
+  // Use the focused hooks with optimistic updates
+  const {
+    smoothPosition,
+    setPosition,
+    setOptimisticPosition,
+    isPending,
+    startTransition,
+    transformString,
+  } = useDeferredPosition()
 
   const zoomBehaviorProps = {
     mapRef,
@@ -61,14 +67,19 @@ export function useZoomPan({
     onMove,
     bypassEvents,
     onZoom: (transform: { x: number; y: number; k: number }, sourceEvent?: Event) => {
+      const newPosition = {
+        x: transform.x,
+        y: transform.y,
+        k: transform.k,
+        dragging: sourceEvent,
+      }
+
+      // Immediate optimistic update for responsive feel
+      setOptimisticPosition(newPosition)
+
       // Use transition for non-blocking position updates
       startTransition(() => {
-        setPosition({
-          x: transform.x,
-          y: transform.y,
-          k: transform.k,
-          dragging: sourceEvent,
-        })
+        setPosition(newPosition)
       })
     },
     ...(filterZoomEvent && { filterZoomEvent }),

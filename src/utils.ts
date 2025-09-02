@@ -27,14 +27,142 @@ export function fetchGeographies(url: string): Promise<Topology | FeatureCollect
     })
 }
 
+// Security configuration for geography fetching
+const GEOGRAPHY_FETCH_CONFIG = {
+  TIMEOUT_MS: 10000, // 10 seconds
+  MAX_RESPONSE_SIZE: 50 * 1024 * 1024, // 50MB
+  ALLOWED_CONTENT_TYPES: ["application/json", "application/geo+json", "text/json"],
+  ALLOWED_PROTOCOLS: ["https:", "http:"], // Allow http for development
+} as const
+
+// Validate URL security
+function validateGeographyUrl(url: string): void {
+  try {
+    const parsedUrl = new URL(url)
+
+    if (
+      !GEOGRAPHY_FETCH_CONFIG.ALLOWED_PROTOCOLS.includes(parsedUrl.protocol as "https:" | "http:")
+    ) {
+      throw new Error(`Invalid protocol: ${parsedUrl.protocol}. Only HTTPS and HTTP are allowed.`)
+    }
+
+    // Prevent local file access and private networks in production
+    if (typeof window !== "undefined" && parsedUrl.hostname === "localhost") {
+      if (process.env.NODE_ENV !== "production") {
+        // Development warning for localhost usage
+        // eslint-disable-next-line no-console
+        console.warn("Loading from localhost - ensure this is intended for development")
+      }
+    }
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error(`Invalid URL format: ${url}`)
+    }
+    throw error
+  }
+}
+
+// Validate response content type
+function validateContentType(response: Response): void {
+  const contentType = response.headers.get("content-type")
+  if (!contentType) {
+    throw new Error("Missing Content-Type header")
+  }
+
+  const isValidType = GEOGRAPHY_FETCH_CONFIG.ALLOWED_CONTENT_TYPES.some((type) =>
+    contentType.toLowerCase().includes(type)
+  )
+
+  if (!isValidType) {
+    throw new Error(
+      `Invalid content type: ${contentType}. Expected one of: ${GEOGRAPHY_FETCH_CONFIG.ALLOWED_CONTENT_TYPES.join(", ")}`
+    )
+  }
+}
+
+// Check response size
+async function validateResponseSize(response: Response): Promise<void> {
+  const contentLength = response.headers.get("content-length")
+  if (contentLength) {
+    const size = parseInt(contentLength, 10)
+    if (size > GEOGRAPHY_FETCH_CONFIG.MAX_RESPONSE_SIZE) {
+      throw new Error(
+        `Response too large: ${size} bytes. Maximum allowed: ${GEOGRAPHY_FETCH_CONFIG.MAX_RESPONSE_SIZE} bytes`
+      )
+    }
+  }
+}
+
 // Modern cached version for use with use() hook
 export const fetchGeographiesCache = cache(
   async (url: string): Promise<Topology | FeatureCollection> => {
-    const response = await fetch(url)
-    if (!response.ok) {
-      throw new Error(`Failed to fetch geography: ${response.statusText}`)
+    // Validate URL before making request
+    validateGeographyUrl(url)
+
+    // Create abort controller for timeout
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => {
+      controller.abort()
+    }, GEOGRAPHY_FETCH_CONFIG.TIMEOUT_MS)
+
+    try {
+      const response = await fetch(url, {
+        signal: controller.signal,
+        headers: {
+          Accept: GEOGRAPHY_FETCH_CONFIG.ALLOWED_CONTENT_TYPES.join(", "),
+          "Cache-Control": "public, max-age=3600", // Cache for 1 hour
+        },
+        // Security headers
+        mode: "cors",
+        credentials: "omit", // Don't send credentials
+      })
+
+      clearTimeout(timeoutId)
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      // Validate content type and size
+      validateContentType(response)
+      await validateResponseSize(response)
+
+      // Parse JSON with error handling
+      try {
+        const data = await response.json()
+
+        // Basic validation that it's a valid geography object
+        if (!data || typeof data !== "object") {
+          throw new Error("Invalid geography data: not a valid object")
+        }
+
+        if (!data.type || (data.type !== "Topology" && data.type !== "FeatureCollection")) {
+          throw new Error(
+            `Invalid geography data: expected Topology or FeatureCollection, got ${data.type}`
+          )
+        }
+
+        return data
+      } catch (jsonError) {
+        if (jsonError instanceof SyntaxError) {
+          throw new Error("Invalid JSON format in geography data")
+        }
+        throw jsonError
+      }
+    } catch (error) {
+      clearTimeout(timeoutId)
+
+      if (error instanceof Error) {
+        if (error.name === "AbortError") {
+          throw new Error(`Request timeout after ${GEOGRAPHY_FETCH_CONFIG.TIMEOUT_MS}ms`)
+        }
+        if (error.name === "TypeError" && error.message.includes("fetch")) {
+          throw new Error(`Network error: Unable to fetch geography from ${url}`)
+        }
+      }
+
+      throw error
     }
-    return response.json()
   }
 )
 

@@ -103,7 +103,7 @@ const MapProvider: React.FC<MapProviderProps> = ({
     }
   }, [width, height, proj])
 
-  return <MapContext.Provider value={value}>{children}</MapContext.Provider>
+  return <MapContext value={value}>{children}</MapContext>
 }
 
 const useMapContext = (): MapContextType => {

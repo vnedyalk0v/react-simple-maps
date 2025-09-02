@@ -16,7 +16,7 @@ interface ZoomPanProviderProps {
 }
 
 const ZoomPanProvider: React.FC<ZoomPanProviderProps> = ({ value = defaultValue, children }) => {
-  return <ZoomPanContext.Provider value={value}>{children}</ZoomPanContext.Provider>
+  return <ZoomPanContext value={value}>{children}</ZoomPanContext>
 }
 
 const useZoomPanContext = (): ZoomPanContextType => {

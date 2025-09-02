@@ -13,7 +13,13 @@ export function LoadingProgressBar({
   const clampedProgress = Math.max(0, Math.min(100, progress))
 
   return (
-    <div className={`rsm-loading-progress ${className}`} role="progressbar" aria-valuenow={clampedProgress} aria-valuemin={0} aria-valuemax={100}>
+    <div
+      className={`rsm-loading-progress ${className}`}
+      role="progressbar"
+      aria-valuenow={clampedProgress}
+      aria-valuemin={0}
+      aria-valuemax={100}
+    >
       <div className="rsm-progress-bar" style={{ width: `${clampedProgress}%` }} />
       {showPercentage && <span className="rsm-progress-text">{Math.round(clampedProgress)}%</span>}
     </div>

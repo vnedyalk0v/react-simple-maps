@@ -19,6 +19,11 @@ export default [
   {
     input: "src/index.ts",
     external,
+    treeshake: {
+      moduleSideEffects: false,
+      propertyReadSideEffects: false,
+      tryCatchDeoptimization: false,
+    },
     output: {
       name: "reactSimpleMaps",
       file: pkg.browser,
@@ -41,6 +46,8 @@ export default [
       resolve({
         browser: true,
         preferBuiltins: false,
+        exportConditions: ['import', 'module', 'browser', 'default'],
+        mainFields: ['browser', 'module', 'main'],
       }),
       commonjs(),
       typescript({
@@ -53,10 +60,72 @@ export default [
       terser({
         compress: {
           drop_console: isProduction,
+          drop_debugger: isProduction,
+          pure_funcs: isProduction ? [
+            'console.log',
+            'console.warn',
+            'console.info',
+            'console.debug',
+            'console.trace',
+            'console.group',
+            'console.groupEnd',
+            'console.groupCollapsed',
+            'console.time',
+            'console.timeEnd',
+            'console.timeLog',
+            'console.count',
+            'console.countReset',
+            'console.clear',
+            'console.table',
+            'console.dir',
+            'console.dirxml',
+            'console.assert'
+          ] : [],
+          dead_code: true,
+          unused: true,
+          side_effects: false,
+          passes: 2,
+          toplevel: true,
+          module: true,
+          // Additional optimizations for React 19
+          keep_fargs: false,
+          reduce_vars: true,
+          reduce_funcs: true,
+          collapse_vars: true,
+          join_vars: true,
+          sequences: true,
+          properties: true,
+          conditionals: true,
+          comparisons: true,
+          evaluate: true,
+          booleans: true,
+          loops: true,
+          hoist_funs: true,
+          hoist_vars: false,
+          if_return: true,
+          inline: true,
+          unsafe: false,
+          unsafe_comps: false,
+          unsafe_math: false,
+          unsafe_proto: false,
+          unsafe_regexp: false,
+          unsafe_undefined: false,
+        },
+        mangle: {
+          toplevel: true,
+          module: true,
+          properties: {
+            regex: /^_/,
+          },
         },
         format: {
           comments: false,
+          beautify: false,
+          ascii_only: false,
+          semicolons: true,
         },
+        toplevel: true,
+        module: true,
       }),
     ],
   },
@@ -64,12 +133,18 @@ export default [
   {
     input: "src/index.ts",
     external,
+    treeshake: {
+      moduleSideEffects: false,
+      propertyReadSideEffects: false,
+      tryCatchDeoptimization: false,
+    },
     output: [
       {
         file: pkg.main,
         format: "cjs",
         sourcemap: true,
         exports: "named",
+        interop: "auto",
       },
       {
         file: pkg.module,
@@ -80,8 +155,12 @@ export default [
     plugins: [
       resolve({
         preferBuiltins: false,
+        exportConditions: ['import', 'module', 'default'],
+        mainFields: ['module', 'main'],
       }),
-      commonjs(),
+      commonjs({
+        ignoreDynamicRequires: true,
+      }),
       typescript({
         tsconfig: "./tsconfig.build.json",
         outDir: undefined,
@@ -89,6 +168,69 @@ export default [
         declarationMap: false,
         sourceMap: true,
       }),
+      ...(isProduction ? [
+        terser({
+          compress: {
+            drop_console: true,
+            drop_debugger: true,
+            pure_funcs: [
+              'console.log',
+              'console.warn',
+              'console.info',
+              'console.debug',
+              'console.trace',
+              'console.group',
+              'console.groupEnd',
+              'console.groupCollapsed',
+              'console.time',
+              'console.timeEnd',
+              'console.timeLog',
+              'console.count',
+              'console.countReset',
+              'console.clear',
+              'console.table',
+              'console.dir',
+              'console.dirxml',
+              'console.assert'
+            ],
+            dead_code: true,
+            unused: true,
+            side_effects: false,
+            passes: 2,
+            // Additional optimizations for React 19
+            keep_fargs: false,
+            reduce_vars: true,
+            reduce_funcs: true,
+            collapse_vars: true,
+            join_vars: true,
+            sequences: true,
+            properties: true,
+            conditionals: true,
+            comparisons: true,
+            evaluate: true,
+            booleans: true,
+            loops: true,
+            hoist_funs: true,
+            hoist_vars: false,
+            if_return: true,
+            inline: true,
+            unsafe: false,
+          },
+          mangle: {
+            toplevel: true,
+            module: true,
+            properties: {
+              regex: /^_/,
+            },
+          },
+          format: {
+            comments: false,
+            beautify: false,
+            ascii_only: false,
+            semicolons: true,
+          },
+        })
+      ] : []),
     ],
   },
   // Type definitions bundle
