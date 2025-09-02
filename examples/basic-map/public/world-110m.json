@@ -1,1 +1,84 @@
-{"type":"Topology","arcs":[[[158,206],[159,204],[160,204],[160,206],[158,206]],[[145,203],[147,201],[149,201],[149,203],[145,203]],[[153,203],[155,201],[157,201],[157,203],[153,203]],[[48,114],[49,114],[49,115],[48,115],[48,114]],[[133,206],[135,204],[137,204],[137,206],[133,206]],[[125,203],[127,201],[129,201],[129,203],[125,203]]],"objects":{"countries":{"type":"GeometryCollection","geometries":[{"type":"Polygon","properties":{"NAME":"Sample Country 1"},"arcs":[[0]]},{"type":"Polygon","properties":{"NAME":"Sample Country 2"},"arcs":[[1]]},{"type":"Polygon","properties":{"NAME":"Sample Country 3"},"arcs":[[2]]},{"type":"Polygon","properties":{"NAME":"Sample Country 4"},"arcs":[[3]]},{"type":"Polygon","properties":{"NAME":"Sample Country 5"},"arcs":[[4]]},{"type":"Polygon","properties":{"NAME":"Sample Country 6"},"arcs":[[5]]}]}}}
+{
+  "type": "Topology",
+  "arcs": [
+    [
+      [158, 206],
+      [159, 204],
+      [160, 204],
+      [160, 206],
+      [158, 206]
+    ],
+    [
+      [145, 203],
+      [147, 201],
+      [149, 201],
+      [149, 203],
+      [145, 203]
+    ],
+    [
+      [153, 203],
+      [155, 201],
+      [157, 201],
+      [157, 203],
+      [153, 203]
+    ],
+    [
+      [48, 114],
+      [49, 114],
+      [49, 115],
+      [48, 115],
+      [48, 114]
+    ],
+    [
+      [133, 206],
+      [135, 204],
+      [137, 204],
+      [137, 206],
+      [133, 206]
+    ],
+    [
+      [125, 203],
+      [127, 201],
+      [129, 201],
+      [129, 203],
+      [125, 203]
+    ]
+  ],
+  "objects": {
+    "countries": {
+      "type": "GeometryCollection",
+      "geometries": [
+        {
+          "type": "Polygon",
+          "properties": { "NAME": "Sample Country 1" },
+          "arcs": [[0]]
+        },
+        {
+          "type": "Polygon",
+          "properties": { "NAME": "Sample Country 2" },
+          "arcs": [[1]]
+        },
+        {
+          "type": "Polygon",
+          "properties": { "NAME": "Sample Country 3" },
+          "arcs": [[2]]
+        },
+        {
+          "type": "Polygon",
+          "properties": { "NAME": "Sample Country 4" },
+          "arcs": [[3]]
+        },
+        {
+          "type": "Polygon",
+          "properties": { "NAME": "Sample Country 5" },
+          "arcs": [[4]]
+        },
+        {
+          "type": "Polygon",
+          "properties": { "NAME": "Sample Country 6" },
+          "arcs": [[5]]
+        }
+      ]
+    }
+  }
+}
