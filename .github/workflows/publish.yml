@@ -59,8 +59,21 @@ jobs:
       - name: Publish to GitHub Package Registry
         if: steps.changesets.outputs.published == 'true'
         run: |
+          # Create a temporary package.json for GitHub Packages
+          cp package.json package.json.backup
+
+          # Update package.json for GitHub Packages
+          npm pkg set publishConfig.registry="https://npm.pkg.github.com"
+          npm pkg set publishConfig.access="public"
+
+          # Configure npm for GitHub Packages
           echo "@vnedyalk0v:registry=https://npm.pkg.github.com" > ~/.npmrc
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+
+          # Publish to GitHub Packages
           npm publish --registry=https://npm.pkg.github.com
+
+          # Restore original package.json
+          mv package.json.backup package.json
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

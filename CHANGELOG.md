@@ -1,23 +1,38 @@
 # Changelog
 
-## 1.0.5
-
-### Patch Changes
-
-- 93014c3: Improve examples and npm publishing configuration
-  - Simplify basic-map example by removing advanced React 19 features for better accessibility
-  - Configure npm publishing to public registry with proper authentication
-  - Update dependencies and improve ESLint configuration for examples
-  - Remove focus outlines from map elements for better visual appearance
-  - Add SRI hashes and improve security features
-  - Fix root element existence check in examples
-
 All notable changes to `@vnedyalk0v/react19-simple-maps` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 > 📦 **Latest Version**: Check [npm](https://www.npmjs.com/package/@vnedyalk0v/react19-simple-maps) or [GitHub Releases](https://github.com/vnedyalk0v/react19-simple-maps/releases) for the most recent version.
+
+## 1.0.5
+
+### 🔧 Examples & Publishing Improvements
+
+**Published:** September 3, 2025
+
+#### **📚 Example Enhancements**
+
+- **🎯 Simplified basic-map example** - Removed advanced React 19 features for better accessibility and learning
+- **🎨 Improved visual appearance** - Removed focus outlines from map elements for cleaner UI
+- **🔧 Enhanced ESLint configuration** - Better linting rules specifically for example files
+- **🛠️ Fixed root element checks** - Improved error handling in example applications
+
+#### **📦 Publishing & Configuration**
+
+- **🌐 Configured npm publishing** - Proper authentication and public registry setup
+- **🔒 Enhanced security features** - Added SRI hashes and improved security validation
+- **📋 Updated dependencies** - Latest compatible versions for better stability
+- **🏗️ Improved build process** - Better error handling and validation
+
+#### **🐛 Bug Fixes**
+
+- **✅ Fixed root element existence check** in examples
+- **🎯 Removed unused hover states** and event handlers from markers
+- **🧹 Cleaned up Content Security Policy** meta tags
+- **📝 Updated package linkage** for consistent versioning
 
 ## 1.0.4
 
