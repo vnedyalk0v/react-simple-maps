@@ -35,6 +35,19 @@ function ZoomableGroup(
     className = '',
     children,
     ref,
+    // Extract ZoomableGroup-specific props to prevent React DOM warnings
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    minZoom,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    maxZoom,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    enableZoom,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    enablePan,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    scaleExtent,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    translateExtent,
     ...restProps
   } = props;
 
