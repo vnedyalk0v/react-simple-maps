@@ -10,9 +10,9 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "browser": "./dist/index.umd.js",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "browser": "./dist/index.umd.js"
     }
   },
   "sideEffects": false,

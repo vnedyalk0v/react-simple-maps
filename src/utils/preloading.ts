@@ -2,28 +2,42 @@ import { preload, prefetchDNS, preconnect, preinit } from 'react-dom';
 
 // React 19 resource preloading utilities for geography data
 
+// Track preloaded URLs to avoid duplicate preloads
+const preloadedUrls = new Set<string>();
+
 /**
  * Preload geography resources for better performance
+ * Only preloads if the resource will be used soon
  */
-export function preloadGeography(url: string): void {
+export function preloadGeography(url: string, immediate = false): void {
   if (typeof url !== 'string' || !url) {
+    return;
+  }
+
+  // Avoid duplicate preloads
+  if (preloadedUrls.has(url)) {
     return;
   }
 
   try {
     const parsedUrl = new URL(url);
 
-    // Prefetch DNS for the domain
+    // Always prefetch DNS and preconnect (lightweight operations)
     prefetchDNS(parsedUrl.origin);
-
-    // Preconnect to the domain for faster connection establishment
     preconnect(parsedUrl.origin);
 
-    // Preload the specific geography resource
-    preload(url, {
-      as: 'fetch',
-      crossOrigin: 'anonymous', // Most geography APIs support CORS
-    });
+    // Only preload the actual resource if immediate or in production
+    const shouldPreloadResource =
+      immediate ||
+      (typeof process !== 'undefined' && process.env.NODE_ENV === 'production');
+
+    if (shouldPreloadResource) {
+      preload(url, {
+        as: 'fetch',
+        crossOrigin: 'anonymous', // Most geography APIs support CORS
+      });
+      preloadedUrls.add(url);
+    }
   } catch (error) {
     // Silently handle invalid URLs in development only
     if (

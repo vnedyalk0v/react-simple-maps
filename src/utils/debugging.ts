@@ -317,17 +317,24 @@ export const devTools = {
       typeof process !== 'undefined' &&
       process.env.NODE_ENV !== 'production'
     ) {
-      const ownerStack = captureOwnerStack();
-      // eslint-disable-next-line no-console
-      console.group(`🌍 Geography Loading: ${url}`);
-      // eslint-disable-next-line no-console
-      console.log('Status:', status);
-      // eslint-disable-next-line no-console
-      console.log('Owner Stack:', ownerStack);
-      // eslint-disable-next-line no-console
-      if (data) console.log('Data:', data);
-      // eslint-disable-next-line no-console
-      console.groupEnd();
+      try {
+        const ownerStack = captureOwnerStack();
+        // eslint-disable-next-line no-console
+        console.group(`🌍 Geography Loading: ${url}`);
+        // eslint-disable-next-line no-console
+        console.log('Status:', status);
+        // eslint-disable-next-line no-console
+        console.log('Owner Stack:', ownerStack);
+        // eslint-disable-next-line no-console
+        if (data) console.log('Data:', data);
+        // eslint-disable-next-line no-console
+        console.groupEnd();
+      } catch {
+        // eslint-disable-next-line no-console
+        console.log(`🌍 Geography Loading: ${url} - Status: ${status}`);
+        // eslint-disable-next-line no-console
+        if (data) console.log('Data:', data);
+      }
     }
   },
 };

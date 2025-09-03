@@ -7,6 +7,7 @@
     <title>Basic Map - react-simple-maps</title>
 
     <!-- Content Security Policy for enhanced security -->
+    <!-- Note: frame-ancestors directive is not supported in meta tags, only in HTTP headers -->
     <meta
       http-equiv="Content-Security-Policy"
       content="
@@ -19,7 +20,6 @@
       object-src 'none';
       base-uri 'self';
       form-action 'self';
-      frame-ancestors 'none';
       upgrade-insecure-requests;
     "
     />

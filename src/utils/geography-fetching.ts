@@ -10,7 +10,10 @@ import {
   GEOGRAPHY_FETCH_CONFIG,
 } from './geography-validation';
 import { createGeographyFetchError } from './error-utils';
-import { getSRIForUrl, validateSRI } from './subresource-integrity';
+import {
+  getSRIForUrl,
+  validateSRIFromArrayBuffer,
+} from './subresource-integrity';
 
 /**
  * Creates fetch options with security headers and timeout
@@ -126,6 +129,34 @@ async function parseGeographyResponse(
 }
 
 /**
+ * Parses JSON from ArrayBuffer with proper error handling
+ * @param arrayBuffer - The response data as ArrayBuffer
+ * @param url - The URL for error context
+ * @returns Parsed geography data
+ */
+async function parseGeographyFromArrayBuffer(
+  arrayBuffer: ArrayBuffer,
+  url: string,
+): Promise<Topology | FeatureCollection> {
+  try {
+    const text = new TextDecoder().decode(arrayBuffer);
+    const data = JSON.parse(text);
+    validateGeographyData(data);
+    return data as Topology | FeatureCollection;
+  } catch (jsonError) {
+    if (jsonError instanceof SyntaxError) {
+      throw createGeographyFetchError(
+        'GEOGRAPHY_PARSE_ERROR',
+        'Invalid JSON format in geography data',
+        url,
+        jsonError,
+      );
+    }
+    throw jsonError;
+  }
+}
+
+/**
  * Basic fetch function for geography data without caching
  * @param url - The URL to fetch geography data from
  * @returns Promise resolving to geography data or undefined on error
@@ -182,14 +213,20 @@ export const fetchGeographiesCache = cache(
       validateContentType(response);
       await validateResponseSize(response);
 
-      // Validate SRI if required
-      let validatedResponse = response;
+      // Handle SRI validation and parsing in one step to avoid response body consumption issues
       if (sriConfig) {
-        validatedResponse = await validateSRI(response, url, sriConfig);
-      }
+        // Read response body once as ArrayBuffer
+        const arrayBuffer = await response.arrayBuffer();
 
-      // Parse and validate geography data
-      return await parseGeographyResponse(validatedResponse, url);
+        // Validate SRI hash
+        await validateSRIFromArrayBuffer(arrayBuffer, url, sriConfig);
+
+        // Parse JSON from ArrayBuffer
+        return await parseGeographyFromArrayBuffer(arrayBuffer, url);
+      } else {
+        // No SRI validation needed, parse normally
+        return await parseGeographyResponse(response, url);
+      }
     } catch (error) {
       cleanup();
       throw handleFetchError(error, url);
@@ -202,7 +239,16 @@ export const fetchGeographiesCache = cache(
  * @param url - The URL to preload
  */
 export function preloadGeography(url: string): void {
-  // Use the cached function to preload data
+  // Import and use the preload utility with immediate flag
+  import('./preloading')
+    .then(({ preloadGeography: preloadUtil }) => {
+      preloadUtil(url, true); // immediate = true
+    })
+    .catch(() => {
+      // Silently handle import errors
+    });
+
+  // Also preload the actual data
   fetchGeographiesCache(url).catch(() => {
     // Silently ignore preload errors
   });

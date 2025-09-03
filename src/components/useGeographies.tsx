@@ -43,9 +43,11 @@ export default function useGeographies({
   useEffect(() => {
     if (isString(geography)) {
       setIsLoading(true);
-      preloadGeography(geography);
 
       devTools.debugGeographyLoading(geography, 'start');
+
+      // Preload immediately before fetching to minimize the gap
+      preloadGeography(geography);
 
       fetchGeographiesCache(geography)
         .then((data) => {

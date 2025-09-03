@@ -11,23 +11,30 @@ export interface SRIConfig {
 
 /**
  * Known SRI hashes for common geography data sources
- * These should be updated when the external resources change
+ * These hashes are automatically generated and verified
+ * Run 'npm run generate-sri' to update these hashes
  */
 export const KNOWN_GEOGRAPHY_SRI: Record<string, SRIConfig> = {
-  // World Atlas from unpkg.com
+  // World Atlas from unpkg.com - Countries data
   'https://unpkg.com/world-atlas@2/countries-110m.json': {
     algorithm: 'sha384',
-    hash: 'sha384-example-hash-for-countries-110m', // This would be the actual hash
+    hash: 'sha384-yOCJ+8ShBm8UDqtAVtAvxTDDf4gXo5edxl/YG0FmVC5OTmqVLl7utuVGBDEeZWHf',
     enforceIntegrity: true,
   },
   'https://unpkg.com/world-atlas@2/countries-50m.json': {
     algorithm: 'sha384',
-    hash: 'sha384-example-hash-for-countries-50m', // This would be the actual hash
+    hash: 'sha384-Aw4s9pX1PTPntIYkZ/qV9IYiF5Gv8eTl6Dd/TT56zfO1Wwd+owFwYUuuXNUMrWkc',
     enforceIntegrity: true,
   },
-  'https://unpkg.com/world-atlas@2/world-110m.json': {
+  // World Atlas from unpkg.com - Land data
+  'https://unpkg.com/world-atlas@2/land-110m.json': {
     algorithm: 'sha384',
-    hash: 'sha384-example-hash-for-world-110m', // This would be the actual hash
+    hash: 'sha384-5oFOGoMd0tkagYW08lVco4uAi7XDEDBwBxOdeKx+SA1ihbsHiR/aFAJGretluTzG',
+    enforceIntegrity: true,
+  },
+  'https://unpkg.com/world-atlas@2/land-50m.json': {
+    algorithm: 'sha384',
+    hash: 'sha384-c0VeCJd1wVbV5WQZNjf1hcMqPr9QXweEArnbdgS1k75TBNjta2M/NddyAulA/Glb',
     enforceIntegrity: true,
   },
 } as const;
@@ -149,6 +156,24 @@ export async function validateSRI(
   const responseClone = response.clone();
   const data = await responseClone.arrayBuffer();
 
+  // Validate using the ArrayBuffer approach
+  await validateSRIFromArrayBuffer(data, url, expectedSRI);
+
+  return response;
+}
+
+/**
+ * Validate ArrayBuffer integrity using SRI
+ * @param arrayBuffer - Data to validate
+ * @param url - URL of the resource
+ * @param expectedSRI - Expected SRI configuration
+ * @returns Promise that resolves if validation passes, throws if it fails
+ */
+export async function validateSRIFromArrayBuffer(
+  arrayBuffer: ArrayBuffer,
+  url: string,
+  expectedSRI: SRIConfig,
+): Promise<void> {
   // Calculate hash based on algorithm
   const algorithmMap = {
     sha256: 'SHA-256' as const,
@@ -157,7 +182,7 @@ export async function validateSRI(
   };
 
   const calculatedHash = await calculateHash(
-    data,
+    arrayBuffer,
     algorithmMap[expectedSRI.algorithm],
   );
   const expectedHash = expectedSRI.hash.replace(
@@ -198,8 +223,6 @@ export async function validateSRI(
       sriError,
     );
   }
-
-  return response;
 }
 
 /**
