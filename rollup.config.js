@@ -28,6 +28,7 @@ export default [
       name: 'reactSimpleMaps',
       file: pkg.browser,
       format: 'umd',
+      exports: 'named', // Ensure named exports are preserved
       extend: true,
       sourcemap: true,
       globals: {
@@ -86,9 +87,9 @@ export default [
           dead_code: true,
           unused: true,
           side_effects: false,
-          passes: 2,
-          toplevel: true,
-          module: true,
+          passes: 1, // Reduce passes for UMD to preserve exports
+          toplevel: false, // Don't mangle top-level for UMD
+          // Remove module: true - not compatible with UMD
           // Additional optimizations for React 19
           keep_fargs: false,
           reduce_vars: true,
@@ -114,8 +115,8 @@ export default [
           unsafe_undefined: false,
         },
         mangle: {
-          toplevel: true,
-          module: true,
+          toplevel: false, // Don't mangle top-level for UMD exports
+          // Remove module: true - not compatible with UMD
           properties: {
             regex: /^_/,
           },
@@ -126,8 +127,7 @@ export default [
           ascii_only: false,
           semicolons: true,
         },
-        toplevel: true,
-        module: true,
+        // Remove toplevel and module flags - not compatible with UMD
       }),
     ],
   },
