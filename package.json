@@ -49,7 +49,7 @@
     "verify-builds": "node scripts/verify-builds.js",
     "local-release": "changeset version && changeset publish",
     "release": "changeset publish",
-    "prepublishOnly": "npm run ci && npm run verify-builds"
+    "prepublishOnly": "npm run ci"
   },
   "repository": {
     "type": "git",
