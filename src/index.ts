@@ -33,15 +33,30 @@ export {
   createTranslateExtent,
   createParallels,
   createGraticuleStep,
+  createZoomConfig,
+  createPanConfig,
+  createZoomPanConfig,
 } from './types';
+
+// Export geography utilities
+export {
+  getGeographyCentroid,
+  getGeographyBounds,
+  getGeographyCoordinates,
+  getBestGeographyCoordinates,
+  isValidCoordinates,
+} from './utils/geography-utils';
 
 // Export types for TypeScript users
 export type {
   ComposableMapProps,
   GeographiesProps,
   GeographyProps,
+  GeographyEventData,
   GraticuleProps,
   ZoomableGroupProps,
+  ZoomableGroupPropsUnion,
+  SimpleZoomableGroupProps,
   SphereProps,
   MarkerProps,
   LineProps,
