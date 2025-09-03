@@ -48,6 +48,28 @@ export const createParallels = (p1: number, p2: number): Parallels =>
 export const createGraticuleStep = (x: number, y: number): GraticuleStep =>
   [x, y] as GraticuleStep;
 
+// Convenience functions for ZoomableGroup configuration
+export const createZoomConfig = (minZoom: number, maxZoom: number) => ({
+  minZoom,
+  maxZoom,
+  scaleExtent: createScaleExtent(minZoom, maxZoom),
+  enableZoom: true,
+});
+
+export const createPanConfig = (bounds: [Coordinates, Coordinates]) => ({
+  translateExtent: createTranslateExtent(bounds[0], bounds[1]),
+  enablePan: true,
+});
+
+export const createZoomPanConfig = (
+  minZoom: number,
+  maxZoom: number,
+  bounds: [Coordinates, Coordinates],
+) => ({
+  ...createZoomConfig(minZoom, maxZoom),
+  ...createPanConfig(bounds),
+});
+
 // Conditional types for enhanced component APIs
 export type ConditionalProps<T, K extends keyof T> = T[K] extends undefined
   ? Partial<T>
@@ -214,15 +236,56 @@ export type GeographiesProps<E extends boolean = false> = Omit<
     className?: string;
   };
 
-export interface GeographyProps
-  extends Omit<SVGProps<SVGPathElement>, 'style'> {
+// Enhanced Geography event handlers with geographic data
+export interface GeographyEventData {
   geography: Feature<Geometry>;
-  onMouseEnter?: (event: React.MouseEvent<SVGPathElement>) => void;
-  onMouseLeave?: (event: React.MouseEvent<SVGPathElement>) => void;
-  onMouseDown?: (event: React.MouseEvent<SVGPathElement>) => void;
-  onMouseUp?: (event: React.MouseEvent<SVGPathElement>) => void;
-  onFocus?: (event: React.FocusEvent<SVGPathElement>) => void;
-  onBlur?: (event: React.FocusEvent<SVGPathElement>) => void;
+  centroid: Coordinates | null;
+  bounds: [Coordinates, Coordinates] | null;
+  coordinates: Coordinates | null;
+}
+
+export interface GeographyProps
+  extends Omit<
+    SVGProps<SVGPathElement>,
+    | 'style'
+    | 'onClick'
+    | 'onMouseEnter'
+    | 'onMouseLeave'
+    | 'onMouseDown'
+    | 'onMouseUp'
+    | 'onFocus'
+    | 'onBlur'
+  > {
+  geography: Feature<Geometry>;
+  // Enhanced event handlers with geographic data (backward compatible)
+  onClick?: (
+    event: React.MouseEvent<SVGPathElement>,
+    data?: GeographyEventData,
+  ) => void;
+  onMouseEnter?: (
+    event: React.MouseEvent<SVGPathElement>,
+    data?: GeographyEventData,
+  ) => void;
+  onMouseLeave?: (
+    event: React.MouseEvent<SVGPathElement>,
+    data?: GeographyEventData,
+  ) => void;
+  onMouseDown?: (
+    event: React.MouseEvent<SVGPathElement>,
+    data?: GeographyEventData,
+  ) => void;
+  onMouseUp?: (
+    event: React.MouseEvent<SVGPathElement>,
+    data?: GeographyEventData,
+  ) => void;
+  onFocus?: (
+    event: React.FocusEvent<SVGPathElement>,
+    data?: GeographyEventData,
+  ) => void;
+  onBlur?: (
+    event: React.FocusEvent<SVGPathElement>,
+    data?: GeographyEventData,
+  ) => void;
   style?: ConditionalStyle<CSSProperties>;
   className?: string;
 }
@@ -242,6 +305,32 @@ export type ZoomableGroupProps<
     className?: string;
     children?: ReactNode;
   };
+
+// Simplified ZoomableGroup interface for easier usage
+export interface SimpleZoomableGroupProps extends SVGProps<SVGGElement> {
+  center?: Coordinates;
+  zoom?: number;
+  minZoom?: number;
+  maxZoom?: number;
+  translateExtent?: TranslateExtent;
+  scaleExtent?: ScaleExtent;
+  enableZoom?: boolean;
+  enablePan?: boolean;
+  filterZoomEvent?: (event: Event) => boolean;
+  onMoveStart?: (position: Position, event: Event) => void;
+  onMove?: (position: Position, event: Event) => void;
+  onMoveEnd?: (position: Position, event: Event) => void;
+  className?: string;
+  children?: ReactNode;
+}
+
+// Union type for ZoomableGroup component props - supports both APIs
+export type ZoomableGroupPropsUnion =
+  | ZoomableGroupProps<true, true> // Complex API with zoom and pan
+  | ZoomableGroupProps<true, false> // Complex API with zoom only
+  | ZoomableGroupProps<false, true> // Complex API with pan only
+  | ZoomableGroupProps<false, false> // Complex API with neither
+  | SimpleZoomableGroupProps; // Simple API
 
 export interface MarkerProps extends Omit<SVGProps<SVGGElement>, 'style'> {
   coordinates: Coordinates;

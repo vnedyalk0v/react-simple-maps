@@ -80,6 +80,19 @@ npm install @vnedyalk0v/react19-simple-maps
 - **TypeScript**: 5.0.0 or higher (strongly recommended for best developer experience)
 - **Node.js**: 18.0.0 or higher (for development and build tools)
 
+## 🔄 Migration from react-simple-maps
+
+Migrating from the original `react-simple-maps`? We've got you covered!
+
+**Quick Migration:**
+
+1. `npm uninstall react-simple-maps && npm install @vnedyalk0v/react19-simple-maps`
+2. Update imports: `from "react-simple-maps"` → `from "@vnedyalk0v/react19-simple-maps"`
+3. Convert coordinates: `[lon, lat]` → `createCoordinates(lon, lat)`
+4. Update event handlers to use enhanced data parameter
+
+**📖 [Complete Migration Guide](./docs/MIGRATION.md)** - Detailed step-by-step instructions, breaking changes, and troubleshooting tips.
+
 ### Peer Dependencies
 
 The package automatically includes these dependencies:
@@ -301,26 +314,72 @@ import { Geographies, Geography } from '@vnedyalk0v/react19-simple-maps';
 
 ### Geography
 
-Individual geographic feature component with interaction support.
+Individual geographic feature component with enhanced interaction support.
+
+**Enhanced Event Handlers:**
+
+All event handlers now receive geographic data as a second parameter:
+
+```tsx
+<Geography
+  geography={geo}
+  onClick={(event, data) => {
+    console.log('Country:', data.geography.properties?.name);
+    console.log('Centroid:', data.centroid);
+    console.log('Bounds:', data.bounds);
+    console.log('Coordinates:', data.coordinates);
+  }}
+  onMouseEnter={(event, data) => {
+    // Access to rich geographic data
+  }}
+/>
+```
 
 **Props:**
 
 - `geography` - GeoJSON feature object
 - `style` - Conditional styling object with `default`, `hover`, `pressed` states
-- Event handlers: `onClick`, `onMouseEnter`, `onMouseLeave`, `onFocus`, `onBlur`
+- Enhanced event handlers: `onClick`, `onMouseEnter`, `onMouseLeave`, `onFocus`, `onBlur`
+  - All handlers receive `(event, GeographyEventData)` parameters
 
 ### ZoomableGroup
 
-Provides zoom and pan functionality with configurable constraints.
+Provides zoom and pan functionality with configurable constraints. Supports both simple and advanced APIs.
+
+**Simple API (Recommended):**
+
+```tsx
+import { ZoomableGroup, createZoomConfig, createPanConfig } from '@vnedyalk0v/react19-simple-maps';
+
+// Easy zoom configuration
+<ZoomableGroup
+  zoom={1}
+  center={createCoordinates(0, 0)}
+  {...createZoomConfig(0.5, 8)} // minZoom, maxZoom
+>
+  {/* Content */}
+</ZoomableGroup>
+
+// Or use direct props
+<ZoomableGroup
+  zoom={1}
+  center={createCoordinates(0, 0)}
+  minZoom={0.5}
+  maxZoom={8}
+  enableZoom={true}
+>
+  {/* Content */}
+</ZoomableGroup>
+```
 
 **Props:**
 
 - `zoom` - Current zoom level
 - `center` - Center coordinates
-- `enableZoom`, `enablePan` - Enable/disable zoom and pan behaviors
-- `minZoom`, `maxZoom` - Zoom level constraints (when enableZoom is true)
+- `minZoom`, `maxZoom` - Zoom level constraints (simple API)
+- `enableZoom`, `enablePan` - Enable/disable behaviors (simple API)
 - `scaleExtent` - Alternative to minZoom/maxZoom using branded types
-- `translateExtent` - Pan boundaries (when enablePan is true)
+- `translateExtent` - Pan boundaries
 - `filterZoomEvent` - Custom zoom event filtering
 - `onMoveStart`, `onMove`, `onMoveEnd` - Movement event handlers
 
@@ -451,15 +510,46 @@ const translateExtent = createTranslateExtent(
 );
 ```
 
+### Geography Utilities
+
+Extract geographic data from features for enhanced interactions:
+
+```tsx
+import {
+  getGeographyCentroid,
+  getGeographyBounds,
+  getBestGeographyCoordinates,
+  isValidCoordinates,
+} from '@vnedyalk0v/react19-simple-maps';
+
+// Extract centroid for map centering
+const centroid = getGeographyCentroid(geography);
+if (centroid) {
+  setMapCenter(centroid);
+}
+
+// Get bounding box for zoom-to-fit
+const bounds = getGeographyBounds(geography);
+if (bounds) {
+  const [southwest, northeast] = bounds;
+  // Use bounds for map fitting
+}
+
+// Get best available coordinates
+const coords = getBestGeographyCoordinates(geography);
+```
+
 ### Component Props and Event Handlers
 
 ```tsx
 import type {
   ComposableMapProps,
   GeographyProps,
+  GeographyEventData,
   MarkerProps,
   ProjectionConfig,
   Position,
+  SimpleZoomableGroupProps,
 } from '@vnedyalk0v/react19-simple-maps';
 import type { Feature, Geometry } from 'geojson';
 
@@ -470,9 +560,16 @@ const projectionConfig: ProjectionConfig = {
   rotate: [0, 0, 0],
 };
 
-// Typed event handlers
-const handleGeographyClick = (geography: Feature<Geometry>) => {
-  console.log('Country:', geography.properties?.name);
+// Enhanced event handlers with geographic data
+const handleGeographyClick = (
+  event: React.MouseEvent,
+  data: GeographyEventData,
+) => {
+  console.log('Country:', data.geography.properties?.name);
+  console.log('Centroid:', data.centroid);
+  if (data.centroid) {
+    setMapCenter(data.centroid);
+  }
 };
 
 const handleZoomEnd = (position: Position) => {

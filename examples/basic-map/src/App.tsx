@@ -27,10 +27,31 @@ const cities = [
 const App: React.FC = () => {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
-  const handleGeographyClick = (geography: Feature<Geometry>) => {
-    const countryName =
-      geography.properties?.NAME || geography.properties?.name || 'Unknown';
+  const handleGeographyClick = (
+    _event: React.MouseEvent<SVGPathElement>,
+    data?: {
+      geography: Feature<Geometry>;
+      centroid: [number, number] | null;
+      bounds: [[number, number], [number, number]] | null;
+      coordinates: [number, number] | null;
+    },
+  ) => {
+    // Support both old and new API
+    const geography = data?.geography;
+    const countryName = geography
+      ? geography.properties?.NAME || geography.properties?.name || 'Unknown'
+      : 'Unknown';
+
     setSelectedCountry(countryName);
+
+    // Demonstrate new enhanced geographic data access when available
+    if (data) {
+      console.log('🗺️ Enhanced Geography Data:');
+      console.log('Selected country:', countryName);
+      console.log('Centroid coordinates:', data.centroid);
+      console.log('Bounding box:', data.bounds);
+      console.log('Best coordinates:', data.coordinates);
+    }
   };
 
   return (
@@ -73,7 +94,7 @@ const App: React.FC = () => {
                   <Geography
                     key={countryName || geo.id || index}
                     geography={geo}
-                    onClick={() => handleGeographyClick(geo)}
+                    onClick={handleGeographyClick}
                     style={{
                       default: {
                         fill:

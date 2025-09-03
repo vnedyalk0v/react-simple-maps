@@ -1,8 +1,14 @@
 import { useState, memo, Ref, useMemo, useCallback } from 'react';
-import { GeographyProps, PreparedFeature } from '../types';
+import { GeographyProps, PreparedFeature, GeographyEventData } from '../types';
+import {
+  getGeographyCentroid,
+  getGeographyBounds,
+  getBestGeographyCoordinates,
+} from '../utils/geography-utils';
 
 function Geography({
   geography,
+  onClick,
   onMouseEnter,
   onMouseLeave,
   onMouseDown,
@@ -17,55 +23,72 @@ function Geography({
   const [isPressed, setPressed] = useState(false);
   const [isFocused, setFocus] = useState(false);
 
-  // Memoize event handlers to prevent unnecessary re-renders
+  // Memoize geographic data calculation for performance
+  const geographyEventData = useMemo((): GeographyEventData => {
+    return {
+      geography,
+      centroid: getGeographyCentroid(geography),
+      bounds: getGeographyBounds(geography),
+      coordinates: getBestGeographyCoordinates(geography),
+    };
+  }, [geography]);
+
+  // Enhanced event handlers with geographic data
+  const handleClick = useCallback(
+    (evt: React.MouseEvent<SVGPathElement>) => {
+      if (onClick) onClick(evt, geographyEventData);
+    },
+    [onClick, geographyEventData],
+  );
+
   const handleMouseEnter = useCallback(
     (evt: React.MouseEvent<SVGPathElement>) => {
       setFocus(true);
-      if (onMouseEnter) onMouseEnter(evt);
+      if (onMouseEnter) onMouseEnter(evt, geographyEventData);
     },
-    [onMouseEnter],
+    [onMouseEnter, geographyEventData],
   );
 
   const handleMouseLeave = useCallback(
     (evt: React.MouseEvent<SVGPathElement>) => {
       setFocus(false);
       if (isPressed) setPressed(false);
-      if (onMouseLeave) onMouseLeave(evt);
+      if (onMouseLeave) onMouseLeave(evt, geographyEventData);
     },
-    [onMouseLeave, isPressed],
+    [onMouseLeave, geographyEventData, isPressed],
   );
 
   const handleFocus = useCallback(
     (evt: React.FocusEvent<SVGPathElement>) => {
       setFocus(true);
-      if (onFocus) onFocus(evt);
+      if (onFocus) onFocus(evt, geographyEventData);
     },
-    [onFocus],
+    [onFocus, geographyEventData],
   );
 
   const handleBlur = useCallback(
     (evt: React.FocusEvent<SVGPathElement>) => {
       setFocus(false);
       if (isPressed) setPressed(false);
-      if (onBlur) onBlur(evt);
+      if (onBlur) onBlur(evt, geographyEventData);
     },
-    [onBlur, isPressed],
+    [onBlur, geographyEventData, isPressed],
   );
 
   const handleMouseDown = useCallback(
     (evt: React.MouseEvent<SVGPathElement>) => {
       setPressed(true);
-      if (onMouseDown) onMouseDown(evt);
+      if (onMouseDown) onMouseDown(evt, geographyEventData);
     },
-    [onMouseDown],
+    [onMouseDown, geographyEventData],
   );
 
   const handleMouseUp = useCallback(
     (evt: React.MouseEvent<SVGPathElement>) => {
       setPressed(false);
-      if (onMouseUp) onMouseUp(evt);
+      if (onMouseUp) onMouseUp(evt, geographyEventData);
     },
-    [onMouseUp],
+    [onMouseUp, geographyEventData],
   );
 
   // Memoize current state calculation
@@ -93,6 +116,7 @@ function Geography({
       tabIndex={0}
       className={`rsm-geography ${className}`}
       d={svgPath}
+      onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onFocus={handleFocus}
