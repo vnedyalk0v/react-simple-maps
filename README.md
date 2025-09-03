@@ -262,6 +262,7 @@ The main wrapper component that provides the SVG context and projection system.
 - `projectionConfig` - Configuration for built-in projections
 - `width`, `height` - SVG dimensions
 - `className` - CSS class name
+- `debug` - Enable debug logging (default: false, opt-in only)
 - `metadata` - Optional metadata for SEO and accessibility
 
 ```tsx
@@ -876,6 +877,52 @@ This is a complete rewrite focused exclusively on React 19+. **No backward compa
 4. **Use branded types**: Replace coordinate arrays with `createCoordinates()`
 5. **Add error boundaries**: Wrap geography components for better error handling
 6. **Update TypeScript**: Use the new comprehensive type definitions
+
+## 🐛 Debugging
+
+The library provides opt-in debugging capabilities to help with development and troubleshooting.
+
+### Debug Mode
+
+By default, the library is **quiet** and produces no console output. You can enable debugging in two ways:
+
+**1. Environment Variable (Global)**
+
+```bash
+# Enable debug mode for all maps
+REACT_SIMPLE_MAPS_DEBUG=true npm start
+
+# Or in your .env file
+REACT_SIMPLE_MAPS_DEBUG=true
+```
+
+**2. Component Prop (Per Map)**
+
+```tsx
+<ComposableMap debug={true}>{/* Map content */}</ComposableMap>
+```
+
+### Debug Output
+
+When enabled, debug mode provides:
+
+- **Component render information** with React 19 Owner Stack
+- **Performance metrics** for render times
+- **Error context** with detailed stack traces
+- **Props and state logging** for troubleshooting
+
+```tsx
+// Example debug output in console:
+// 🗺️ ComposableMap Render
+//   Owner Stack: ComposableMap <- App <- Router
+//   Props: { width: 800, height: 600, projection: "geoEqualEarth" }
+```
+
+### Best Practices
+
+- **Production**: Always keep debug disabled (`debug={false}` or omit the prop)
+- **Development**: Enable only when needed for troubleshooting
+- **CI/CD**: Set `REACT_SIMPLE_MAPS_DEBUG=false` in production environments
 
 ## 🤝 Contributing
 

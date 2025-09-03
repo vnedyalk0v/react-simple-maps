@@ -9,13 +9,14 @@ function ComposableMap({
   projection = 'geoEqualEarth',
   projectionConfig = {},
   className = '',
+  debug = false,
   children,
   ref,
   ...restProps
 }: Omit<ComposableMapProps, 'metadata'> & { ref?: Ref<SVGSVGElement> }) {
-  const { logRender } = useMapDebugger('ComposableMap');
+  const { logRender } = useMapDebugger('ComposableMap', debug);
 
-  // Log render with debugging information
+  // Log render with debugging information (only if debug is enabled)
   logRender({ width, height, projection, projectionConfig, className });
 
   return (
