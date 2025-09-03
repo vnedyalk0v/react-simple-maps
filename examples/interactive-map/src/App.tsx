@@ -9,68 +9,21 @@ import {
 } from '@vnedyalk0v/react19-simple-maps';
 import type { GeographyProps, Position } from '@vnedyalk0v/react19-simple-maps';
 
-// Simple inline geography data for testing
-const geoData = {
-  type: 'FeatureCollection' as const,
-  features: [
-    {
-      type: 'Feature' as const,
-      properties: { NAME: 'North America' },
-      geometry: {
-        type: 'Polygon' as const,
-        coordinates: [
-          [
-            [-100, 40],
-            [-80, 40],
-            [-80, 60],
-            [-100, 60],
-            [-100, 40],
-          ],
-        ],
-      },
-    },
-    {
-      type: 'Feature' as const,
-      properties: { NAME: 'Europe' },
-      geometry: {
-        type: 'Polygon' as const,
-        coordinates: [
-          [
-            [0, 45],
-            [20, 45],
-            [20, 65],
-            [0, 65],
-            [0, 45],
-          ],
-        ],
-      },
-    },
-    {
-      type: 'Feature' as const,
-      properties: { NAME: 'Asia' },
-      geometry: {
-        type: 'Polygon' as const,
-        coordinates: [
-          [
-            [80, 20],
-            [120, 20],
-            [120, 60],
-            [80, 60],
-            [80, 20],
-          ],
-        ],
-      },
-    },
-  ],
-};
+// URL to world geography data (110m resolution for better performance)
+const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
-// Major cities with coordinates
+// Major world cities with coordinates
 const cities = [
   { name: 'New York', coordinates: [-74.006, 40.7128] as [number, number] },
   { name: 'London', coordinates: [-0.1276, 51.5074] as [number, number] },
   { name: 'Tokyo', coordinates: [139.6917, 35.6895] as [number, number] },
   { name: 'Sydney', coordinates: [151.2093, -33.8688] as [number, number] },
   { name: 'São Paulo', coordinates: [-46.6333, -23.5505] as [number, number] },
+  { name: 'Cairo', coordinates: [31.2357, 30.0444] as [number, number] },
+  { name: 'Mumbai', coordinates: [72.8777, 19.076] as [number, number] },
+  { name: 'Beijing', coordinates: [116.4074, 39.9042] as [number, number] },
+  { name: 'Lagos', coordinates: [3.3792, 6.5244] as [number, number] },
+  { name: 'Mexico City', coordinates: [-99.1332, 19.4326] as [number, number] },
 ];
 
 const App: React.FC = () => {
@@ -140,7 +93,7 @@ const App: React.FC = () => {
             minZoom={0.5}
             maxZoom={8}
           >
-            <Geographies geography={geoData}>
+            <Geographies geography={geoUrl}>
               {({ geographies }) =>
                 geographies.map((geo, index) => (
                   <Geography

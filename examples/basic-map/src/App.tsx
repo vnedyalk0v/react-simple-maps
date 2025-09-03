@@ -4,48 +4,21 @@ import {
   Geographies,
   Geography,
   GeographyErrorBoundary,
+  Marker,
 } from '@vnedyalk0v/react19-simple-maps';
 import type { GeographyProps } from '@vnedyalk0v/react19-simple-maps';
 
-// URL to a valid TopoJSON file
-// Simple inline geography data for testing
-const geoData = {
-  type: 'FeatureCollection' as const,
-  features: [
-    {
-      type: 'Feature' as const,
-      properties: { NAME: 'Sample Country 1' },
-      geometry: {
-        type: 'Polygon' as const,
-        coordinates: [
-          [
-            [0, 0],
-            [10, 0],
-            [10, 10],
-            [0, 10],
-            [0, 0],
-          ],
-        ],
-      },
-    },
-    {
-      type: 'Feature' as const,
-      properties: { NAME: 'Sample Country 2' },
-      geometry: {
-        type: 'Polygon' as const,
-        coordinates: [
-          [
-            [20, 20],
-            [30, 20],
-            [30, 30],
-            [20, 30],
-            [20, 20],
-          ],
-        ],
-      },
-    },
-  ],
-};
+// URL to world geography data (110m resolution for better performance)
+const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+
+// Major world cities for markers
+const cities = [
+  { name: 'New York', coordinates: [-74.006, 40.7128] as any },
+  { name: 'London', coordinates: [-0.1276, 51.5074] as any },
+  { name: 'Tokyo', coordinates: [139.6917, 35.6895] as any },
+  { name: 'Sydney', coordinates: [151.2093, -33.8688] as any },
+  { name: 'São Paulo', coordinates: [-46.6333, -23.5505] as any },
+];
 
 const App: React.FC = () => {
   const handleGeographyClick = (geography: GeographyProps['geography']) => {
@@ -85,7 +58,7 @@ const App: React.FC = () => {
               }
             >
               <Geographies
-                geography={geoData}
+                geography={geoUrl}
                 errorBoundary={true}
                 onGeographyError={handleGeographyError}
               >
@@ -116,6 +89,31 @@ const App: React.FC = () => {
               </Geographies>
             </Suspense>
           </GeographyErrorBoundary>
+
+          {/* City markers */}
+          {cities.map((city) => (
+            <Marker key={city.name} coordinates={city.coordinates}>
+              <circle
+                r={4}
+                fill="#F53"
+                stroke="#fff"
+                strokeWidth={2}
+                style={{ cursor: 'pointer' }}
+              />
+              <text
+                textAnchor="middle"
+                y={-10}
+                style={{
+                  fontFamily: 'system-ui',
+                  fontSize: '12px',
+                  fill: '#333',
+                  fontWeight: 'bold',
+                }}
+              >
+                {city.name}
+              </text>
+            </Marker>
+          ))}
         </ComposableMap>
       </div>
 
