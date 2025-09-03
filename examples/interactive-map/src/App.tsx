@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   ComposableMap,
   Geographies,
@@ -6,22 +6,17 @@ import {
   ZoomableGroup,
   Marker,
   Annotation,
-} from '@vnedyalk0v/react19-simple-maps';
-import type {
-  Coordinates,
-  Longitude,
-  Latitude,
+  createCoordinates,
 } from '@vnedyalk0v/react19-simple-maps';
 import type { GeographyProps, Position } from '@vnedyalk0v/react19-simple-maps';
 
 // URL to world geography data (using unpkg for better CORS support)
 const geoUrl = 'https://unpkg.com/world-atlas@2/countries-110m.json';
 
-// Helper function to create branded coordinates
-const createCoordinates = (lon: number, lat: number): Coordinates => [
-  lon as Longitude,
-  lat as Latitude,
-];
+/**
+ * BEST PRACTICE: Use the createCoordinates utility from the library
+ * This ensures proper branded typing and prevents coordinate errors
+ */
 
 // Major world cities with coordinates
 const cities = [
@@ -39,25 +34,36 @@ const cities = [
 
 const App: React.FC = () => {
   const [position, setPosition] = useState<Position>({
-    coordinates: [0, 0] as any,
+    coordinates: createCoordinates(0, 0),
     zoom: 1,
   });
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
-  const handleMoveEnd = (position: Position) => {
+  const handleMoveEnd = useCallback((position: Position) => {
     setPosition(position);
-  };
+  }, []);
 
-  const handleGeographyClick = (geography: GeographyProps['geography']) => {
-    const countryName = geography.properties?.NAME || 'Unknown';
-    setSelectedCountry(countryName);
-    console.log('Selected country:', countryName);
-  };
+  const handleGeographyClick = useCallback(
+    (geography: GeographyProps['geography']) => {
+      const countryName = geography.properties?.NAME || 'Unknown';
+      setSelectedCountry(countryName);
+      console.log('Selected country:', countryName);
+    },
+    [],
+  );
 
-  const handleReset = () => {
-    setPosition({ coordinates: [0, 0] as any, zoom: 1 });
+  const handleReset = useCallback(() => {
+    setPosition({ coordinates: createCoordinates(0, 0), zoom: 1 });
     setSelectedCountry(null);
-  };
+  }, []);
+
+  // Memoized click handler factory to prevent recreation on each render
+  const createGeographyClickHandler = useCallback(
+    (geography: GeographyProps['geography']) => () => {
+      handleGeographyClick(geography);
+    },
+    [handleGeographyClick],
+  );
 
   return (
     <div className="container">
@@ -110,7 +116,7 @@ const App: React.FC = () => {
                   <Geography
                     key={geo.properties?.NAME || `geo-${index}`}
                     geography={geo}
-                    onClick={() => handleGeographyClick(geo)}
+                    onClick={createGeographyClickHandler(geo)}
                     style={{
                       default: {
                         fill:

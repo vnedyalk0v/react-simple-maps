@@ -1,12 +1,12 @@
 import { memo, Ref } from 'react';
 import { geoGraticule } from 'd3-geo';
-import { GraticuleProps } from '../types';
+import { GraticuleProps, createGraticuleStep } from '../types';
 import { useMapContext } from './MapProvider';
 
 function Graticule({
   fill = 'transparent',
   stroke = 'currentcolor',
-  step = [10, 10],
+  step = createGraticuleStep(10, 10),
   className = '',
   ref,
   ...restProps

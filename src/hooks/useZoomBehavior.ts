@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { zoom as d3Zoom, ZoomBehavior, D3ZoomEvent } from 'd3-zoom';
 import { select as d3Select } from 'd3-selection';
 import { GeoProjection } from 'd3-geo';
+import { ScaleExtent, TranslateExtent } from '../types';
 import { getCoords } from '../utils';
 import { Position, Coordinates, Longitude, Latitude } from '../types';
 
@@ -16,8 +17,8 @@ interface UseZoomBehaviorProps {
   width: number;
   height: number;
   projection: GeoProjection;
-  scaleExtent: [number, number];
-  translateExtent: [[number, number], [number, number]];
+  scaleExtent: ScaleExtent;
+  translateExtent: TranslateExtent;
   filterZoomEvent?: (event: Event) => boolean;
   onZoom?: (
     transform: { x: number; y: number; k: number },

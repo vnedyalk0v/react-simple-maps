@@ -1,18 +1,26 @@
 import { useRef, useDeferredValue } from 'react';
 import { useMapContext } from '../components/MapProvider';
-import { Position } from '../types';
+import {
+  Position,
+  Coordinates,
+  ScaleExtent,
+  TranslateExtent,
+  createCoordinates,
+  createTranslateExtent,
+  createScaleExtent,
+} from '../types';
 import { useZoomBehavior } from './useZoomBehavior';
 import { usePanBehavior } from './usePanBehavior';
 import { useDeferredPosition } from './useDeferredPosition';
 
 interface UseZoomPanHookProps {
-  center: [number, number];
+  center: Coordinates;
   filterZoomEvent?: (event: Event) => boolean;
   onMoveStart?: (position: Position, event: Event) => void;
   onMoveEnd?: (position: Position, event: Event) => void;
   onMove?: (position: Position, event: Event) => void;
-  translateExtent?: [[number, number], [number, number]];
-  scaleExtent?: [number, number];
+  translateExtent?: TranslateExtent;
+  scaleExtent?: ScaleExtent;
   zoom?: number;
 }
 
@@ -29,17 +37,17 @@ export function useZoomPan({
   onMoveStart,
   onMoveEnd,
   onMove,
-  translateExtent = [
-    [-Infinity, -Infinity],
-    [Infinity, Infinity],
-  ],
-  scaleExtent = [1, 8],
+  translateExtent = createTranslateExtent(
+    createCoordinates(-Infinity, -Infinity),
+    createCoordinates(Infinity, Infinity),
+  ),
+  scaleExtent = createScaleExtent(1, 8),
   zoom = 1,
 }: UseZoomPanHookProps): UseZoomPanReturn {
   const { width, height, projection } = useMapContext();
 
   // Defer expensive calculations for smooth rendering with initialValue for better UX
-  const deferredCenter = useDeferredValue(center, [0, 0] as [number, number]);
+  const deferredCenter = useDeferredValue(center, createCoordinates(0, 0));
   const deferredZoom = useDeferredValue(zoom, 1);
 
   const mapRef = useRef<SVGGElement>(null);

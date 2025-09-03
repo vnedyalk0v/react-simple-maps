@@ -1,4 +1,4 @@
-import { cache, ReactNode } from 'react';
+import { cache, ReactNode, useMemo } from 'react';
 import { Feature, FeatureCollection, Geometry } from 'geojson';
 import { Topology } from 'topojson-specification';
 import { GeographyData } from '../../types';
@@ -9,6 +9,17 @@ import {
   prepareMesh,
 } from '../../utils';
 import { useMapContext } from '../MapProvider';
+import {
+  cacheFeatures,
+  getCachedFeatures,
+  cachePreparedFeatures,
+  getCachedPreparedFeatures,
+  cacheMeshData,
+  getCachedMeshData,
+  generateFeaturesCacheKey,
+  generatePreparedFeaturesCacheKey,
+  generateMeshCacheKey,
+} from '../../utils/geography-cache';
 
 type ParseGeographiesFunction = (
   geographies: Feature<Geometry>[],
@@ -46,19 +57,76 @@ function GeographyProcessor({
 }: GeographyProcessorProps) {
   const { path } = useMapContext();
 
-  const features = getFeatures(geographyData, parseGeographies);
-  const mesh = getMesh(geographyData);
-  const preparedMesh = prepareMesh(
-    mesh?.outline || null,
-    mesh?.borders || null,
-    path,
-  );
+  // Memoize feature extraction with caching for performance
+  const features = useMemo(() => {
+    const cacheKey = generateFeaturesCacheKey(geographyData, parseGeographies);
+    const cached = getCachedFeatures(cacheKey);
 
-  const processedData: GeographyData = {
-    geographies: prepareFeatures(features, path),
-    outline: preparedMesh.outline || '',
-    borders: preparedMesh.borders || '',
-  };
+    if (cached) {
+      return cached;
+    }
+
+    const extractedFeatures = getFeatures(geographyData, parseGeographies);
+    cacheFeatures(cacheKey, extractedFeatures);
+    return extractedFeatures;
+  }, [geographyData, parseGeographies]);
+
+  // Memoize mesh extraction separately for better granularity
+  const mesh = useMemo(() => {
+    return getMesh(geographyData);
+  }, [geographyData]);
+
+  // Memoize prepared features with caching (path generation is expensive)
+  const preparedGeographies = useMemo(() => {
+    if (features.length === 0) return [];
+
+    const cacheKey = generatePreparedFeaturesCacheKey(features, path);
+    const cached = getCachedPreparedFeatures(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    const prepared = prepareFeatures(features, path);
+    cachePreparedFeatures(cacheKey, prepared);
+    return prepared;
+  }, [features, path]);
+
+  // Memoize prepared mesh with caching (path generation for borders/outline)
+  const preparedMeshData = useMemo(() => {
+    if (!mesh) return { outline: '', borders: '' };
+
+    const cacheKey = generateMeshCacheKey(geographyData, path);
+    const cached = getCachedMeshData(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    const prepared = prepareMesh(
+      mesh.outline || null,
+      mesh.borders || null,
+      path,
+    );
+
+    const result = {
+      outline: prepared.outline || '',
+      borders: prepared.borders || '',
+    };
+
+    cacheMeshData(cacheKey, result);
+    return result;
+  }, [mesh, path, geographyData]);
+
+  // Memoize the final processed data object
+  const processedData: GeographyData = useMemo(
+    () => ({
+      geographies: preparedGeographies,
+      outline: preparedMeshData.outline,
+      borders: preparedMeshData.borders,
+    }),
+    [preparedGeographies, preparedMeshData],
+  );
 
   return children(processedData);
 }

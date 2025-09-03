@@ -2,6 +2,11 @@ import React, { createContext, useMemo, useContext, ReactNode } from 'react';
 import * as d3Geo from 'd3-geo';
 import { GeoProjection } from 'd3-geo';
 import { MapContextType, ProjectionConfig } from '../types';
+import { createGeographyError } from '../utils';
+import {
+  validateProjectionConfig,
+  sanitizeString,
+} from '../utils/input-validation';
 
 const { geoPath, ...projections } = d3Geo;
 
@@ -24,9 +29,20 @@ const makeProjection = ({
 
   if (isFunc) return projection as GeoProjection;
 
-  const projectionName = projection as keyof typeof projections;
+  // Validate and sanitize projection input
+  const sanitizedProjection = sanitizeString(projection);
+
+  // Validate projection configuration
+  const validatedConfig = validateProjectionConfig(projectionConfig);
+
+  const projectionName = sanitizedProjection as keyof typeof projections;
   if (!(projectionName in projections)) {
-    throw new Error(`Unknown projection: ${projection}`);
+    throw createGeographyError(
+      'PROJECTION_ERROR',
+      `Unknown projection: ${sanitizedProjection}`,
+      undefined,
+      { availableProjections: Object.keys(projections) },
+    );
   }
 
   let proj = (projections[projectionName] as () => GeoProjection)().translate([
@@ -34,15 +50,15 @@ const makeProjection = ({
     height / 2,
   ]);
 
-  // Apply projection configuration
-  if (projectionConfig.center && proj.center) {
-    proj = proj.center(projectionConfig.center);
+  // Apply validated projection configuration
+  if (validatedConfig.center && proj.center) {
+    proj = proj.center(validatedConfig.center);
   }
-  if (projectionConfig.rotate && proj.rotate) {
-    proj = proj.rotate(projectionConfig.rotate);
+  if (validatedConfig.rotate && proj.rotate) {
+    proj = proj.rotate(validatedConfig.rotate);
   }
-  if (projectionConfig.scale && proj.scale) {
-    proj = proj.scale(projectionConfig.scale);
+  if (validatedConfig.scale && proj.scale) {
+    proj = proj.scale(validatedConfig.scale);
   }
 
   return proj;
@@ -87,7 +103,10 @@ const MapProvider: React.FC<MapProviderProps> = ({
 const useMapContext = (): MapContextType => {
   const context = useContext(MapContext);
   if (context === undefined) {
-    throw new Error('useMapContext must be used within a MapProvider');
+    throw createGeographyError(
+      'CONTEXT_ERROR',
+      'useMapContext must be used within a MapProvider',
+    );
   }
   return context;
 };

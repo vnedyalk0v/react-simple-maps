@@ -11,24 +11,25 @@ import {
   Geography,
   GeographyErrorBoundary,
   Marker,
-} from '@vnedyalk0v/react19-simple-maps';
-import type {
-  Coordinates,
-  Longitude,
-  Latitude,
+  createCoordinates,
 } from '@vnedyalk0v/react19-simple-maps';
 import type { GeographyProps } from '@vnedyalk0v/react19-simple-maps';
 
 // URL to world geography data (using unpkg for better CORS support)
 const geoUrl = 'https://unpkg.com/world-atlas@2/countries-110m.json';
 
-// Helper function to create branded coordinates
-const createCoordinates = (lon: number, lat: number): Coordinates => [
-  lon as Longitude,
-  lat as Latitude,
-];
+/**
+ * BEST PRACTICE: Use branded coordinate types for type safety
+ * The createCoordinates function from the library ensures proper typing
+ * and prevents accidentally swapping longitude and latitude values
+ */
 
-// Major world cities for markers - memoized for performance
+/**
+ * Major world cities for markers
+ *
+ * BEST PRACTICE: Define static data outside components to prevent recreation
+ * Using 'as const' ensures the array is readonly and coordinates are immutable
+ */
 const cities = [
   { name: 'New York', coordinates: createCoordinates(-74.006, 40.7128) },
   { name: 'London', coordinates: createCoordinates(-0.1276, 51.5074) },
@@ -74,13 +75,32 @@ const MemoizedGeography = memo(
 // Add display name for React DevTools
 MemoizedGeography.displayName = 'MemoizedGeography';
 
+/**
+ * Main App component demonstrating React Simple Maps best practices
+ *
+ * BEST PRACTICES DEMONSTRATED:
+ * - React 19 concurrent features (useDeferredValue)
+ * - Proper event handler memoization
+ * - Error boundary integration
+ * - Performance optimization with memo
+ * - Branded coordinate types
+ * - Accessibility support
+ */
 const App: React.FC = () => {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [hoveredMarker, setHoveredMarker] = useState<string | null>(null);
 
-  // Use deferred value for better performance during interactions
+  /**
+   * PERFORMANCE OPTIMIZATION: Use deferred value for better performance
+   * This prevents expensive re-renders during rapid state changes
+   * React 19 feature for concurrent rendering
+   */
   const deferredSelectedCountry = useDeferredValue(selectedCountry);
 
+  /**
+   * MEMOIZATION: Event handlers are wrapped with useCallback
+   * This prevents unnecessary re-renders of child components
+   */
   const handleGeographyClick = useCallback(
     (geography: GeographyProps['geography']) => {
       const countryName = geography.properties?.NAME || 'Unknown';
@@ -90,8 +110,13 @@ const App: React.FC = () => {
     [],
   );
 
+  /**
+   * ERROR HANDLING: Proper error handling for geography loading
+   * In production, you might want to send errors to a monitoring service
+   */
   const handleGeographyError = useCallback((error: Error) => {
     console.error('Geography loading error:', error.message);
+    // In production: errorReporting.captureException(error);
   }, []);
 
   const handleMarkerHover = useCallback(
@@ -99,6 +124,29 @@ const App: React.FC = () => {
       setHoveredMarker(isHovering ? cityName : null);
     },
     [],
+  );
+
+  // Memoized click handler factory to prevent recreation on each render
+  const createGeographyClickHandler = useCallback(
+    (geography: GeographyProps['geography']) => () => {
+      handleGeographyClick(geography);
+    },
+    [handleGeographyClick],
+  );
+
+  // Memoized marker event handlers to prevent recreation
+  const createMarkerEnterHandler = useCallback(
+    (cityName: string) => () => {
+      handleMarkerHover(cityName, true);
+    },
+    [handleMarkerHover],
+  );
+
+  const createMarkerLeaveHandler = useCallback(
+    (cityName: string) => () => {
+      handleMarkerHover(cityName, false);
+    },
+    [handleMarkerHover],
   );
 
   return (
@@ -151,7 +199,7 @@ const App: React.FC = () => {
                     <MemoizedGeography
                       key={geo.properties?.NAME || `geo-${index}`}
                       geography={geo}
-                      onClick={() => handleGeographyClick(geo)}
+                      onClick={createGeographyClickHandler(geo)}
                       isSelected={
                         deferredSelectedCountry ===
                         (geo.properties?.NAME || 'Unknown')
@@ -175,8 +223,8 @@ const App: React.FC = () => {
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
                 }}
-                onMouseEnter={() => handleMarkerHover(city.name, true)}
-                onMouseLeave={() => handleMarkerHover(city.name, false)}
+                onMouseEnter={createMarkerEnterHandler(city.name)}
+                onMouseLeave={createMarkerLeaveHandler(city.name)}
               />
               <text
                 textAnchor="middle"
