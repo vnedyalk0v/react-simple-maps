@@ -1,4 +1,4 @@
-import { Ref } from 'react';
+import { Ref, memo } from 'react';
 import { ComposableMapProps } from '../types';
 import { MapProvider } from './MapProvider';
 import { MapMetadata, mapMetadataPresets } from './MapMetadata';
@@ -69,4 +69,4 @@ function ComposableMap({
 
 ComposableMap.displayName = 'ComposableMap';
 
-export default ComposableMap;
+export default memo(ComposableMap);

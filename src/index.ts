@@ -42,4 +42,7 @@ export type {
   GeographyData,
   ZoomPanState,
   Position,
+  Coordinates,
+  Longitude,
+  Latitude,
 } from './types';

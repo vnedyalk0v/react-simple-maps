@@ -48,7 +48,7 @@ const GEOGRAPHY_FETCH_CONFIG = {
     'application/geo+json',
     'text/json',
   ],
-  ALLOWED_PROTOCOLS: ['https:', 'http:'], // Allow http for development
+  ALLOWED_PROTOCOLS: ['https:', 'http:'], // HTTP restricted to localhost in development only
 } as const;
 
 // Validate URL security
@@ -56,19 +56,30 @@ function validateGeographyUrl(url: string): void {
   try {
     const parsedUrl = new URL(url);
 
-    if (
-      !GEOGRAPHY_FETCH_CONFIG.ALLOWED_PROTOCOLS.includes(
-        parsedUrl.protocol as 'https:' | 'http:',
-      )
-    ) {
-      throw new Error(
-        `Invalid protocol: ${parsedUrl.protocol}. Only HTTPS and HTTP are allowed.`,
-      );
+    // Only allow HTTPS in production
+    if (process.env.NODE_ENV === 'production') {
+      if (parsedUrl.protocol !== 'https:') {
+        throw new Error(
+          `Invalid protocol: ${parsedUrl.protocol}. Only HTTPS is allowed in production.`,
+        );
+      }
+    } else {
+      // Allow HTTP only for localhost in development
+      if (
+        parsedUrl.protocol !== 'https:' &&
+        !(parsedUrl.protocol === 'http:' && parsedUrl.hostname === 'localhost')
+      ) {
+        throw new Error(
+          `Invalid protocol: ${parsedUrl.protocol}. Only HTTPS is allowed (HTTP allowed for localhost in development).`,
+        );
+      }
     }
 
     // Prevent local file access and private networks in production
     if (typeof window !== 'undefined' && parsedUrl.hostname === 'localhost') {
-      if (process.env.NODE_ENV !== 'production') {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('Localhost access not allowed in production');
+      } else {
         // Development warning for localhost usage
         // eslint-disable-next-line no-console
         console.warn(

@@ -1,4 +1,4 @@
-import { Ref, ReactNode } from 'react';
+import { Ref, ReactNode, memo } from 'react';
 import { GeographiesProps } from '../types';
 import { useMapContext } from './MapProvider';
 import useGeographies from './useGeographies';
@@ -86,4 +86,4 @@ function Geographies({
 
 Geographies.displayName = 'Geographies';
 
-export default Geographies;
+export default memo(Geographies);

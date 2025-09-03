@@ -7,23 +7,34 @@ import {
   Marker,
   Annotation,
 } from '@vnedyalk0v/react19-simple-maps';
+import type {
+  Coordinates,
+  Longitude,
+  Latitude,
+} from '@vnedyalk0v/react19-simple-maps';
 import type { GeographyProps, Position } from '@vnedyalk0v/react19-simple-maps';
 
-// URL to world geography data (110m resolution for better performance)
-const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+// URL to world geography data (using unpkg for better CORS support)
+const geoUrl = 'https://unpkg.com/world-atlas@2/countries-110m.json';
+
+// Helper function to create branded coordinates
+const createCoordinates = (lon: number, lat: number): Coordinates => [
+  lon as Longitude,
+  lat as Latitude,
+];
 
 // Major world cities with coordinates
 const cities = [
-  { name: 'New York', coordinates: [-74.006, 40.7128] as [number, number] },
-  { name: 'London', coordinates: [-0.1276, 51.5074] as [number, number] },
-  { name: 'Tokyo', coordinates: [139.6917, 35.6895] as [number, number] },
-  { name: 'Sydney', coordinates: [151.2093, -33.8688] as [number, number] },
-  { name: 'São Paulo', coordinates: [-46.6333, -23.5505] as [number, number] },
-  { name: 'Cairo', coordinates: [31.2357, 30.0444] as [number, number] },
-  { name: 'Mumbai', coordinates: [72.8777, 19.076] as [number, number] },
-  { name: 'Beijing', coordinates: [116.4074, 39.9042] as [number, number] },
-  { name: 'Lagos', coordinates: [3.3792, 6.5244] as [number, number] },
-  { name: 'Mexico City', coordinates: [-99.1332, 19.4326] as [number, number] },
+  { name: 'New York', coordinates: createCoordinates(-74.006, 40.7128) },
+  { name: 'London', coordinates: createCoordinates(-0.1276, 51.5074) },
+  { name: 'Tokyo', coordinates: createCoordinates(139.6917, 35.6895) },
+  { name: 'Sydney', coordinates: createCoordinates(151.2093, -33.8688) },
+  { name: 'São Paulo', coordinates: createCoordinates(-46.6333, -23.5505) },
+  { name: 'Cairo', coordinates: createCoordinates(31.2357, 30.0444) },
+  { name: 'Mumbai', coordinates: createCoordinates(72.8777, 19.076) },
+  { name: 'Beijing', coordinates: createCoordinates(116.4074, 39.9042) },
+  { name: 'Lagos', coordinates: createCoordinates(3.3792, 6.5244) },
+  { name: 'Mexico City', coordinates: createCoordinates(-99.1332, 19.4326) },
 ];
 
 const App: React.FC = () => {
@@ -126,7 +137,7 @@ const App: React.FC = () => {
 
             {/* City Markers */}
             {cities.map(({ name, coordinates }) => (
-              <Marker key={name} coordinates={coordinates as any}>
+              <Marker key={name} coordinates={coordinates}>
                 <circle r={4} fill="#4ECDC4" stroke="#fff" strokeWidth={2} />
               </Marker>
             ))}
@@ -136,7 +147,7 @@ const App: React.FC = () => {
               cities.map(({ name, coordinates }) => (
                 <Annotation
                   key={`${name}-annotation`}
-                  subject={coordinates as any}
+                  subject={coordinates}
                   dx={-90}
                   dy={-30}
                   connectorProps={{

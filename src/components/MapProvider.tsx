@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useMemo,
-  useCallback,
-  useContext,
-  ReactNode,
-} from 'react';
+import React, { createContext, useMemo, useContext, ReactNode } from 'react';
 import * as d3Geo from 'd3-geo';
 import { GeoProjection } from 'd3-geo';
 import { MapContextType, ProjectionConfig } from '../types';
@@ -69,49 +63,23 @@ const MapProvider: React.FC<MapProviderProps> = ({
   projectionConfig = {},
   children,
 }) => {
-  const [cx, cy] = projectionConfig.center || [undefined, undefined];
-  const [rx, ry, rz] = projectionConfig.rotate || [
-    undefined,
-    undefined,
-    undefined,
-  ];
-  const [p1, p2] = projectionConfig.parallels || [undefined, undefined];
-  const s = projectionConfig.scale;
-
   const projMemo = useMemo(() => {
-    const config: ProjectionConfig = {};
-
-    if (cx !== undefined && cy !== undefined) {
-      config.center = [cx, cy];
-    }
-    if (rx !== undefined || ry !== undefined) {
-      config.rotate = [rx || 0, ry || 0, rz || 0];
-    }
-    if (p1 !== undefined || p2 !== undefined) {
-      config.parallels = [p1 || 0, p2 || 0];
-    }
-    if (s !== undefined) {
-      config.scale = s;
-    }
-
     return makeProjection({
-      projectionConfig: config,
+      projectionConfig,
       projection: projection || 'geoEqualEarth',
       width,
       height,
     });
-  }, [width, height, projection, cx, cy, rx, ry, rz, p1, p2, s]);
-
-  const proj = useCallback(() => projMemo, [projMemo]);
+  }, [width, height, projection, projectionConfig]);
 
   const value = useMemo((): MapContextType => {
     return {
       width,
       height,
-      projection: proj(),
-      path: geoPath().projection(proj()),
+      projection: projMemo,
+      path: geoPath().projection(projMemo),
     };
-  }, [width, height, proj]);
+  }, [width, height, projMemo]);
 
   return <MapContext value={value}>{children}</MapContext>;
 };

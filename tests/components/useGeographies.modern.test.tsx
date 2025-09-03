@@ -90,8 +90,13 @@ describe('useGeographies (Modern)', () => {
       { timeout: 3000 },
     );
 
-    // We only assert that we suspended (fallback visible) due to environment timing with React.use()
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    // Wait for the data to load and verify the result
+    await waitFor(
+      () => {
+        expect(screen.getByTestId('ready')).toHaveTextContent('1::1::1');
+      },
+      { timeout: 3000 },
+    );
   });
 
   it('should handle direct geography data without caching', () => {
@@ -271,25 +276,21 @@ describe('useGeographies (Modern)', () => {
     const cacheError = new Error('Failed to fetch geography data');
     vi.mocked(fetchGeographiesCache).mockRejectedValue(cacheError);
 
-    const Fallback = () => <div data-testid="error-fallback">Error</div>;
-
-    const ErrorWrapper = ({ children }: { children: React.ReactNode }) => (
-      <MapProvider width={800} height={600} projection={mockProjection}>
-        <GeographyErrorBoundary fallback={() => <Fallback />}>
-          <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
-        </GeographyErrorBoundary>
-      </MapProvider>
-    );
-
     const HookUser = () => {
-      useGeographies({ geography: 'https://example.com/invalid.json' });
-      return <div data-testid="loaded">Loaded</div>;
+      const { geographies, outline, borders } = useGeographies({
+        geography: 'https://example.com/invalid.json',
+      });
+      return (
+        <div data-testid="result">
+          {geographies.length}::{outline}::{borders}
+        </div>
+      );
     };
 
     render(
-      <ErrorWrapper>
+      <TestWrapper>
         <HookUser />
-      </ErrorWrapper>,
+      </TestWrapper>,
     );
 
     await waitFor(
@@ -300,14 +301,10 @@ describe('useGeographies (Modern)', () => {
       { timeout: 3000 },
     );
 
-    // In some environments, Suspense fallback may remain visible while the rejection surfaces.
-    // We only assert the UI remains stable and shows either boundary fallback or loading indicator.
+    // When there's an error, the hook should return empty data gracefully
     await waitFor(
       () => {
-        const hasErrorFallback =
-          screen.queryByTestId('error-fallback') !== null;
-        const hasLoading = screen.queryByText('Loading...') !== null;
-        expect(hasErrorFallback || hasLoading).toBe(true);
+        expect(screen.getByTestId('result')).toHaveTextContent('0::::');
       },
       { timeout: 3000 },
     );

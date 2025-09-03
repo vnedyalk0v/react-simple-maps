@@ -177,6 +177,7 @@ export interface UseZoomPanProps {
 // Utility types
 export interface PreparedFeature extends Feature<Geometry> {
   svgPath: string;
+  rsmKey: string;
 }
 
 export interface GeographyData {
