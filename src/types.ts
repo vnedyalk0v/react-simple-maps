@@ -199,6 +199,9 @@ export interface ComposableMapProps<
   onGeographyError?: (error: Error) => void;
   fallback?: ReactNode;
 
+  // Debug mode - opt-in debugging (quiet by default)
+  debug?: boolean;
+
   // Conditional metadata support
   metadata?: M extends true
     ? Required<{

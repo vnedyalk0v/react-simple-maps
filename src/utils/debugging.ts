@@ -24,10 +24,34 @@ export class MapDebugger {
   private static instance: MapDebugger;
   private debugLogs: DebugInfo[] = [];
   private performanceMetrics: Map<string, PerformanceMetrics> = new Map();
-  private isEnabled: boolean =
-    typeof process !== 'undefined'
-      ? process.env.NODE_ENV !== 'production'
-      : true;
+  private isEnabled: boolean = this.getDebugMode();
+
+  /**
+   * Determine if debug mode should be enabled
+   * Priority: Environment variable > explicit prop > default (false)
+   */
+  private getDebugMode(): boolean {
+    // Check environment variable first
+    if (typeof process !== 'undefined') {
+      const envDebug = process.env.REACT_SIMPLE_MAPS_DEBUG;
+      if (envDebug === 'true' || envDebug === '1') {
+        return true;
+      }
+      if (envDebug === 'false' || envDebug === '0') {
+        return false;
+      }
+    }
+
+    // Default to quiet (false) - opt-in debugging only
+    return false;
+  }
+
+  /**
+   * Enable or disable debugging at runtime
+   */
+  setDebugMode(enabled: boolean): void {
+    this.isEnabled = enabled;
+  }
 
   static getInstance(): MapDebugger {
     if (!MapDebugger.instance) {
@@ -217,10 +241,15 @@ export class MapDebugger {
 }
 
 /**
- * Hook for component debugging
+ * Hook for component debugging with opt-in support
  */
-export function useMapDebugger(componentName: string) {
+export function useMapDebugger(componentName: string, debug?: boolean) {
   const mapDebugger = MapDebugger.getInstance();
+
+  // If debug prop is provided, temporarily set debug mode
+  if (debug !== undefined) {
+    mapDebugger.setDebugMode(debug);
+  }
 
   return {
     logRender: (
