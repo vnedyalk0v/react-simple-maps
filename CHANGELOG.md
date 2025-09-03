@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.5
+
+### Patch Changes
+
+- 93014c3: Improve examples and npm publishing configuration
+  - Simplify basic-map example by removing advanced React 19 features for better accessibility
+  - Configure npm publishing to public registry with proper authentication
+  - Update dependencies and improve ESLint configuration for examples
+  - Remove focus outlines from map elements for better visual appearance
+  - Add SRI hashes and improve security features
+  - Fix root element existence check in examples
+
 All notable changes to `@vnedyalk0v/react19-simple-maps` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
