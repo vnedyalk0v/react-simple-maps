@@ -14,15 +14,137 @@ export type Longitude = number & { __brand: 'longitude' };
 export type Latitude = number & { __brand: 'latitude' };
 export type Coordinates = [Longitude, Latitude];
 
+// Additional branded types for specific coordinate patterns
+export type ScaleExtent = [number, number] & { __brand: 'scaleExtent' };
+export type TranslateExtent = [Coordinates, Coordinates] & {
+  __brand: 'translateExtent';
+};
+export type RotationAngles = [number, number, number] & {
+  __brand: 'rotationAngles';
+};
+export type Parallels = [number, number] & { __brand: 'parallels' };
+export type GraticuleStep = [number, number] & { __brand: 'graticuleStep' };
+
+// Helper functions to create branded types
+export const createLongitude = (value: number): Longitude => value as Longitude;
+export const createLatitude = (value: number): Latitude => value as Latitude;
+export const createCoordinates = (lon: number, lat: number): Coordinates => [
+  createLongitude(lon),
+  createLatitude(lat),
+];
+export const createScaleExtent = (min: number, max: number): ScaleExtent =>
+  [min, max] as ScaleExtent;
+export const createTranslateExtent = (
+  topLeft: Coordinates,
+  bottomRight: Coordinates,
+): TranslateExtent => [topLeft, bottomRight] as TranslateExtent;
+export const createRotationAngles = (
+  x: number,
+  y: number,
+  z: number,
+): RotationAngles => [x, y, z] as RotationAngles;
+export const createParallels = (p1: number, p2: number): Parallels =>
+  [p1, p2] as Parallels;
+export const createGraticuleStep = (x: number, y: number): GraticuleStep =>
+  [x, y] as GraticuleStep;
+
+// Conditional types for enhanced component APIs
+export type ConditionalProps<T, K extends keyof T> = T[K] extends undefined
+  ? Partial<T>
+  : Required<T>;
+
+// Style variant conditional types
+export type StyleVariant = 'default' | 'hover' | 'pressed' | 'focused';
+export type ConditionalStyle<T = CSSProperties> = {
+  [K in StyleVariant]?: T;
+};
+
+// Geography props with conditional error handling
+export type GeographyPropsWithErrorHandling<T extends boolean> = T extends true
+  ? {
+      errorBoundary: true;
+      onGeographyError: (error: Error) => void;
+      fallback: ErrorBoundaryFallback;
+    }
+  : {
+      errorBoundary?: false;
+      onGeographyError?: (error: Error) => void;
+      fallback?: never;
+    };
+
+// Zoom behavior conditional props
+export type ZoomBehaviorProps<T extends boolean> = T extends true
+  ? {
+      enableZoom: true;
+      minZoom: number;
+      maxZoom: number;
+      scaleExtent: ScaleExtent;
+    }
+  : {
+      enableZoom?: false;
+      minZoom?: never;
+      maxZoom?: never;
+      scaleExtent?: never;
+    };
+
+// Pan behavior conditional props
+export type PanBehaviorProps<T extends boolean> = T extends true
+  ? {
+      enablePan: true;
+      translateExtent: TranslateExtent;
+    }
+  : {
+      enablePan?: false;
+      translateExtent?: never;
+    };
+
+// Projection configuration conditional types
+export type ProjectionConfigConditional<T extends string> =
+  T extends 'geoAlbers'
+    ? ProjectionConfig & Required<Pick<ProjectionConfig, 'parallels'>>
+    : T extends 'geoConicEqualArea' | 'geoConicConformal'
+      ? ProjectionConfig & Required<Pick<ProjectionConfig, 'parallels'>>
+      : ProjectionConfig;
+
+// Utility types for better type inference
+export type ExtractStyleVariant<T> =
+  T extends ConditionalStyle<infer U> ? U : never;
+
+export type RequiredKeys<T> = {
+  [K in keyof T]-?: {} extends Pick<T, K> ? never : K;
+}[keyof T];
+
+export type OptionalKeys<T> = {
+  [K in keyof T]-?: {} extends Pick<T, K> ? K : never;
+}[keyof T];
+
+// Type guards for runtime type checking
+export type TypeGuard<T> = (value: unknown) => value is T;
+
+// Enhanced error types for better error handling
+export type GeographyError = Error & {
+  type:
+    | 'GEOGRAPHY_LOAD_ERROR'
+    | 'GEOGRAPHY_PARSE_ERROR'
+    | 'PROJECTION_ERROR'
+    | 'VALIDATION_ERROR'
+    | 'SECURITY_ERROR'
+    | 'CONFIGURATION_ERROR'
+    | 'CONTEXT_ERROR';
+  geography?: string;
+  details?: Record<string, unknown>;
+  timestamp?: string;
+};
+
 // Template literal types for projections
 export type ProjectionName = `geo${Capitalize<string>}`;
 
 // Base types
 export interface ProjectionConfig {
-  center?: [number, number];
-  rotate?: [number, number, number];
+  center?: Coordinates;
+  rotate?: RotationAngles;
   scale?: number;
-  parallels?: [number, number];
+  parallels?: Parallels;
 }
 
 export interface MapContextType {
@@ -39,12 +161,15 @@ export interface ZoomPanContextType {
   transformString: string;
 }
 
-// Component Props
-export interface ComposableMapProps extends SVGProps<SVGSVGElement> {
+// Enhanced Component Props with conditional types
+export interface ComposableMapProps<
+  P extends string = string,
+  M extends boolean = false,
+> extends SVGProps<SVGSVGElement> {
   width?: number;
   height?: number;
-  projection?: ProjectionName | string | GeoProjection;
-  projectionConfig?: ProjectionConfig;
+  projection?: ProjectionName | P | GeoProjection;
+  projectionConfig?: ProjectionConfigConditional<P>;
   className?: string;
   children?: ReactNode;
 
@@ -52,34 +177,42 @@ export interface ComposableMapProps extends SVGProps<SVGSVGElement> {
   onGeographyError?: (error: Error) => void;
   fallback?: ReactNode;
 
-  // Metadata support
-  metadata?: {
-    title?: string;
-    description?: string;
-    keywords?: string[];
-    author?: string;
-    canonicalUrl?: string;
+  // Conditional metadata support
+  metadata?: M extends true
+    ? Required<{
+        title: string;
+        description: string;
+        keywords: string[];
+        author?: string;
+        canonicalUrl?: string;
+      }>
+    : {
+        title?: string;
+        description?: string;
+        keywords?: string[];
+        author?: string;
+        canonicalUrl?: string;
+      };
+}
+
+export type GeographiesProps<E extends boolean = false> = Omit<
+  SVGProps<SVGGElement>,
+  'children' | 'onError'
+> &
+  GeographyPropsWithErrorHandling<E> & {
+    geography: string | Topology | FeatureCollection;
+    children: (props: {
+      geographies: Feature<Geometry>[];
+      outline: string;
+      borders: string;
+      path: GeoPath;
+      projection: GeoProjection;
+    }) => ReactNode;
+    parseGeographies?: (
+      geographies: Feature<Geometry>[],
+    ) => Feature<Geometry>[];
+    className?: string;
   };
-}
-
-export interface GeographiesProps
-  extends Omit<SVGProps<SVGGElement>, 'children' | 'onError'> {
-  geography: string | Topology | FeatureCollection;
-  children: (props: {
-    geographies: Feature<Geometry>[];
-    outline: string;
-    borders: string;
-    path: GeoPath;
-    projection: GeoProjection;
-  }) => ReactNode;
-  parseGeographies?: (geographies: Feature<Geometry>[]) => Feature<Geometry>[];
-  className?: string;
-
-  // Modern React patterns
-  errorBoundary?: boolean;
-  onGeographyError?: (error: Error) => void;
-  fallback?: ErrorBoundaryFallback;
-}
 
 export interface GeographyProps
   extends Omit<SVGProps<SVGPathElement>, 'style'> {
@@ -90,27 +223,25 @@ export interface GeographyProps
   onMouseUp?: (event: React.MouseEvent<SVGPathElement>) => void;
   onFocus?: (event: React.FocusEvent<SVGPathElement>) => void;
   onBlur?: (event: React.FocusEvent<SVGPathElement>) => void;
-  style?: {
-    default?: CSSProperties;
-    hover?: CSSProperties;
-    pressed?: CSSProperties;
-  };
+  style?: ConditionalStyle<CSSProperties>;
   className?: string;
 }
 
-export interface ZoomableGroupProps extends SVGProps<SVGGElement> {
-  center?: [number, number];
-  zoom?: number;
-  minZoom?: number;
-  maxZoom?: number;
-  translateExtent?: [[number, number], [number, number]];
-  filterZoomEvent?: (event: Event) => boolean;
-  onMoveStart?: (position: Position, event: Event) => void;
-  onMove?: (position: Position, event: Event) => void;
-  onMoveEnd?: (position: Position, event: Event) => void;
-  className?: string;
-  children?: ReactNode;
-}
+export type ZoomableGroupProps<
+  Z extends boolean = true,
+  P extends boolean = true,
+> = SVGProps<SVGGElement> &
+  ZoomBehaviorProps<Z> &
+  PanBehaviorProps<P> & {
+    center?: Coordinates;
+    zoom?: number;
+    filterZoomEvent?: (event: Event) => boolean;
+    onMoveStart?: (position: Position, event: Event) => void;
+    onMove?: (position: Position, event: Event) => void;
+    onMoveEnd?: (position: Position, event: Event) => void;
+    className?: string;
+    children?: ReactNode;
+  };
 
 export interface MarkerProps extends Omit<SVGProps<SVGGElement>, 'style'> {
   coordinates: Coordinates;
@@ -120,11 +251,7 @@ export interface MarkerProps extends Omit<SVGProps<SVGGElement>, 'style'> {
   onMouseUp?: (event: React.MouseEvent<SVGGElement>) => void;
   onFocus?: (event: React.FocusEvent<SVGGElement>) => void;
   onBlur?: (event: React.FocusEvent<SVGGElement>) => void;
-  style?: {
-    default?: CSSProperties;
-    hover?: CSSProperties;
-    pressed?: CSSProperties;
-  };
+  style?: ConditionalStyle<CSSProperties>;
   className?: string;
   children?: ReactNode;
 }
@@ -148,7 +275,7 @@ export interface AnnotationProps extends SVGProps<SVGGElement> {
 }
 
 export interface GraticuleProps extends SVGProps<SVGPathElement> {
-  step?: [number, number];
+  step?: GraticuleStep;
   className?: string;
 }
 
@@ -164,10 +291,10 @@ export interface UseGeographiesProps {
 }
 
 export interface UseZoomPanProps {
-  center: [number, number];
+  center: Coordinates;
   zoom: number;
-  scaleExtent: [number, number];
-  translateExtent?: [[number, number], [number, number]];
+  scaleExtent: ScaleExtent;
+  translateExtent?: TranslateExtent;
   filterZoomEvent?: (event: Event) => boolean;
   onMoveStart?: (position: Position, event: Event) => void;
   onMove?: (position: Position, event: Event) => void;
@@ -177,6 +304,7 @@ export interface UseZoomPanProps {
 // Utility types
 export interface PreparedFeature extends Feature<Geometry> {
   svgPath: string;
+  rsmKey: string;
 }
 
 export interface GeographyData {
@@ -202,6 +330,24 @@ export interface GeographyErrorBoundaryProps {
   children: ReactNode;
   fallback?: (error: Error, retry: () => void) => ReactNode;
   onError?: (error: Error) => void;
+}
+
+// Security configuration interfaces
+export interface SRIConfig {
+  algorithm: 'sha256' | 'sha384' | 'sha512';
+  hash: string;
+  enforceIntegrity: boolean;
+}
+
+export interface GeographySecurityConfig {
+  ALLOW_LOCALHOST?: boolean;
+  ALLOWED_PROTOCOLS?: string[];
+  MAX_FILE_SIZE?: number;
+  MAX_RESPONSE_SIZE?: number;
+  TIMEOUT_MS?: number;
+  STRICT_HTTPS_ONLY?: boolean;
+  ALLOWED_CONTENT_TYPES?: string[];
+  ALLOW_HTTP_LOCALHOST?: boolean;
 }
 
 // Server Component compatible geography props

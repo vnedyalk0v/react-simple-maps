@@ -53,3 +53,59 @@ body {
   margin-bottom: 0;
   color: #424242;
 }
+
+.status {
+  background: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem auto;
+  max-width: 300px;
+  color: #0c4a6e;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.status strong {
+  color: #0369a1;
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .header p {
+    font-size: 1rem;
+  }
+
+  .map-container {
+    padding: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .status {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+/* Smooth transitions for better UX */
+.map-container svg {
+  transition: transform 0.3s ease;
+}
+
+.info ul li {
+  margin-bottom: 0.5rem;
+}
+
+/* Focus styles for accessibility */
+.map-container:focus-within {
+  outline: 2px solid #2196f3;
+  outline-offset: 2px;
+}

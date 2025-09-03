@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { zoomIdentity as d3ZoomIdentity, ZoomBehavior } from 'd3-zoom';
 import { select as d3Select } from 'd3-selection';
 import { GeoProjection } from 'd3-geo';
-import { ZoomPanState } from '../types';
+import { ZoomPanState, Coordinates } from '../types';
 
 interface UsePanBehaviorProps {
   mapRef: React.RefObject<SVGGElement | null>;
@@ -10,7 +10,7 @@ interface UsePanBehaviorProps {
   width: number;
   height: number;
   projection: GeoProjection;
-  center: [number, number];
+  center: Coordinates;
   zoom: number;
   bypassEvents: React.MutableRefObject<boolean>;
   onPositionChange?: (position: ZoomPanState) => void;
@@ -19,7 +19,7 @@ interface UsePanBehaviorProps {
 
 interface UsePanBehaviorReturn {
   lastPosition: React.MutableRefObject<ZoomPanState>;
-  programmaticMove: (center: [number, number], zoom: number) => void;
+  programmaticMove: (center: Coordinates, zoom: number) => void;
 }
 
 export function usePanBehavior({
@@ -37,7 +37,7 @@ export function usePanBehavior({
   const lastPosition = useRef<ZoomPanState>({ x: 0, y: 0, k: 1 });
 
   const programmaticMove = useCallback(
-    (newCenter: [number, number], newZoom: number) => {
+    (newCenter: Coordinates, newZoom: number) => {
       const [lon, lat] = newCenter;
       const coords = projection([lon, lat]);
       if (!coords || !mapRef.current || !zoomRef.current) return;

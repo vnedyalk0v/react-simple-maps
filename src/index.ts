@@ -1,4 +1,5 @@
 export { default as ComposableMap } from './components/ComposableMap';
+export { default as MapWithMetadata } from './components/MapWithMetadata';
 export { default as Geographies } from './components/Geographies';
 export { default as Geography } from './components/Geography';
 export { default as Graticule } from './components/Graticule';
@@ -23,6 +24,17 @@ export { default as useZoomPan } from './components/useZoomPan';
 // React 19 specific exports
 export { default as GeographyErrorBoundary } from './components/GeographyErrorBoundary';
 
+// Export utility functions for branded types
+export {
+  createLongitude,
+  createLatitude,
+  createCoordinates,
+  createScaleExtent,
+  createTranslateExtent,
+  createParallels,
+  createGraticuleStep,
+} from './types';
+
 // Export types for TypeScript users
 export type {
   ComposableMapProps,
@@ -42,4 +54,10 @@ export type {
   GeographyData,
   ZoomPanState,
   Position,
+  Coordinates,
+  Longitude,
+  Latitude,
 } from './types';
+
+// Export MapWithMetadata types
+export type { MapWithMetadataProps } from './components/MapWithMetadata';

@@ -1,0 +1,6 @@
+dist/
+node_modules/
+*.config.js
+*.config.ts
+.eslintrc.js
+vite.config.ts

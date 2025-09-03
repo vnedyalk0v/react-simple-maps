@@ -11,6 +11,21 @@ import {
   isString,
   prepareMesh,
 } from '../utils';
+import {
+  cacheFeatures,
+  getCachedFeatures,
+  cachePreparedFeatures,
+  getCachedPreparedFeatures,
+  cacheMeshData,
+  getCachedMeshData,
+  generateFeaturesCacheKey,
+  generatePreparedFeaturesCacheKey,
+  generateMeshCacheKey,
+  getCachedGeographyData,
+  cacheGeographyData,
+  getCachedPreparedFeaturesWeakMap,
+  cachePreparedFeaturesWeakMap,
+} from '../utils/geography-cache';
 import { preloadGeography } from '../utils/preloading';
 import { devTools } from '../utils/debugging';
 
@@ -48,28 +63,132 @@ export default function useGeographies({
     }
   }, [geography]);
 
-  return useMemo(() => {
-    if (isLoading || !loadedData) {
-      // Return empty data structure while loading
-      return {
-        geographies: [],
-        outline: '',
-        borders: '',
-      };
+  // Granular memoization for expensive operations
+
+  // Memoize feature extraction with aggressive caching
+  const rawFeatures = useMemo(() => {
+    if (isLoading || !loadedData) return [];
+
+    // Try WeakMap cache first for object-based geography data
+    if (
+      loadedData &&
+      typeof loadedData === 'object' &&
+      !Array.isArray(loadedData)
+    ) {
+      const weakMapCached = getCachedGeographyData(loadedData);
+      if (weakMapCached) {
+        return weakMapCached.features;
+      }
     }
 
+    // Fall back to LRU cache
+    const cacheKey = generateFeaturesCacheKey(loadedData, parseGeographies);
+    const cached = getCachedFeatures(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    // Extract features
     const features = getFeatures(loadedData, parseGeographies);
-    const mesh = getMesh(loadedData);
-    const preparedMesh = prepareMesh(
-      mesh?.outline || null,
-      mesh?.borders || null,
+
+    // Cache in both systems
+    cacheFeatures(cacheKey, features);
+    if (
+      loadedData &&
+      typeof loadedData === 'object' &&
+      !Array.isArray(loadedData)
+    ) {
+      const mesh = getMesh(loadedData);
+      cacheGeographyData(loadedData, features, mesh);
+    }
+
+    return features;
+  }, [loadedData, isLoading, parseGeographies]);
+
+  // Memoize mesh extraction separately
+  const rawMesh = useMemo(() => {
+    if (isLoading || !loadedData) return null;
+    return getMesh(loadedData);
+  }, [loadedData, isLoading]);
+
+  // Memoize prepared features with aggressive caching (path generation is expensive)
+  const preparedGeographies = useMemo(() => {
+    if (rawFeatures.length === 0) return [];
+
+    // Try WeakMap cache first if we have the original geography object
+    if (
+      loadedData &&
+      typeof loadedData === 'object' &&
+      !Array.isArray(loadedData)
+    ) {
+      const pathFunctionString = path.toString().slice(0, 100);
+      const weakMapCached = getCachedPreparedFeaturesWeakMap(
+        loadedData,
+        pathFunctionString,
+      );
+      if (weakMapCached) {
+        return weakMapCached;
+      }
+    }
+
+    // Fall back to LRU cache
+    const cacheKey = generatePreparedFeaturesCacheKey(rawFeatures, path);
+    const cached = getCachedPreparedFeatures(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    // Generate prepared features
+    const prepared = prepareFeatures(rawFeatures, path);
+
+    // Cache in both systems
+    cachePreparedFeatures(cacheKey, prepared);
+    if (
+      loadedData &&
+      typeof loadedData === 'object' &&
+      !Array.isArray(loadedData)
+    ) {
+      const pathFunctionString = path.toString().slice(0, 100);
+      cachePreparedFeaturesWeakMap(loadedData, prepared, pathFunctionString);
+    }
+
+    return prepared;
+  }, [rawFeatures, path, loadedData]);
+
+  // Memoize prepared mesh with caching (path generation for borders/outline)
+  const preparedMeshData = useMemo(() => {
+    if (!rawMesh) return { outline: '', borders: '' };
+
+    const cacheKey = generateMeshCacheKey(loadedData, path);
+    const cached = getCachedMeshData(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    const prepared = prepareMesh(
+      rawMesh.outline || null,
+      rawMesh.borders || null,
       path,
     );
 
-    return {
-      geographies: prepareFeatures(features, path),
-      outline: preparedMesh.outline || '',
-      borders: preparedMesh.borders || '',
+    const result = {
+      outline: prepared.outline || '',
+      borders: prepared.borders || '',
     };
-  }, [loadedData, isLoading, parseGeographies, path]);
+
+    cacheMeshData(cacheKey, result);
+    return result;
+  }, [rawMesh, path, loadedData]);
+
+  // Final memoized result
+  return useMemo(() => {
+    return {
+      geographies: preparedGeographies,
+      outline: preparedMeshData.outline,
+      borders: preparedMeshData.borders,
+    };
+  }, [preparedGeographies, preparedMeshData]);
 }

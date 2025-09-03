@@ -22,7 +22,7 @@ function Annotation({
   }
 
   const [x, y] = projectedCoords;
-  const connectorPath = createConnectorPath(dx, dy, curve);
+  const connectorPath = createConnectorPath([x, y], [x + dx, y + dy], curve);
 
   return (
     <g

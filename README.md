@@ -19,7 +19,13 @@ Create beautiful SVG maps in React with d3-geo and topojson using a declarative,
 - 🧪 **Comprehensive Testing** - 100% test coverage with 159 tests
 - 📦 **Optimized Bundle** - Smaller bundle size with better performance
 
-Read the [docs](https://www.react-simple-maps.io/docs/getting-started/), or check out the [examples](https://www.react-simple-maps.io/examples/).
+## 📋 Quick Links
+
+- 📚 [Documentation](https://www.react-simple-maps.io/docs/getting-started/)
+- 🎯 [Examples](https://www.react-simple-maps.io/examples/)
+- 📝 [**Changelog**](https://github.com/vnedyalk0v/react19-simple-maps/blob/main/CHANGELOG.md) - See what's new!
+- 🐛 [Issues](https://github.com/vnedyalk0v/react19-simple-maps/issues)
+- 💬 [Discussions](https://github.com/vnedyalk0v/react19-simple-maps/discussions)
 
 ## Why @vnedyalk0v/react19-simple-maps?
 
@@ -264,6 +270,78 @@ const customProjection = geoMercator().scale(100).translate([400, 300]);
   {/* Map content */}
 </ComposableMap>;
 ```
+
+### Security Configuration
+
+React19 Simple Maps includes robust security features for geography data fetching:
+
+```tsx
+import {
+  configureGeographySecurity,
+  enableDevelopmentMode,
+  DEFAULT_GEOGRAPHY_FETCH_CONFIG,
+} from '@vnedyalk0v/react19-simple-maps';
+
+// Default: Strict HTTPS-only mode (recommended for production)
+// No configuration needed - secure by default
+
+// For development with local geography files:
+enableDevelopmentMode(true); // Allows HTTP localhost
+
+// Custom security configuration:
+configureGeographySecurity({
+  STRICT_HTTPS_ONLY: true, // Force HTTPS only
+  ALLOW_HTTP_LOCALHOST: false, // Disable HTTP localhost
+  TIMEOUT_MS: 5000, // 5 second timeout
+  MAX_RESPONSE_SIZE: 10 * 1024 * 1024, // 10MB max
+});
+```
+
+**Security Features:**
+
+- 🔒 HTTPS-only by default
+- 🚫 Private IP address blocking
+- ⏱️ Request timeout protection
+- 📏 Response size limits
+- 🛡️ Content-Type validation
+- 🏠 Configurable localhost access
+- 🔐 Subresource Integrity (SRI) validation
+- 🛡️ Tamper-proof external resource loading
+
+### Subresource Integrity (SRI)
+
+Protect against tampered external resources with built-in SRI validation:
+
+```tsx
+import {
+  configureSRI,
+  enableStrictSRI,
+  addCustomSRI,
+  generateSRIHash,
+} from '@vnedyalk0v/react19-simple-maps';
+
+// Enable strict SRI for all external resources
+enableStrictSRI();
+
+// Add custom SRI for your geography data
+addCustomSRI('https://your-domain.com/data.json', {
+  algorithm: 'sha384',
+  hash: 'sha384-your-calculated-hash',
+  enforceIntegrity: true,
+});
+
+// Generate SRI hash for a URL (development utility)
+const hash = await generateSRIHash('https://example.com/data.json');
+console.log('SRI Hash:', hash);
+```
+
+**SRI Features:**
+
+- ✅ Automatic validation for known geography sources
+- 🔧 Custom SRI configuration support
+- 🛠️ Hash generation utilities
+- ⚡ Configurable enforcement levels
+- 🚫 Tamper detection and prevention
 
 ### Styling with CSS-in-JS
 

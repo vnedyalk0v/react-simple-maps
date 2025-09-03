@@ -14,6 +14,7 @@ type: 'always_apply'
 - **NEVER** use deprecated patterns from React 18 or earlier
 - **ALWAYS** leverage new React 19 APIs when applicable
 - **NEVER** implement custom solutions for problems React 19 solves natively
+- **NEVER** overcomplicate the code
 
 ### 2. Component Architecture
 

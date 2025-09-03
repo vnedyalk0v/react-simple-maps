@@ -4,22 +4,21 @@ This directory contains TypeScript examples demonstrating various features of re
 
 ## Examples
 
-### Basic Examples
+### Available Examples
 
-- **[basic-map](./basic-map/)** - Simple world map with TypeScript
-- **[interactive-map](./interactive-map/)** - Map with click interactions and hover effects
-- **[styled-map](./styled-map/)** - Custom styling and theming
+- **[basic-map](./basic-map/)** - Simple world map with TypeScript, error boundaries, and Suspense
+- **[interactive-map](./interactive-map/)** - Interactive map with zoom, pan, click interactions, and markers
 
-### Advanced Examples
+### Security Features
 
-- **[zoom-pan-map](./zoom-pan-map/)** - Zoom and pan functionality
-- **[markers-annotations](./markers-annotations/)** - Adding markers and annotations
-- **[custom-projection](./custom-projection/)** - Using custom D3 projections
-- **[choropleth-map](./choropleth-map/)** - Data visualization with color coding
+All examples include comprehensive security measures:
 
-### React 19 Features
+- 🔒 **Content Security Policy (CSP)** headers
+- 🛡️ **XSS protection** and security headers
+- 🚫 **Private IP blocking** for external resources
+- ⚡ **HTTPS enforcement** with upgrade-insecure-requests
 
-- **[react-19-features](./react-19-features/)** - Demonstrating React 19 compatibility
+See [SECURITY.md](./SECURITY.md) for detailed security configuration.
 
 ## Running Examples
 

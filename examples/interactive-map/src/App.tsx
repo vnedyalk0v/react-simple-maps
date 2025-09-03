@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   ComposableMap,
   Geographies,
@@ -6,94 +6,64 @@ import {
   ZoomableGroup,
   Marker,
   Annotation,
+  createCoordinates,
 } from '@vnedyalk0v/react19-simple-maps';
 import type { GeographyProps, Position } from '@vnedyalk0v/react19-simple-maps';
 
-// Simple inline geography data for testing
-const geoData = {
-  type: 'FeatureCollection' as const,
-  features: [
-    {
-      type: 'Feature' as const,
-      properties: { NAME: 'North America' },
-      geometry: {
-        type: 'Polygon' as const,
-        coordinates: [
-          [
-            [-100, 40],
-            [-80, 40],
-            [-80, 60],
-            [-100, 60],
-            [-100, 40],
-          ],
-        ],
-      },
-    },
-    {
-      type: 'Feature' as const,
-      properties: { NAME: 'Europe' },
-      geometry: {
-        type: 'Polygon' as const,
-        coordinates: [
-          [
-            [0, 45],
-            [20, 45],
-            [20, 65],
-            [0, 65],
-            [0, 45],
-          ],
-        ],
-      },
-    },
-    {
-      type: 'Feature' as const,
-      properties: { NAME: 'Asia' },
-      geometry: {
-        type: 'Polygon' as const,
-        coordinates: [
-          [
-            [80, 20],
-            [120, 20],
-            [120, 60],
-            [80, 60],
-            [80, 20],
-          ],
-        ],
-      },
-    },
-  ],
-};
+// URL to world geography data (using unpkg for better CORS support)
+const geoUrl = 'https://unpkg.com/world-atlas@2/countries-110m.json';
 
-// Major cities with coordinates
+/**
+ * BEST PRACTICE: Use the createCoordinates utility from the library
+ * This ensures proper branded typing and prevents coordinate errors
+ */
+
+// Major world cities with coordinates
 const cities = [
-  { name: 'New York', coordinates: [-74.006, 40.7128] as [number, number] },
-  { name: 'London', coordinates: [-0.1276, 51.5074] as [number, number] },
-  { name: 'Tokyo', coordinates: [139.6917, 35.6895] as [number, number] },
-  { name: 'Sydney', coordinates: [151.2093, -33.8688] as [number, number] },
-  { name: 'São Paulo', coordinates: [-46.6333, -23.5505] as [number, number] },
+  { name: 'New York', coordinates: createCoordinates(-74.006, 40.7128) },
+  { name: 'London', coordinates: createCoordinates(-0.1276, 51.5074) },
+  { name: 'Tokyo', coordinates: createCoordinates(139.6917, 35.6895) },
+  { name: 'Sydney', coordinates: createCoordinates(151.2093, -33.8688) },
+  { name: 'São Paulo', coordinates: createCoordinates(-46.6333, -23.5505) },
+  { name: 'Cairo', coordinates: createCoordinates(31.2357, 30.0444) },
+  { name: 'Mumbai', coordinates: createCoordinates(72.8777, 19.076) },
+  { name: 'Beijing', coordinates: createCoordinates(116.4074, 39.9042) },
+  { name: 'Lagos', coordinates: createCoordinates(3.3792, 6.5244) },
+  { name: 'Mexico City', coordinates: createCoordinates(-99.1332, 19.4326) },
 ];
 
 const App: React.FC = () => {
   const [position, setPosition] = useState<Position>({
-    coordinates: [0, 0] as any,
+    coordinates: createCoordinates(0, 0),
     zoom: 1,
   });
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
-  const handleMoveEnd = (position: Position) => {
+  const handleMoveEnd = useCallback((position: Position) => {
     setPosition(position);
-  };
+  }, []);
 
-  const handleGeographyClick = (geography: GeographyProps['geography']) => {
-    const countryName = geography.properties?.NAME || 'Unknown';
-    setSelectedCountry(countryName);
-    console.log('Selected country:', countryName);
-  };
+  const handleGeographyClick = useCallback(
+    (geography: GeographyProps['geography']) => {
+      const countryName = geography.properties?.NAME || 'Unknown';
+      setSelectedCountry(countryName);
+      console.log('Selected country:', countryName);
+    },
+    [],
+  );
 
-  const handleReset = () => {
-    setPosition({ coordinates: [0, 0] as any, zoom: 1 });
+  const handleReset = useCallback(() => {
+    setPosition({ coordinates: createCoordinates(0, 0), zoom: 1 });
     setSelectedCountry(null);
-  };
+  }, []);
+
+  // Memoized click handler factory to prevent recreation on each render
+  const createGeographyClickHandler = useCallback(
+    (geography: GeographyProps['geography']) => () => {
+      handleGeographyClick(geography);
+    },
+    [handleGeographyClick],
+  );
 
   return (
     <div className="container">
@@ -140,13 +110,13 @@ const App: React.FC = () => {
             minZoom={0.5}
             maxZoom={8}
           >
-            <Geographies geography={geoData}>
+            <Geographies geography={geoUrl}>
               {({ geographies }) =>
                 geographies.map((geo, index) => (
                   <Geography
                     key={geo.properties?.NAME || `geo-${index}`}
                     geography={geo}
-                    onClick={() => handleGeographyClick(geo)}
+                    onClick={createGeographyClickHandler(geo)}
                     style={{
                       default: {
                         fill:
@@ -173,7 +143,7 @@ const App: React.FC = () => {
 
             {/* City Markers */}
             {cities.map(({ name, coordinates }) => (
-              <Marker key={name} coordinates={coordinates as any}>
+              <Marker key={name} coordinates={coordinates}>
                 <circle r={4} fill="#4ECDC4" stroke="#fff" strokeWidth={2} />
               </Marker>
             ))}
@@ -183,7 +153,7 @@ const App: React.FC = () => {
               cities.map(({ name, coordinates }) => (
                 <Annotation
                   key={`${name}-annotation`}
-                  subject={coordinates as any}
+                  subject={coordinates}
                   dx={-90}
                   dy={-30}
                   connectorProps={{

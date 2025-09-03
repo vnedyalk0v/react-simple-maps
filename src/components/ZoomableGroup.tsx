@@ -1,12 +1,16 @@
 import { Ref } from 'react';
-import { ZoomableGroupProps } from '../types';
+import {
+  ZoomableGroupProps,
+  createCoordinates,
+  createScaleExtent,
+} from '../types';
 import { useMapContext } from './MapProvider';
 import { ZoomPanProvider } from './ZoomPanProvider';
 import useZoomPan from './useZoomPan';
 import { ZoomPanIndicator } from './LoadingStates';
 
 function ZoomableGroup({
-  center = [0, 0],
+  center = createCoordinates(0, 0),
   zoom = 1,
   minZoom = 1,
   maxZoom = 8,
@@ -28,7 +32,7 @@ function ZoomableGroup({
     ...(onMoveStart && { onMoveStart }),
     ...(onMove && { onMove }),
     ...(onMoveEnd && { onMoveEnd }),
-    scaleExtent: [minZoom, maxZoom],
+    scaleExtent: createScaleExtent(minZoom, maxZoom),
     ...(translateExtent && { translateExtent }),
     zoom,
   });
