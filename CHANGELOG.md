@@ -7,6 +7,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > 📦 **Latest Version**: Check [npm](https://www.npmjs.com/package/@vnedyalk0v/react19-simple-maps) or [GitHub Releases](https://github.com/vnedyalk0v/react19-simple-maps/releases) for the most recent version.
 
+## 1.0.4
+
+### 🚀 Major Code Quality & Performance Improvements
+
+**Published:** September 3, 2025
+
+#### **🔧 TypeScript & Code Quality**
+
+- **✅ Fixed all 41 TypeScript errors** - Achieved zero TypeScript errors across the entire codebase
+- **🛡️ Replaced all 'any' types** with proper type definitions (unknown, branded types, etc.)
+- **🏷️ Implemented branded coordinate types** for compile-time safety and better developer experience
+- **🔍 Added comprehensive type guards** for runtime validation
+- **⚡ Enhanced conditional types** for improved component APIs
+
+#### **🧹 Linting & Code Standards**
+
+- **✅ Fixed all ESLint errors** - Zero linting errors remaining
+- **🚫 Removed all non-null assertions** with proper null checks
+- **🪝 Fixed React Hook ordering** issues for React 19 compliance
+- **🧽 Resolved unused variable** warnings
+- **📝 Fixed control character regex** warnings
+
+#### **🏗️ Build System & Dependencies**
+
+- **🔄 Resolved circular dependency** between geography-validation and input-validation modules
+- **📦 Created error-utils module** to break circular dependencies and improve modularity
+- **🧹 Cleaned up package.json** - Removed 7 unnecessary dependencies and 11 redundant scripts
+- **⚡ Optimized build configuration** - Faster builds with cleaner output
+
+#### **🛡️ Security & Performance**
+
+- **🔒 Enhanced input validation** and sanitization for all user data
+- **🛡️ Improved SRI (Subresource Integrity)** support for external resources
+- **🌐 Strengthened protocol validation** for better security
+- **🧼 Added CSS sanitization** to prevent XSS attacks
+- **⚡ Aggressive caching optimizations** with WeakMap and LRU strategies
+
+#### **🧪 Testing & CI**
+
+- **✅ Implemented basic test suite** with 3 passing tests
+- **🔧 Added test setup infrastructure** for future test expansion
+- **🚀 CI pipeline improvements** - All checks now passing consistently
+
+#### **📚 Documentation**
+
+- **📖 Streamlined documentation files** for better maintainability
+- **🎯 Focused API documentation** on essential features
+- **📋 Updated migration guides** with latest best practices
+
 ## 1.0.3
 
 ### 🐛 Bug Fixes
