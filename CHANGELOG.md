@@ -1,46 +1,40 @@
 # Changelog
 
+## 1.0.6
+
+### Patch Changes
+
+- 1f71b02: 🚨 **CRITICAL: Fixed UMD build export issues** - Resolved broken UMD build that had no exports, causing failures in Turbopack (Next.js 15.5+) and other modern bundlers
+
+  ## 🔧 Build System Fixes
+  - **⚙️ Improved Rollup UMD configuration** - Fixed aggressive terser minification settings that were breaking export mechanisms
+  - **📦 Updated package.json exports** - Temporarily point browser field to working ES modules as fallback until UMD is fully stable
+  - **🧪 Added build verification script** - Comprehensive testing for all build formats (ES, CJS, UMD, TypeScript) to prevent future regressions
+  - **🔍 Enhanced CI/CD pipeline** - Added automated build verification to prepublish process
+
+  ## 🛠️ Technical Improvements
+  - **📋 Better error reporting** - Improved build verification with detailed export analysis
+  - **🎯 React 19 compliance maintained** - All fixes follow strict React 19.1.1+ development guidelines
+  - **⚡ Optimized build process** - Reduced terser passes and improved UMD compatibility
+
+  ## 🐛 Bug Fixes
+  - Fixed module resolution failures in Turbopack and modern bundlers
+  - Resolved "The module has no exports at all" errors
+  - Fixed browser field pointing to broken UMD build
+  - Corrected terser configuration for UMD format compatibility
+
+  ## 📚 Migration Notes
+
+  This release fixes critical compatibility issues reported in production environments. Users experiencing module resolution failures with Turbopack, Webpack, or other bundlers should upgrade immediately.
+
+  **Breaking Changes:** None - this is a patch release that maintains full backward compatibility.
+
 All notable changes to `@vnedyalk0v/react19-simple-maps` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 > 📦 **Latest Version**: Check [npm](https://www.npmjs.com/package/@vnedyalk0v/react19-simple-maps) or [GitHub Releases](https://github.com/vnedyalk0v/react19-simple-maps/releases) for the most recent version.
-
-## 1.0.6
-
-### 🚨 Critical UMD Build Fixes
-
-**Published:** September 3, 2025
-
-#### **🔧 Build System Fixes**
-
-- **🚨 CRITICAL: Fixed UMD build export issues** - Resolved broken UMD build that had no exports, causing failures in Turbopack (Next.js 15.5+) and other modern bundlers
-- **⚙️ Improved Rollup UMD configuration** - Fixed aggressive terser minification settings that were breaking export mechanisms
-- **📦 Updated package.json exports** - Temporarily point browser field to working ES modules as fallback until UMD is fully stable
-- **🧪 Added build verification script** - Comprehensive testing for all build formats (ES, CJS, UMD, TypeScript) to prevent future regressions
-- **🔍 Enhanced CI/CD pipeline** - Added automated build verification to prepublish process
-
-#### **🛠️ Technical Improvements**
-
-- **📋 Better error reporting** - Improved build verification with detailed export analysis
-- **🎯 React 19 compliance maintained** - All fixes follow strict React 19.1.1+ development guidelines
-- **⚡ Optimized build process** - Reduced terser passes and improved UMD compatibility
-
-#### **🐛 Bug Fixes**
-
-- Fixed module resolution failures in Turbopack and modern bundlers
-- Resolved "The module has no exports at all" errors
-- Fixed browser field pointing to broken UMD build
-- Corrected terser configuration for UMD format compatibility
-
-#### **📚 Migration Notes**
-
-This release fixes critical compatibility issues reported in production environments. Users experiencing module resolution failures with Turbopack, Webpack, or other bundlers should upgrade immediately.
-
-**Breaking Changes:** None - this is a patch release that maintains full backward compatibility.
-
----
 
 ## 1.0.5
 
