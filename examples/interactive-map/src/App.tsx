@@ -1,138 +1,247 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
   ComposableMap,
   Geographies,
   Geography,
-  ZoomableGroup,
   Marker,
-  Annotation,
+  ZoomableGroup,
   createCoordinates,
+  createScaleExtent,
+  createTranslateExtent,
 } from '@vnedyalk0v/react19-simple-maps';
-import type { GeographyProps, Position } from '@vnedyalk0v/react19-simple-maps';
-
-// URL to world geography data (using unpkg for better CORS support)
-const geoUrl = 'https://unpkg.com/world-atlas@2/countries-110m.json';
+import type { Position } from '@vnedyalk0v/react19-simple-maps';
 
 /**
- * BEST PRACTICE: Use the createCoordinates utility from the library
- * This ensures proper branded typing and prevents coordinate errors
+ * Interactive Map Showcase
+ *
+ * Shows key features of @vnedyalk0v/react19-simple-maps:
+ * ✨ Easy zoom/pan ✨ Click interactions ✨ Multiple projections
+ * ✨ Custom markers ✨ Hover effects ✨ Quick navigation
  */
-
-// Major world cities with coordinates
-const cities = [
-  { name: 'New York', coordinates: createCoordinates(-74.006, 40.7128) },
-  { name: 'London', coordinates: createCoordinates(-0.1276, 51.5074) },
-  { name: 'Tokyo', coordinates: createCoordinates(139.6917, 35.6895) },
-  { name: 'Sydney', coordinates: createCoordinates(151.2093, -33.8688) },
-  { name: 'São Paulo', coordinates: createCoordinates(-46.6333, -23.5505) },
-  { name: 'Cairo', coordinates: createCoordinates(31.2357, 30.0444) },
-  { name: 'Mumbai', coordinates: createCoordinates(72.8777, 19.076) },
-  { name: 'Beijing', coordinates: createCoordinates(116.4074, 39.9042) },
-  { name: 'Lagos', coordinates: createCoordinates(3.3792, 6.5244) },
-  { name: 'Mexico City', coordinates: createCoordinates(-99.1332, 19.4326) },
-];
-
 const App: React.FC = () => {
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
+  const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+  const [projection, setProjection] = useState<
+    'geoEqualEarth' | 'geoMercator' | 'geoNaturalEarth1'
+  >('geoEqualEarth');
+  const [showCities, setShowCities] = useState(true);
   const [position, setPosition] = useState<Position>({
     coordinates: createCoordinates(0, 0),
     zoom: 1,
   });
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
-  const handleMoveEnd = useCallback((position: Position) => {
-    setPosition(position);
-  }, []);
-
-  const handleGeographyClick = useCallback(
-    (geography: GeographyProps['geography']) => {
-      const countryName = geography.properties?.NAME || 'Unknown';
-      setSelectedCountry(countryName);
-      console.log('Selected country:', countryName);
+  // Cities with more data to showcase markers
+  const cities = [
+    {
+      name: 'New York',
+      coordinates: createCoordinates(-74.006, 40.7128),
+      population: '8.3M',
     },
-    [],
-  );
-
-  const handleReset = useCallback(() => {
-    setPosition({ coordinates: createCoordinates(0, 0), zoom: 1 });
-    setSelectedCountry(null);
-  }, []);
-
-  // Memoized click handler factory to prevent recreation on each render
-  const createGeographyClickHandler = useCallback(
-    (geography: GeographyProps['geography']) => () => {
-      handleGeographyClick(geography);
+    {
+      name: 'London',
+      coordinates: createCoordinates(-0.1276, 51.5074),
+      population: '9.0M',
     },
-    [handleGeographyClick],
-  );
+    {
+      name: 'Tokyo',
+      coordinates: createCoordinates(139.6917, 35.6895),
+      population: '37.4M',
+    },
+    {
+      name: 'Paris',
+      coordinates: createCoordinates(2.3522, 48.8566),
+      population: '2.1M',
+    },
+    {
+      name: 'Sydney',
+      coordinates: createCoordinates(151.2093, -33.8688),
+      population: '5.3M',
+    },
+    {
+      name: 'São Paulo',
+      coordinates: createCoordinates(-46.6333, -23.5505),
+      population: '12.3M',
+    },
+  ];
+
+  // Quick navigation presets
+  const quickNav = [
+    { name: 'World', center: createCoordinates(0, 0), zoom: 1 },
+    { name: 'Europe', center: createCoordinates(10, 50), zoom: 3 },
+    { name: 'Asia', center: createCoordinates(100, 30), zoom: 2.5 },
+    { name: 'Americas', center: createCoordinates(-80, 20), zoom: 2 },
+  ];
 
   return (
-    <div className="container">
-      <div className="header">
-        <h1>Interactive World Map</h1>
-        <p>
-          Zoom, pan, and click to explore. Built with TypeScript and React 19.
-        </p>
+    <div style={{ padding: '2rem', fontFamily: 'system-ui' }}>
+      <h1>🗺️ Interactive Map Showcase</h1>
+      <p>Built with @vnedyalk0v/react19-simple-maps - See our key features!</p>
+
+      {/* Quick Controls */}
+      <div
+        style={{
+          display: 'flex',
+          gap: '1rem',
+          marginBottom: '1rem',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+        }}
+      >
+        <div>
+          <label>Projection: </label>
+          <select
+            value={projection}
+            onChange={(e) =>
+              setProjection(
+                e.target.value as
+                  | 'geoEqualEarth'
+                  | 'geoMercator'
+                  | 'geoNaturalEarth1',
+              )
+            }
+            style={{ padding: '0.5rem', borderRadius: '4px' }}
+          >
+            <option value="geoEqualEarth">Equal Earth</option>
+            <option value="geoMercator">Mercator</option>
+            <option value="geoNaturalEarth1">Natural Earth</option>
+          </select>
+        </div>
+
+        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <input
+            type="checkbox"
+            checked={showCities}
+            onChange={(e) => setShowCities(e.target.checked)}
+          />
+          Show Cities
+        </label>
+
+        {quickNav.map((nav) => (
+          <button
+            key={nav.name}
+            onClick={() =>
+              setPosition({ coordinates: nav.center, zoom: nav.zoom })
+            }
+            style={{
+              padding: '0.5rem 1rem',
+              borderRadius: '6px',
+              border: '1px solid #2196f3',
+              background: '#e3f2fd',
+              cursor: 'pointer',
+              color: '#1976d2',
+            }}
+          >
+            {nav.name}
+          </button>
+        ))}
       </div>
 
-      <div className="controls">
-        <div className="info-panel">
-          <h3>Map Position</h3>
-          <p>
-            Center: [{position.coordinates[0].toFixed(2)},{' '}
-            {position.coordinates[1].toFixed(2)}]
-          </p>
-          <p>Zoom: {position.zoom.toFixed(2)}x</p>
+      {/* Selection Info */}
+      {(selectedCountry || selectedCity || hoveredCountry) && (
+        <div style={{ marginBottom: '1rem' }}>
+          {hoveredCountry && !selectedCountry && (
+            <div
+              style={{
+                background: '#fff3e0',
+                padding: '0.5rem 1rem',
+                borderRadius: '6px',
+                fontSize: '0.9rem',
+              }}
+            >
+              Hovering: {hoveredCountry}
+            </div>
+          )}
+
           {selectedCountry && (
-            <p>
-              Selected: <strong>{selectedCountry}</strong>
-            </p>
+            <div
+              style={{
+                background: '#e3f2fd',
+                padding: '1rem',
+                borderRadius: '8px',
+                marginBottom: '0.5rem',
+              }}
+            >
+              <h3>Selected Country: {selectedCountry}</h3>
+            </div>
+          )}
+
+          {selectedCity && (
+            <div
+              style={{
+                background: '#e8f5e8',
+                padding: '1rem',
+                borderRadius: '8px',
+              }}
+            >
+              <h3>Selected City: {selectedCity}</h3>
+              <p>
+                Population:{' '}
+                {cities.find((c) => c.name === selectedCity)?.population}
+              </p>
+            </div>
           )}
         </div>
-        <button onClick={handleReset} className="reset-button">
-          Reset View
-        </button>
-      </div>
+      )}
 
-      <div className="map-container">
-        <ComposableMap
-          projection="geoEqualEarth"
-          projectionConfig={{
-            scale: 147,
-            center: [0, 0],
-          }}
-          width={900}
-          height={600}
-        >
+      <div
+        style={{
+          background: 'white',
+          borderRadius: '12px',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+          padding: '1rem',
+          marginBottom: '2rem',
+        }}
+      >
+        <ComposableMap projection={projection} width={800} height={500}>
           <ZoomableGroup
             zoom={position.zoom}
             center={position.coordinates}
-            onMoveEnd={handleMoveEnd}
+            onMoveEnd={setPosition}
+            enableZoom={true}
             minZoom={0.5}
             maxZoom={8}
+            scaleExtent={createScaleExtent(0.5, 8)}
+            enablePan={true}
+            translateExtent={createTranslateExtent(
+              createCoordinates(-2000, -1000),
+              createCoordinates(2000, 1000),
+            )}
           >
-            <Geographies geography={geoUrl}>
+            <Geographies geography="https://unpkg.com/world-atlas@2/countries-50m.json">
               {({ geographies }) =>
-                geographies.map((geo, index) => (
+                geographies.map((geo) => (
                   <Geography
-                    key={geo.properties?.NAME || `geo-${index}`}
+                    key={geo.properties?.name || geo.id}
                     geography={geo}
-                    onClick={createGeographyClickHandler(geo)}
+                    onClick={() => {
+                      const name = geo.properties?.name || 'Unknown';
+                      setSelectedCountry(name);
+                    }}
+                    onMouseEnter={() => {
+                      const name = geo.properties?.name || 'Unknown';
+                      setHoveredCountry(name);
+                    }}
+                    onMouseLeave={() => setHoveredCountry(null)}
                     style={{
                       default: {
                         fill:
-                          selectedCountry === geo.properties?.NAME
-                            ? '#FF6B6B'
-                            : '#D6D6DA',
+                          selectedCountry === geo.properties?.name
+                            ? '#1976d2'
+                            : hoveredCountry === geo.properties?.name
+                              ? '#42a5f5'
+                              : '#e0e0e0',
                         outline: 'none',
-                        transition: 'fill 0.2s ease-in-out',
+                        stroke: '#FFFFFF',
+                        strokeWidth: 0.5,
                       },
                       hover: {
-                        fill: '#F53',
+                        fill: '#42a5f5',
                         outline: 'none',
                         cursor: 'pointer',
                       },
                       pressed: {
-                        fill: '#E42',
+                        fill: '#1976d2',
                         outline: 'none',
                       },
                     }}
@@ -141,61 +250,104 @@ const App: React.FC = () => {
               }
             </Geographies>
 
-            {/* City Markers */}
-            {cities.map(({ name, coordinates }) => (
-              <Marker key={name} coordinates={coordinates}>
-                <circle r={4} fill="#4ECDC4" stroke="#fff" strokeWidth={2} />
-              </Marker>
-            ))}
-
-            {/* City Annotations */}
-            {position.zoom > 2 &&
-              cities.map(({ name, coordinates }) => (
-                <Annotation
-                  key={`${name}-annotation`}
-                  subject={coordinates}
-                  dx={-90}
-                  dy={-30}
-                  connectorProps={{
-                    stroke: '#4ECDC4',
-                    strokeWidth: 2,
-                    strokeLinecap: 'round',
-                  }}
-                >
+            {showCities &&
+              cities.map((city) => (
+                <Marker key={city.name} coordinates={city.coordinates}>
+                  <circle
+                    r={selectedCity === city.name ? 8 : 5}
+                    fill={selectedCity === city.name ? '#1976d2' : '#f44336'}
+                    stroke="#fff"
+                    strokeWidth={2}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      setSelectedCity(
+                        selectedCity === city.name ? null : city.name,
+                      );
+                    }}
+                  />
                   <text
-                    textAnchor="end"
-                    alignmentBaseline="middle"
-                    fill="#4ECDC4"
-                    fontSize={12}
-                    fontWeight="bold"
+                    textAnchor="middle"
+                    y={-10}
+                    style={{
+                      fontFamily: 'system-ui',
+                      fontSize: '12px',
+                      fill: '#333',
+                      pointerEvents: 'none',
+                    }}
                   >
-                    {name}
+                    {city.name}
                   </text>
-                </Annotation>
+                </Marker>
               ))}
           </ZoomableGroup>
         </ComposableMap>
       </div>
 
-      <div className="features">
-        <h3>Interactive Features</h3>
+      <div
+        style={{
+          background: '#fff3e0',
+          borderLeft: '4px solid #ff9800',
+          padding: '1rem',
+          borderRadius: '8px',
+        }}
+      >
+        <h3>🎮 Interactive Features</h3>
         <ul>
           <li>
-            <strong>Zoom & Pan:</strong> Use mouse wheel to zoom, drag to pan
+            <strong>Scroll</strong> to zoom in/out
           </li>
           <li>
-            <strong>Click Countries:</strong> Click any country to select it
+            <strong>Click and drag</strong> to pan around
           </li>
           <li>
-            <strong>City Markers:</strong> Major cities are marked with circles
+            <strong>Hover countries</strong> to see hover effects
           </li>
           <li>
-            <strong>Dynamic Labels:</strong> City names appear when zoomed in
+            <strong>Click countries</strong> to select them
           </li>
           <li>
-            <strong>TypeScript:</strong> Full type safety throughout
+            <strong>Click cities</strong> to highlight them
+          </li>
+          <li>
+            <strong>Change projections</strong> to see different map views
+          </li>
+          <li>
+            <strong>Toggle cities</strong> to show/hide markers
+          </li>
+          <li>
+            <strong>Quick navigation</strong> to jump to regions
           </li>
         </ul>
+
+        <h4>✨ Key Package Features Showcased:</h4>
+        <ul>
+          <li>
+            🗺️ <strong>Multiple Projections</strong> - Equal Earth, Mercator,
+            Natural Earth
+          </li>
+          <li>
+            🎯 <strong>Interactive Markers</strong> - Custom city markers with
+            data
+          </li>
+          <li>
+            🖱️ <strong>Hover Effects</strong> - Real-time country highlighting
+          </li>
+          <li>
+            🔍 <strong>Zoom & Pan</strong> - Smooth navigation with default
+            behavior
+          </li>
+          <li>
+            📍 <strong>Click Interactions</strong> - Country and city selection
+          </li>
+          <li>
+            ⚡ <strong>Performance</strong> - Optimized rendering with React 19
+          </li>
+        </ul>
+
+        <p>
+          <strong>~300 lines of code</strong> for all these features! Our
+          package handles the complexity.
+        </p>
       </div>
     </div>
   );

@@ -104,8 +104,20 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* Focus styles for accessibility */
-.map-container:focus-within {
-  outline: 2px solid #2196f3;
-  outline-offset: 2px;
+/* Remove focus outline from map container to prevent blue border on country clicks */
+.map-container {
+  outline: none;
+}
+
+.map-container:focus {
+  outline: none;
+}
+
+/* Ensure SVG elements don't get focus outlines */
+.map-container svg {
+  outline: none;
+}
+
+.map-container svg:focus {
+  outline: none;
 }
