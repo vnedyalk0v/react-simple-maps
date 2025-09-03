@@ -1,6 +1,8 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f5f5f5;
@@ -88,7 +90,7 @@ body {
   font-size: 0.95rem;
 }
 
-.checkbox-label input[type="checkbox"] {
+.checkbox-label input[type='checkbox'] {
   width: 18px;
   height: 18px;
   accent-color: #2196f3;
@@ -152,20 +154,23 @@ body {
   margin-bottom: 2rem;
 }
 
-.country-info, .city-info {
+.country-info,
+.city-info {
   background: #e8f5e8;
   border: 1px solid #4caf50;
   border-radius: 8px;
   padding: 1.5rem;
 }
 
-.country-info h3, .city-info h3 {
+.country-info h3,
+.city-info h3 {
   margin-top: 0;
   margin-bottom: 1rem;
   color: #2e7d32;
 }
 
-.country-info p, .city-info p {
+.country-info p,
+.city-info p {
   margin: 0.5rem 0;
   color: #424242;
 }
@@ -261,12 +266,31 @@ body {
 }
 
 @media (max-width: 768px) {
-  .container { padding: 1rem; }
-  .header h1 { font-size: 2rem; }
-  .header p { font-size: 1rem; }
-  .controls { grid-template-columns: 1fr; gap: 1rem; }
-  .control-section { padding: 1rem; }
-  .zoom-presets { justify-content: center; }
-  .map-container { padding: 1rem; overflow-x: auto; }
-  .selection-info { grid-template-columns: 1fr; gap: 1rem; }
+  .container {
+    padding: 1rem;
+  }
+  .header h1 {
+    font-size: 2rem;
+  }
+  .header p {
+    font-size: 1rem;
+  }
+  .controls {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .control-section {
+    padding: 1rem;
+  }
+  .zoom-presets {
+    justify-content: center;
+  }
+  .map-container {
+    padding: 1rem;
+    overflow-x: auto;
+  }
+  .selection-info {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
