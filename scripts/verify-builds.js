@@ -10,13 +10,11 @@
  */
 
 import { readFileSync, existsSync } from 'fs';
-import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const require = createRequire(import.meta.url);
 
 // Expected exports from the package
 const EXPECTED_EXPORTS = [
@@ -78,19 +76,24 @@ class BuildVerifier {
   }
 
   checkFileExists(filePath) {
-    if (!existsSync(filePath)) {
-      throw new Error(`Build file not found: ${filePath}`);
+    const fullPath = join(process.cwd(), filePath);
+    if (!existsSync(fullPath)) {
+      throw new Error(
+        `Build file not found: ${filePath} (checked: ${fullPath})`,
+      );
     }
     this.log(`✓ Found ${filePath}`, 'success');
+    return fullPath;
   }
 
   async verifyESModule() {
     try {
       this.log('\n📦 Verifying ES Module build...', 'info');
-      this.checkFileExists(BUILD_FILES.es);
+      const fullPath = this.checkFileExists(BUILD_FILES.es);
 
-      // Dynamic import of ES module
-      const esModule = await import(`../${BUILD_FILES.es}`);
+      // Dynamic import of ES module using file:// URL for better CI compatibility
+      const fileUrl = `file://${fullPath}`;
+      const esModule = await import(fileUrl);
       const exports = Object.keys(esModule);
 
       this.results.es.exports = exports;
@@ -107,11 +110,10 @@ class BuildVerifier {
   async verifyCommonJS() {
     try {
       this.log('\n📦 Verifying CommonJS build...', 'info');
-      this.checkFileExists(BUILD_FILES.cjs);
+      const fullPath = this.checkFileExists(BUILD_FILES.cjs);
 
-      // Since we're in an ES module environment, we need to use dynamic import
-      // and check the file content for CommonJS exports
-      const cjsContent = readFileSync(BUILD_FILES.cjs, 'utf8');
+      // Read the CommonJS file content for export analysis
+      const cjsContent = readFileSync(fullPath, 'utf8');
 
       // Look for exports.ExportName patterns in CommonJS
       const exportMatches =
@@ -143,10 +145,10 @@ class BuildVerifier {
   verifyUMD() {
     try {
       this.log('\n📦 Verifying UMD build...', 'info');
-      this.checkFileExists(BUILD_FILES.umd);
+      const fullPath = this.checkFileExists(BUILD_FILES.umd);
 
       // Read UMD file and check for exports
-      const umdContent = readFileSync(BUILD_FILES.umd, 'utf8');
+      const umdContent = readFileSync(fullPath, 'utf8');
 
       // Check if UMD has proper structure (more flexible check)
       if (
@@ -242,9 +244,9 @@ class BuildVerifier {
   verifyTypeDefinitions() {
     try {
       this.log('\n📦 Verifying TypeScript definitions...', 'info');
-      this.checkFileExists(BUILD_FILES.types);
+      const fullPath = this.checkFileExists(BUILD_FILES.types);
 
-      const typesContent = readFileSync(BUILD_FILES.types, 'utf8');
+      const typesContent = readFileSync(fullPath, 'utf8');
 
       // Check for export declarations
       const exportMatches =
@@ -362,15 +364,22 @@ class BuildVerifier {
   }
 
   async run() {
-    this.log('🔍 Starting build verification...', 'info');
+    try {
+      this.log('🔍 Starting build verification...', 'info');
+      this.log(`Working directory: ${process.cwd()}`, 'info');
 
-    await this.verifyESModule();
-    await this.verifyCommonJS();
-    this.verifyUMD();
-    this.verifyTypeDefinitions();
+      await this.verifyESModule();
+      await this.verifyCommonJS();
+      this.verifyUMD();
+      this.verifyTypeDefinitions();
 
-    const success = this.printSummary();
-    process.exit(success ? 0 : 1);
+      const success = this.printSummary();
+      process.exit(success ? 0 : 1);
+    } catch (error) {
+      this.log(`💥 Verification script failed: ${error.message}`, 'error');
+      console.error('Stack trace:', error.stack);
+      process.exit(1);
+    }
   }
 }
 
